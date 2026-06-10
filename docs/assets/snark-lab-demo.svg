@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">snark-lab interactive protocol workbench</title>
+  <desc id="desc">A Sumcheck transcript with polynomial evaluations, verifier challenges, an accepted claim, and a comparison of product-tree and rational-stream I/O.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1118"/><stop offset="1" stop-color="#080b10"/></linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#54e7db"/><stop offset="1" stop-color="#2fb8c5"/></linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#17212b" stroke-width="1"/></pattern>
+    <style>
+      .sans{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.mono{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}.muted{fill:#71808e}.label{fill:#647381;font-size:11px;letter-spacing:1.7px}.body{fill:#dce7eb;font-size:14px}.small{font-size:12px}.card{fill:#0f161f;stroke:#26333f}.formula{fill:#10242a;stroke:#27454d}.cyan{fill:#54e7db}.orange{fill:#ff9a62}.green{fill:#67dda0}
+    </style>
+  </defs>
+  <rect width="1200" height="620" rx="20" fill="url(#bg)"/>
+  <rect width="1200" height="620" rx="20" fill="url(#grid)" opacity=".55"/>
+  <rect x="1" y="1" width="1198" height="618" rx="19" fill="none" stroke="#293540"/>
+
+  <g class="sans">
+    <rect x="42" y="34" width="36" height="36" rx="9" fill="#10252a" stroke="#2e5559"/>
+    <text x="60" y="58" text-anchor="middle" class="mono cyan" font-size="17">{ }</text>
+    <text x="91" y="59" fill="#eef5f6" font-size="20" font-weight="750">snark<tspan class="cyan">-lab</tspan></text>
+    <rect x="975" y="39" width="98" height="27" rx="14" fill="#101a21" stroke="#293945"/>
+    <circle cx="991" cy="52.5" r="4" fill="#54e7db" filter="url(#glow)"/>
+    <text x="1003" y="57" class="mono label" font-size="10">FIELD F₉₇</text>
+    <text x="1092" y="57" class="mono muted" font-size="11">RUST + WEB</text>
+
+    <text x="46" y="118" class="mono cyan" font-size="11" letter-spacing="2">INTERACTIVE PROTOCOL</text>
+    <text x="46" y="164" fill="#f1f5f7" font-size="39" font-weight="760" letter-spacing="-1.5">Sumcheck, <tspan class="cyan">unfolded.</tspan></text>
+    <text x="46" y="193" class="muted" font-size="14">An exponential sum collapses into one evaluation—one challenge at a time.</text>
+
+    <rect x="42" y="226" width="290" height="330" rx="12" class="card"/>
+    <circle cx="68" cy="253" r="13" fill="#153136" stroke="#2e5559"/>
+    <text x="68" y="257" text-anchor="middle" class="mono cyan" font-size="9">01</text>
+    <text x="91" y="257" class="body" font-weight="700">Polynomial table</text>
+    <text x="62" y="294" class="mono label">EVALUATION VECTOR</text>
+    <rect x="62" y="307" width="250" height="54" rx="7" fill="#080d12" stroke="#2a3742"/>
+    <text x="76" y="339" class="mono body">3, 1, 4, 1, 5, 9, 2, 6</text>
+    <text x="62" y="386" class="mono label">CLAIMED SUM</text>
+    <rect x="62" y="399" width="250" height="43" rx="7" fill="#080d12" stroke="#2a3742"/>
+    <text x="77" y="426" class="mono body">31 mod 97</text>
+    <rect x="62" y="466" width="250" height="48" rx="8" fill="url(#cyan)"/>
+    <polygon points="91,482 91,499 105,490.5" fill="#07110f"/>
+    <text x="178" y="496" text-anchor="middle" fill="#07110f" font-size="13" font-weight="800">RUN PROTOCOL</text>
+    <text x="62" y="538" class="mono muted" font-size="10">8 evaluations  ·  3 variables</text>
+
+    <rect x="351" y="226" width="807" height="330" rx="12" class="card"/>
+    <text x="375" y="253" class="mono label">02 / PROVER ↔ VERIFIER TRANSCRIPT</text>
+    <rect x="1025" y="239" width="108" height="27" rx="14" fill="#10261d" stroke="#29503d"/>
+    <circle cx="1042" cy="252.5" r="6" fill="#67dda0"/>
+    <path d="m1039 252 2 2 4-5" fill="none" stroke="#0c2619" stroke-width="2"/>
+    <text x="1054" y="257" class="mono green" font-size="10">ACCEPTED</text>
+    <line x1="375" y1="278" x2="1133" y2="278" stroke="#24303a"/>
+
+    <g transform="translate(375 298)">
+      <circle cx="14" cy="34" r="14" fill="#17343a"/><text x="14" y="38" text-anchor="middle" class="mono cyan" font-size="10">1</text>
+      <rect x="40" width="718" height="68" rx="8" fill="#101923" stroke="#26343f"/>
+      <text x="58" y="22" class="mono label">PROVER SENDS</text><text x="58" y="47" class="mono body">g₁(0) = 14    g₁(1) = 17</text>
+      <rect x="480" y="16" width="211" height="36" rx="6" class="formula"/><text x="495" y="39" class="mono cyan" font-size="12">challenge r₁ = 13</text>
+    </g>
+    <g transform="translate(375 376)">
+      <circle cx="14" cy="34" r="14" fill="#17343a"/><text x="14" y="38" text-anchor="middle" class="mono cyan" font-size="10">2</text>
+      <rect x="40" width="718" height="68" rx="8" fill="#101923" stroke="#26343f"/>
+      <text x="58" y="22" class="mono label">PROVER SENDS</text><text x="58" y="47" class="mono body">g₂(0) = 41    g₂(1) = 22</text>
+      <rect x="480" y="16" width="211" height="36" rx="6" class="formula"/><text x="495" y="39" class="mono cyan" font-size="12">challenge r₂ = 62</text>
+    </g>
+    <g transform="translate(375 454)">
+      <circle cx="14" cy="34" r="14" fill="#17343a"/><text x="14" y="38" text-anchor="middle" class="mono cyan" font-size="10">3</text>
+      <rect x="40" width="718" height="68" rx="8" fill="#101923" stroke="#26343f"/>
+      <text x="58" y="22" class="mono label">FINAL ORACLE CHECK</text><text x="58" y="47" class="mono body">claim = f(r₁, r₂, r₃) = 45</text>
+      <rect x="480" y="16" width="211" height="36" rx="6" fill="#10261d" stroke="#29503d"/><text x="495" y="39" class="mono green" font-size="12">✓ consistency holds</text>
+    </g>
+
+    <rect x="42" y="574" width="1116" height="28" rx="6" fill="#0e181e" stroke="#24333d"/>
+    <text x="62" y="593" class="mono orange" font-size="10">PRODUCT TREE</text>
+    <rect x="167" y="584" width="278" height="7" rx="3.5" fill="#ff8a4c"/>
+    <text x="462" y="593" class="mono muted" font-size="10">21 PASSES</text>
+    <text x="595" y="593" class="mono cyan" font-size="10">RATIONAL STREAM</text>
+    <rect x="724" y="584" width="83" height="7" rx="3.5" fill="#54e7db" filter="url(#glow)"/>
+    <text x="824" y="593" class="mono muted" font-size="10">1 PASS</text>
+    <text x="1044" y="593" class="mono green" font-size="10">~21× LESS I/O</text>
+  </g>
+</svg>

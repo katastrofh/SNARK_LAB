@@ -1,0 +1,23 @@
+[workspace]
+members = [
+  "crates/field",
+  "crates/multilinear",
+  "crates/sumcheck",
+  "crates/zerocheck",
+  "crates/permcheck",
+  "crates/benches",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/example/snark-lab"
+
+[workspace.dependencies]
+field = { path = "crates/field" }
+multilinear = { path = "crates/multilinear" }
+sumcheck = { path = "crates/sumcheck" }
+zerocheck = { path = "crates/zerocheck" }
+permcheck = { path = "crates/permcheck" }
