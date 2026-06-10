@@ -1,0 +1,10 @@
+[package]
+name = "zerocheck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+field.workspace = true
+multilinear.workspace = true
+sumcheck.workspace = true

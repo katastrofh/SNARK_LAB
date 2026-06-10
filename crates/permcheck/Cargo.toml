@@ -1,0 +1,8 @@
+[package]
+name = "permcheck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+field.workspace = true
