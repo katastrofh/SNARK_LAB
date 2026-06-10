@@ -1,23 +1,25 @@
-# Permutation checks: products and rational fingerprints
+# Transcript-bound product and rational PermCheck
 
-Two columns `a` and `b` are permutations when they contain the same multiset. A random challenge `β` turns this into a fingerprint comparison.
+The Rust crate checks multisets of tagged values. Each row is compressed as
+
+```text
+valueᵢ + β · tagᵢ + γ,
+```
+
+where both columns are bound to a domain-separated Merlin transcript before `β` and `γ` are derived.
 
 ## Product fingerprint
 
 ```text
-Πᵢ (β + aᵢ) = Πᵢ (β + bᵢ).
+Πᵢ (valueᵢ + β tagᵢ + γ).
 ```
-
-This is the familiar grand-product identity. In streamed implementations, constructing or reducing product layers can require intermediate buffers and repeated reads/writes.
 
 ## Rational fingerprint
 
-Take the logarithmic derivative of the characteristic product:
-
 ```text
-Σᵢ 1/(β + aᵢ) = Σᵢ 1/(β + bᵢ).
+Σᵢ 1/(valueᵢ + β tagᵢ + γ).
 ```
 
-Each side can be accumulated in a single pass with constant live state. The trade-off is inversion work (normally batchable) and the need to avoid poles where `β = -aᵢ`.
+The rational path returns an explicit `Pole` error if a denominator is zero. In a large field this event is negligible for honest data, but protocol behavior is still defined rather than relying on a panic. Production integrations can resample in an outer protocol with an explicitly domain-separated retry counter, or prove denominator nonzero constraints.
 
-One challenge gives a probabilistic identity test, not a standalone production argument. Real systems bind columns to commitments, derive challenges cryptographically, manage extension-field soundness, and prove the fingerprint relation inside the relevant polynomial protocol.
+These are transcript-correct fingerprint checks, not yet commitment-backed arguments. A future oracle layer must bind committed columns and prove the product/rational identity inside the chosen polynomial protocol.

@@ -5,5 +5,9 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-field.workspace = true
+ark-ff.workspace = true
 multilinear.workspace = true
+snark-lab-transcript.workspace = true
+
+[dev-dependencies]
+ark-bls12-381.workspace = true

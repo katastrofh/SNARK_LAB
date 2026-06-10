@@ -1,9 +1,12 @@
 [package]
-name = "field"
+name = "snark-lab-transcript"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [dependencies]
-ark-bls12-381.workspace = true
 ark-ff.workspace = true
+merlin = "3"
+
+[dev-dependencies]
+ark-bls12-381.workspace = true

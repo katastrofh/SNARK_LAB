@@ -1,19 +1,33 @@
-//! A transparent sumcheck transcript for multilinear evaluation tables.
-use field::{Fp, MODULUS};
+//! Fiat–Shamir Sumcheck for transparent multilinear evaluation tables.
+//!
+//! Prover messages are bound to a Merlin transcript before each challenge is
+//! derived. The transparent oracle is deliberately separated from a future
+//! polynomial-commitment backend.
+
+use ark_ff::PrimeField;
 use multilinear::Multilinear;
+use snark_lab_transcript::ProofTranscript;
+
+const DOMAIN: &[u8] = b"snark-lab/sumcheck/v1";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Round {
-    pub g_at_zero: Fp,
-    pub g_at_one: Fp,
-    pub challenge: Fp,
+pub struct RoundPolynomial<F: PrimeField> {
+    pub evaluation_at_zero: F,
+    pub evaluation_at_one: F,
 }
+
+impl<F: PrimeField> RoundPolynomial<F> {
+    pub fn evaluate(&self, point: F) -> F {
+        self.evaluation_at_zero + point * (self.evaluation_at_one - self.evaluation_at_zero)
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Proof {
-    pub claimed_sum: Fp,
-    pub rounds: Vec<Round>,
-    pub final_evaluation: Fp,
+pub struct Proof<F: PrimeField> {
+    pub round_polynomials: Vec<RoundPolynomial<F>>,
+    pub final_evaluation: F,
 }
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum VerifyError {
     WrongRoundCount,
@@ -21,81 +35,194 @@ pub enum VerifyError {
     FinalEvaluationMismatch,
 }
 
-fn challenge(round: usize, claim: Fp, g0: Fp, g1: Fp) -> Fp {
-    // A deterministic pedagogical transcript. Production systems use Fiat-Shamir.
-    Fp::from(
-        (claim.value() * 17 + g0.value() * 31 + g1.value() * 43 + round as u64 * 13 + 7) % MODULUS,
-    )
+fn bind_statement<F: PrimeField, T: ProofTranscript<F>>(
+    transcript: &mut T,
+    polynomial: &Multilinear<F>,
+    claimed_sum: F,
+) {
+    transcript.append_domain_separator(DOMAIN);
+    transcript.append_field_modulus();
+    transcript.append_u64(b"num-variables", polynomial.variables() as u64);
+    transcript.append_field_element(b"claimed-sum", &claimed_sum);
+    transcript.append_u64(b"oracle-length", polynomial.evaluations().len() as u64);
+    for evaluation in polynomial.evaluations() {
+        transcript.append_field_element(b"oracle-evaluation", evaluation);
+    }
 }
 
-pub fn prove(polynomial: &Multilinear, claimed_sum: Fp) -> Proof {
+fn append_round<F: PrimeField, T: ProofTranscript<F>>(
+    transcript: &mut T,
+    round: usize,
+    polynomial: &RoundPolynomial<F>,
+) {
+    transcript.append_u64(b"round-index", round as u64);
+    transcript.append_field_element(b"round-evaluation-0", &polynomial.evaluation_at_zero);
+    transcript.append_field_element(b"round-evaluation-1", &polynomial.evaluation_at_one);
+}
+
+pub fn prove<F: PrimeField, T: ProofTranscript<F>>(
+    polynomial: &Multilinear<F>,
+    claimed_sum: F,
+    transcript: &mut T,
+) -> Proof<F> {
+    bind_statement(transcript, polynomial, claimed_sum);
     let mut folded = polynomial.clone();
-    let mut claim = claimed_sum;
-    let mut rounds = Vec::with_capacity(polynomial.variables());
+    let mut round_polynomials = Vec::with_capacity(polynomial.variables());
+
     for round in 0..polynomial.variables() {
-        let g0: Fp = folded
-            .evaluations()
-            .chunks_exact(2)
-            .map(|pair| pair[0])
-            .sum();
-        let g1: Fp = folded
-            .evaluations()
-            .chunks_exact(2)
-            .map(|pair| pair[1])
-            .sum();
-        let r = challenge(round, claim, g0, g1);
-        rounds.push(Round {
-            g_at_zero: g0,
-            g_at_one: g1,
-            challenge: r,
-        });
-        claim = g0 * (Fp::ONE - r) + g1 * r;
-        folded = folded.fold_first(r);
+        let message = RoundPolynomial {
+            evaluation_at_zero: folded
+                .evaluations()
+                .chunks_exact(2)
+                .map(|pair| pair[0])
+                .sum(),
+            evaluation_at_one: folded
+                .evaluations()
+                .chunks_exact(2)
+                .map(|pair| pair[1])
+                .sum(),
+        };
+        append_round(transcript, round, &message);
+        let challenge = transcript.challenge_scalar(b"round-challenge");
+        folded = folded.fold_first(challenge);
+        round_polynomials.push(message);
     }
+
     Proof {
-        claimed_sum,
-        rounds,
+        round_polynomials,
         final_evaluation: folded.evaluations()[0],
     }
 }
 
-pub fn verify(polynomial: &Multilinear, proof: &Proof) -> Result<(), VerifyError> {
-    if proof.rounds.len() != polynomial.variables() {
+/// Derives the verifier challenges from the statement and proof messages.
+pub fn derive_challenges<F: PrimeField, T: ProofTranscript<F>>(
+    polynomial: &Multilinear<F>,
+    claimed_sum: F,
+    proof: &Proof<F>,
+    transcript: &mut T,
+) -> Vec<F> {
+    bind_statement(transcript, polynomial, claimed_sum);
+    proof
+        .round_polynomials
+        .iter()
+        .enumerate()
+        .map(|(round, message)| {
+            append_round(transcript, round, message);
+            transcript.challenge_scalar(b"round-challenge")
+        })
+        .collect()
+}
+
+pub fn verify<F: PrimeField, T: ProofTranscript<F>>(
+    polynomial: &Multilinear<F>,
+    claimed_sum: F,
+    proof: &Proof<F>,
+    transcript: &mut T,
+) -> Result<Vec<F>, VerifyError> {
+    if proof.round_polynomials.len() != polynomial.variables() {
         return Err(VerifyError::WrongRoundCount);
     }
-    let mut claim = proof.claimed_sum;
-    let mut point = Vec::with_capacity(proof.rounds.len());
-    for (round, message) in proof.rounds.iter().enumerate() {
-        if message.g_at_zero + message.g_at_one != claim
-            || message.challenge != challenge(round, claim, message.g_at_zero, message.g_at_one)
-        {
+
+    let challenges = derive_challenges(polynomial, claimed_sum, proof, transcript);
+    let mut claim = claimed_sum;
+    for (round, (message, challenge)) in proof
+        .round_polynomials
+        .iter()
+        .zip(challenges.iter().copied())
+        .enumerate()
+    {
+        if message.evaluation_at_zero + message.evaluation_at_one != claim {
             return Err(VerifyError::RoundDoesNotMatchClaim { round });
         }
-        claim = message.g_at_zero * (Fp::ONE - message.challenge)
-            + message.g_at_one * message.challenge;
-        point.push(message.challenge);
+        claim = message.evaluate(challenge);
     }
+
     if claim != proof.final_evaluation
-        || polynomial.evaluate(&point).unwrap() != proof.final_evaluation
+        || polynomial.evaluate(&challenges).ok() != Some(proof.final_evaluation)
     {
         return Err(VerifyError::FinalEvaluationMismatch);
     }
-    Ok(())
+    Ok(challenges)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test]
-    fn honest_proof_verifies() {
-        let p = Multilinear::new((0..8).map(Fp::from).collect()).unwrap();
-        let proof = prove(&p, p.sum_hypercube());
-        assert_eq!(verify(&p, &proof), Ok(()));
+    use ark_bls12_381::Fr;
+    use ark_ff::Field;
+    use snark_lab_transcript::MerlinTranscript;
+
+    fn fixture_polynomial(offset: u64) -> Multilinear<Fr> {
+        Multilinear::new((0..8).map(|value| Fr::from(value + offset)).collect()).unwrap()
     }
+
+    fn prove_fixture(polynomial: &Multilinear<Fr>) -> (Fr, Proof<Fr>) {
+        let claim = polynomial.sum_hypercube();
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        (claim, prove(polynomial, claim, &mut transcript))
+    }
+
     #[test]
-    fn false_claim_fails() {
-        let p = Multilinear::new((0..4).map(Fp::from).collect()).unwrap();
-        let proof = prove(&p, 42.into());
-        assert!(verify(&p, &proof).is_err());
+    fn valid_sumcheck_accepts() {
+        let polynomial = fixture_polynomial(0);
+        let (claim, proof) = prove_fixture(&polynomial);
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        assert!(verify(&polynomial, claim, &proof, &mut transcript).is_ok());
+    }
+
+    #[test]
+    fn tampered_claim_is_rejected() {
+        let polynomial = fixture_polynomial(0);
+        let (claim, proof) = prove_fixture(&polynomial);
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        assert!(verify(&polynomial, claim + Fr::ONE, &proof, &mut transcript).is_err());
+    }
+
+    #[test]
+    fn tampering_is_rejected() {
+        let polynomial = fixture_polynomial(0);
+        let (claim, mut proof) = prove_fixture(&polynomial);
+        proof.round_polynomials[1].evaluation_at_one += Fr::ONE;
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        assert!(verify(&polynomial, claim, &proof, &mut transcript).is_err());
+
+        let (_, mut proof) = prove_fixture(&polynomial);
+        proof.final_evaluation += Fr::ONE;
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        assert!(verify(&polynomial, claim, &proof, &mut transcript).is_err());
+    }
+
+    #[test]
+    fn same_transcript_same_challenges() {
+        let polynomial = fixture_polynomial(0);
+        let (claim, proof) = prove_fixture(&polynomial);
+        let mut left = MerlinTranscript::new(b"sumcheck-test");
+        let mut right = MerlinTranscript::new(b"sumcheck-test");
+        assert_eq!(
+            derive_challenges(&polynomial, claim, &proof, &mut left),
+            derive_challenges(&polynomial, claim, &proof, &mut right)
+        );
+    }
+
+    #[test]
+    fn public_input_and_round_messages_bind_challenges() {
+        let polynomial = fixture_polynomial(0);
+        let (claim, proof) = prove_fixture(&polynomial);
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        let original = derive_challenges(&polynomial, claim, &proof, &mut transcript);
+
+        let changed_polynomial = fixture_polynomial(1);
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        let changed_statement =
+            derive_challenges(&changed_polynomial, claim, &proof, &mut transcript);
+        assert_ne!(original[0], changed_statement[0]);
+
+        let mut changed_proof = proof.clone();
+        changed_proof.round_polynomials[0].evaluation_at_zero += Fr::ONE;
+        let mut transcript = MerlinTranscript::new(b"sumcheck-test");
+        let changed_message =
+            derive_challenges(&polynomial, claim, &changed_proof, &mut transcript);
+        assert_ne!(original[0], changed_message[0]);
+        assert_ne!(original[1], changed_message[1]);
     }
 }

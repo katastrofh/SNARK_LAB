@@ -19,3 +19,38 @@ export function parseValues(input:string){const values=input.split(/[\s,]+/).fil
 export const fingerprint=(xs:number[],beta:number)=>xs.reduce((a,x)=>mul(a,add(beta,x)),1);
 export const rational=(xs:number[],beta:number)=>xs.reduce((a,x)=>add(a,inv(add(beta,x))),0);
 export function metrics(n:number){const levels=Math.log2(n); return {product:{passes:levels+1,peak:n,read:n*32*(levels+1),write:n*32*levels,ops:n-1},rational:{passes:1,peak:3,read:n*32,write:0,ops:n*2}};}
+
+export type TranscriptJson = {
+  version: 1;
+  protocol: 'sumcheck';
+  field: { modulus: number };
+  claim: { num_variables: number; claimed_sum: number; oracle_evaluations: number[] };
+  rounds: Array<{ round: number; g_at_zero: number; g_at_one: number; challenge: number }>;
+  final: { point: number[]; oracle_evaluation: number };
+};
+
+/** Builds the versioned JSON envelope consumed by snark-lab-cli. */
+export function sumcheckTranscript(values: number[], claimed: number): TranscriptJson {
+  const canonicalValues = values.map(mod);
+  const proof = sumcheck(canonicalValues, claimed);
+  return {
+    version: 1,
+    protocol: 'sumcheck',
+    field: { modulus: P },
+    claim: {
+      num_variables: Math.log2(canonicalValues.length),
+      claimed_sum: proof.claimed,
+      oracle_evaluations: canonicalValues,
+    },
+    rounds: proof.rounds.map((round, index) => ({
+      round: index,
+      g_at_zero: round.g0,
+      g_at_one: round.g1,
+      challenge: round.challenge,
+    })),
+    final: {
+      point: proof.rounds.map(round => round.challenge),
+      oracle_evaluation: proof.final,
+    },
+  };
+}

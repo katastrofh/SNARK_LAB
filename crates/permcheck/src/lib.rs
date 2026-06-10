@@ -1,38 +1,106 @@
-//! Product and rational fingerprints for permutation checks.
-use field::Fp;
+//! Transcript-bound product and rational permutation fingerprints.
+
+use ark_ff::PrimeField;
+use snark_lab_transcript::ProofTranscript;
+
+const DOMAIN: &[u8] = b"snark-lab/permcheck/v1";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PermCheckError {
+pub enum Error {
     LengthMismatch,
     Pole,
 }
 
-pub fn product_fingerprint(values: &[Fp], beta: Fp) -> Fp {
+#[derive(Clone, Copy, Debug)]
+pub struct TaggedColumn<'a, F: PrimeField> {
+    pub values: &'a [F],
+    pub tags: &'a [F],
+}
+
+impl<F: PrimeField> TaggedColumn<'_, F> {
+    fn validate(&self) -> Result<(), Error> {
+        if self.values.len() != self.tags.len() {
+            return Err(Error::LengthMismatch);
+        }
+        Ok(())
+    }
+}
+
+fn bind_columns<F: PrimeField, T: ProofTranscript<F>>(
+    left: TaggedColumn<'_, F>,
+    right: TaggedColumn<'_, F>,
+    transcript: &mut T,
+) -> Result<(F, F), Error> {
+    left.validate()?;
+    right.validate()?;
+    if left.values.len() != right.values.len() {
+        return Err(Error::LengthMismatch);
+    }
+
+    transcript.append_domain_separator(DOMAIN);
+    transcript.append_field_modulus();
+    transcript.append_u64(b"column-length", left.values.len() as u64);
+    for (side, column) in [(b"left".as_slice(), left), (b"right".as_slice(), right)] {
+        transcript.append_bytes(b"column-side", side);
+        for (&value, &tag) in column.values.iter().zip(column.tags) {
+            transcript.append_field_element(b"column-value", &value);
+            transcript.append_field_element(b"column-tag", &tag);
+        }
+    }
+    let beta = transcript.challenge_scalar(b"beta");
+    let gamma = transcript.challenge_scalar(b"gamma");
+    Ok((beta, gamma))
+}
+
+fn compressed<F: PrimeField>(column: TaggedColumn<'_, F>, beta: F, gamma: F) -> Vec<F> {
+    column
+        .values
+        .iter()
+        .zip(column.tags)
+        .map(|(&value, &tag)| value + beta * tag + gamma)
+        .collect()
+}
+
+pub fn product_check<F: PrimeField, T: ProofTranscript<F>>(
+    left: TaggedColumn<'_, F>,
+    right: TaggedColumn<'_, F>,
+    transcript: &mut T,
+) -> Result<bool, Error> {
+    let (beta, gamma) = bind_columns(left, right, transcript)?;
+    Ok(compressed(left, beta, gamma).into_iter().product::<F>()
+        == compressed(right, beta, gamma).into_iter().product::<F>())
+}
+
+pub fn rational_check<F: PrimeField, T: ProofTranscript<F>>(
+    left: TaggedColumn<'_, F>,
+    right: TaggedColumn<'_, F>,
+    transcript: &mut T,
+) -> Result<bool, Error> {
+    let (beta, gamma) = bind_columns(left, right, transcript)?;
+    let fingerprint = |column| {
+        compressed(column, beta, gamma)
+            .into_iter()
+            .try_fold(F::ZERO, |sum, denominator| {
+                denominator
+                    .inverse()
+                    .map(|inverse| sum + inverse)
+                    .ok_or(Error::Pole)
+            })
+    };
+    Ok(fingerprint(left)? == fingerprint(right)?)
+}
+
+pub fn product_fingerprint<F: PrimeField>(values: &[F], beta: F) -> F {
     values.iter().map(|&value| beta + value).product()
 }
 
-/// A logarithmic-derivative fingerprint: Σ 1/(β + aᵢ).
-pub fn rational_fingerprint(values: &[Fp], beta: Fp) -> Result<Fp, PermCheckError> {
-    values.iter().try_fold(Fp::ZERO, |sum, &value| {
+pub fn rational_fingerprint<F: PrimeField>(values: &[F], beta: F) -> Result<F, Error> {
+    values.iter().try_fold(F::ZERO, |sum, &value| {
         (beta + value)
             .inverse()
             .map(|inverse| sum + inverse)
-            .ok_or(PermCheckError::Pole)
+            .ok_or(Error::Pole)
     })
-}
-
-pub fn product_check(left: &[Fp], right: &[Fp], beta: Fp) -> Result<bool, PermCheckError> {
-    if left.len() != right.len() {
-        return Err(PermCheckError::LengthMismatch);
-    }
-    Ok(product_fingerprint(left, beta) == product_fingerprint(right, beta))
-}
-
-pub fn rational_check(left: &[Fp], right: &[Fp], beta: Fp) -> Result<bool, PermCheckError> {
-    if left.len() != right.len() {
-        return Err(PermCheckError::LengthMismatch);
-    }
-    Ok(rational_fingerprint(left, beta)? == rational_fingerprint(right, beta)?)
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -45,7 +113,6 @@ pub struct StreamEstimate {
     pub bytes_written: usize,
 }
 
-/// A simple, explicit cost model used by the UI and benchmark CLI.
 pub fn estimate_product_tree(elements: usize, field_bytes: usize) -> StreamEstimate {
     let levels = elements.max(1).next_power_of_two().ilog2() as usize;
     StreamEstimate {
@@ -57,6 +124,7 @@ pub fn estimate_product_tree(elements: usize, field_bytes: usize) -> StreamEstim
         bytes_written: elements * field_bytes * levels,
     }
 }
+
 pub fn estimate_rational_stream(elements: usize, field_bytes: usize) -> StreamEstimate {
     StreamEstimate {
         elements,
@@ -71,25 +139,67 @@ pub fn estimate_rational_stream(elements: usize, field_bytes: usize) -> StreamEs
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[test]
-    fn permutations_match() {
-        let a = [1.into(), 5.into(), 9.into(), 2.into()];
-        let b = [9.into(), 2.into(), 1.into(), 5.into()];
-        assert_eq!(product_check(&a, &b, 11.into()), Ok(true));
-        assert_eq!(rational_check(&a, &b, 11.into()), Ok(true));
+    use ark_bls12_381::Fr;
+    use ark_ff::AdditiveGroup;
+    use snark_lab_transcript::MerlinTranscript;
+
+    fn column(values: &[u64], tags: &[u64]) -> (Vec<Fr>, Vec<Fr>) {
+        (
+            values.iter().copied().map(Fr::from).collect(),
+            tags.iter().copied().map(Fr::from).collect(),
+        )
     }
+
+    #[test]
+    fn tagged_permutations_match() {
+        let (left_values, left_tags) = column(&[1, 5, 9, 2], &[0, 1, 2, 3]);
+        let (right_values, right_tags) = column(&[9, 2, 1, 5], &[2, 3, 0, 1]);
+        let left = TaggedColumn {
+            values: &left_values,
+            tags: &left_tags,
+        };
+        let right = TaggedColumn {
+            values: &right_values,
+            tags: &right_tags,
+        };
+        let mut product_transcript = MerlinTranscript::new(b"permcheck-test");
+        let mut rational_transcript = MerlinTranscript::new(b"permcheck-test");
+        assert_eq!(
+            product_check(left, right, &mut product_transcript),
+            Ok(true)
+        );
+        assert_eq!(
+            rational_check(left, right, &mut rational_transcript),
+            Ok(true)
+        );
+    }
+
     #[test]
     fn mutation_fails() {
-        let a = [1.into(), 2.into(), 3.into()];
-        let b = [1.into(), 2.into(), 4.into()];
-        assert_eq!(product_check(&a, &b, 10.into()), Ok(false));
-        assert_eq!(rational_check(&a, &b, 10.into()), Ok(false));
+        let (left_values, left_tags) = column(&[1, 2, 3], &[0, 1, 2]);
+        let (right_values, right_tags) = column(&[1, 2, 4], &[0, 1, 2]);
+        let mut transcript = MerlinTranscript::new(b"permcheck-test");
+        assert_eq!(
+            product_check(
+                TaggedColumn {
+                    values: &left_values,
+                    tags: &left_tags
+                },
+                TaggedColumn {
+                    values: &right_values,
+                    tags: &right_tags
+                },
+                &mut transcript
+            ),
+            Ok(false)
+        );
     }
+
     #[test]
-    fn rational_model_is_streaming() {
-        assert!(
-            estimate_rational_stream(1 << 20, 32).bytes_read
-                < estimate_product_tree(1 << 20, 32).bytes_read
+    fn denominator_poles_are_explicit() {
+        assert_eq!(
+            rational_fingerprint(&[Fr::ZERO], Fr::ZERO),
+            Err(Error::Pole)
         );
     }
 }

@@ -1,32 +1,40 @@
 # Protocol examples notebook
 
-All arithmetic below is modulo 97.
+Rust examples use the BLS12-381 scalar field and Merlin. Browser examples use educational F₉₇.
 
-## Sumcheck transcript
-
-Let the two-variable multilinear table be `[1, 2, 3, 4]`. Its Boolean sum is `10`.
-
-- Round 1: `g₁(0)=1+3=4`, `g₁(1)=2+4=6`; check `4+6=10`.
-- The verifier samples `r₁` and updates to `g₁(r₁)=4(1-r₁)+6r₁`.
-- Fold pairs `[1,2]` and `[3,4]` at `r₁`.
-- Round 2 repeats the same check on the two folded values.
-- The final scalar equals the multilinear evaluation at `(r₁,r₂)`.
-
-Reproduce the exact deterministic transcript with:
+## Fiat–Shamir Sumcheck
 
 ```rust
-let p = Multilinear::new(vec![1.into(), 2.into(), 3.into(), 4.into()])?;
-let proof = sumcheck::prove(&p, p.sum_hypercube());
-sumcheck::verify(&p, &proof)?;
+use ark_bls12_381::Fr;
+use multilinear::Multilinear;
+use snark_lab_transcript::MerlinTranscript;
+
+let polynomial = Multilinear::new(
+    [1_u64, 2, 3, 4].into_iter().map(Fr::from).collect()
+)?;
+let claim = polynomial.sum_hypercube();
+
+let mut prover_transcript = MerlinTranscript::new(b"my-application");
+let proof = sumcheck::prove(&polynomial, claim, &mut prover_transcript);
+
+let mut verifier_transcript = MerlinTranscript::new(b"my-application");
+let challenges = sumcheck::verify(
+    &polynomial,
+    claim,
+    &proof,
+    &mut verifier_transcript,
+)?;
 ```
 
-## Zerocheck experiment
+Each round polynomial is appended before its challenge is derived. Prover and verifier start from the same application label and statement, so they reconstruct identical challenges without placing challenges in the proof.
 
-Start from `[0,0,0,0]`, choose a mixing point, and verify the zero claim. Change one cell to `9`; the weighted sumcheck proof generated against claim zero fails its first consistency check.
+## Zerocheck
 
-## PermCheck experiment
+Bind a constraint table, derive the random equality-mixing point from the transcript, and prove the weighted zero sum. Changing one constraint changes the mixing point as well as invalidating the zero claim.
 
-Compare `a=[1,5,9,2]` and `b=[9,2,1,5]` at a non-pole challenge. Both product and rational fingerprints match. Replace the last `5` with `6`; both usually differ.
+## Tagged PermCheck
+
+Bind two columns of `(value, tag)` pairs, derive `β,γ`, and compare either product or rational fingerprints. A reordered collection of identical pairs passes; a changed value or tag fails except with the expected large-field soundness probability.
 
 ## I/O experiment
 
@@ -34,4 +42,4 @@ Compare `a=[1,5,9,2]` and `b=[9,2,1,5]` at a non-pole challenge. Both product an
 cargo run --release -p snark-lab-benches -- 20
 ```
 
-The runtime values measure this small implementation. The reported bytes are the documented logical traffic model, making assumptions explicit and reproducible.
+The runtime uses BLS12-381 scalar arithmetic. Reported bytes remain a documented logical traffic model.

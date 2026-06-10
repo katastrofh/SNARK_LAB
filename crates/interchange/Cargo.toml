@@ -1,9 +1,9 @@
 [package]
-name = "field"
+name = "snark-lab-interchange"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [dependencies]
-ark-bls12-381.workspace = true
-ark-ff.workspace = true
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

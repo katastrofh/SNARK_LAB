@@ -1,14 +1,15 @@
 //! Dense multilinear extensions in little-endian Boolean-cube order.
-use field::Fp;
+
+use ark_ff::Field;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Multilinear {
-    evaluations: Vec<Fp>,
+pub struct Multilinear<F: Field> {
+    evaluations: Vec<F>,
     variables: usize,
 }
 
-impl Multilinear {
-    pub fn new(evaluations: Vec<Fp>) -> Result<Self, &'static str> {
+impl<F: Field> Multilinear<F> {
+    pub fn new(evaluations: Vec<F>) -> Result<Self, &'static str> {
         if evaluations.is_empty() || !evaluations.len().is_power_of_two() {
             return Err("evaluation count must be a non-zero power of two");
         }
@@ -17,47 +18,52 @@ impl Multilinear {
             evaluations,
         })
     }
-    pub fn evaluations(&self) -> &[Fp] {
+
+    pub fn evaluations(&self) -> &[F] {
         &self.evaluations
     }
+
     pub fn variables(&self) -> usize {
         self.variables
     }
-    pub fn sum_hypercube(&self) -> Fp {
+
+    pub fn sum_hypercube(&self) -> F {
         self.evaluations.iter().copied().sum()
     }
-    pub fn evaluate(&self, point: &[Fp]) -> Result<Fp, &'static str> {
+
+    pub fn evaluate(&self, point: &[F]) -> Result<F, &'static str> {
         if point.len() != self.variables {
             return Err("point dimension mismatch");
         }
         let mut layer = self.evaluations.clone();
-        for &r in point {
+        for &challenge in point {
             layer = layer
                 .chunks_exact(2)
-                .map(|pair| pair[0] * (Fp::ONE - r) + pair[1] * r)
+                .map(|pair| pair[0] + challenge * (pair[1] - pair[0]))
                 .collect();
         }
         Ok(layer[0])
     }
-    pub fn fold_first(&self, challenge: Fp) -> Self {
+
+    pub fn fold_first(&self, challenge: F) -> Self {
         Self::new(
             self.evaluations
                 .chunks_exact(2)
-                .map(|p| p[0] * (Fp::ONE - challenge) + p[1] * challenge)
+                .map(|pair| pair[0] + challenge * (pair[1] - pair[0]))
                 .collect(),
         )
-        .unwrap()
+        .expect("folding a valid multilinear table remains non-empty")
     }
 }
 
-/// eq(r, x) = Π_i (r_i x_i + (1-r_i)(1-x_i)).
-pub fn eq_evaluations(point: &[Fp]) -> Vec<Fp> {
-    let mut values = vec![Fp::ONE];
-    for &r in point {
+/// `eq(r, x) = Π_i (r_i x_i + (1-r_i)(1-x_i))` on the Boolean cube.
+pub fn eq_evaluations<F: Field>(point: &[F]) -> Vec<F> {
+    let mut values = vec![F::ONE];
+    for &coordinate in point {
         let mut next = Vec::with_capacity(values.len() * 2);
         for value in values {
-            next.push(value * (Fp::ONE - r));
-            next.push(value * r);
+            next.push(value * (F::ONE - coordinate));
+            next.push(value * coordinate);
         }
         values = next;
     }
@@ -67,18 +73,25 @@ pub fn eq_evaluations(point: &[Fp]) -> Vec<Fp> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ark_bls12_381::Fr;
+
     #[test]
     fn interpolates() {
-        let p = Multilinear::new(vec![0.into(), 2.into(), 4.into(), 8.into()]).unwrap();
-        assert_eq!(p.evaluate(&[1.into(), 1.into()]).unwrap(), 8.into());
-    }
-    #[test]
-    fn eq_sums_to_one() {
+        let polynomial =
+            Multilinear::new(vec![0_u64, 2, 4, 8].into_iter().map(Fr::from).collect()).unwrap();
         assert_eq!(
-            eq_evaluations(&[3.into(), 7.into(), 11.into()])
+            polynomial.evaluate(&[Fr::ONE, Fr::ONE]).unwrap(),
+            Fr::from(8)
+        );
+    }
+
+    #[test]
+    fn equality_polynomial_sums_to_one() {
+        assert_eq!(
+            eq_evaluations(&[Fr::from(3), Fr::from(7), Fr::from(11)])
                 .into_iter()
-                .sum::<Fp>(),
-            Fp::ONE
+                .sum::<Fr>(),
+            Fr::ONE
         );
     }
 }

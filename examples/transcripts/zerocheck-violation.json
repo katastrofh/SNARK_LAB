@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "protocol": "zerocheck",
+  "field": {
+    "modulus": 97
+  },
+  "claim": {
+    "num_variables": 3,
+    "claimed_sum": 0,
+    "oracle_evaluations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "mixing_point": [
+      5,
+      11,
+      19
+    ]
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "g_at_zero": 0,
+      "g_at_one": 20,
+      "challenge": 91
+    },
+    {
+      "round": 1,
+      "g_at_zero": 74,
+      "g_at_one": 0,
+      "challenge": 80
+    },
+    {
+      "round": 2,
+      "g_at_zero": 0,
+      "g_at_one": 71,
+      "challenge": 25
+    }
+  ],
+  "final": {
+    "point": [
+      91,
+      80,
+      25
+    ],
+    "oracle_evaluation": 29
+  }
+}

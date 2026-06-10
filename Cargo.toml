@@ -2,22 +2,29 @@
 members = [
   "crates/field",
   "crates/multilinear",
+  "crates/transcript",
   "crates/sumcheck",
   "crates/zerocheck",
   "crates/permcheck",
+  "crates/interchange",
   "crates/benches",
+  "crates/cli",
 ]
 resolver = "2"
 
 [workspace.package]
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/example/snark-lab"
 
 [workspace.dependencies]
+ark-ff = "0.5"
+ark-bls12-381 = "0.5"
 field = { path = "crates/field" }
 multilinear = { path = "crates/multilinear" }
 sumcheck = { path = "crates/sumcheck" }
 zerocheck = { path = "crates/zerocheck" }
 permcheck = { path = "crates/permcheck" }
+snark-lab-transcript = { path = "crates/transcript" }
+snark-lab-interchange = { path = "crates/interchange" }
