@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "protocol": "sumcheck",
+  "field": {
+    "modulus": 97
+  },
+  "claim": {
+    "num_variables": 3,
+    "claimed_sum": 31,
+    "oracle_evaluations": [
+      3,
+      1,
+      4,
+      1,
+      5,
+      9,
+      2,
+      6
+    ]
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "g_at_zero": 14,
+      "g_at_one": 17,
+      "challenge": 50
+    },
+    {
+      "round": 1,
+      "g_at_zero": 11,
+      "g_at_one": 57,
+      "challenge": 28
+    },
+    {
+      "round": 2,
+      "g_at_zero": 83,
+      "g_at_one": 24,
+      "challenge": 25
+    }
+  ],
+  "final": {
+    "point": [
+      50,
+      28,
+      25
+    ],
+    "oracle_evaluation": 63
+  }
+}

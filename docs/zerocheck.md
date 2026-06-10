@@ -1,23 +1,20 @@
-# Zerocheck as weighted sumcheck
+# Zerocheck as transcript-ordered weighted Sumcheck
 
-Zerocheck proves that a constraint polynomial vanishes at every point of the Boolean hypercube:
-
-```text
-f(x) = 0 for all x ∈ {0,1}ⁿ.
-```
-
-Checking all `2ⁿ` values defeats succinct verification. Instead, sample a random mixing point `τ` and use the multilinear equality polynomial
+Zerocheck proves that `f(x)=0` for every Boolean point. It reduces this to
 
 ```text
-eq(τ, x) = Πᵢ [τᵢxᵢ + (1-τᵢ)(1-xᵢ)].
+Σ_x eq(τ,x) · f(x) = 0,
+eq(τ,x) = Πᵢ [τᵢxᵢ + (1-τᵢ)(1-xᵢ)].
 ```
 
-The prover and verifier invoke sumcheck on
+The security-critical order in the Rust crate is:
 
-```text
-Σ_x eq(τ,x) f(x) = 0.
-```
+1. domain-separate Zerocheck;
+2. bind the constraint oracle and its dimensions;
+3. derive the mixing coordinates `τ` from Merlin;
+4. construct the equality-weighted multilinear table;
+5. invoke Fiat–Shamir Sumcheck on the zero claim.
 
-If every constraint value is zero, the claim is always true. If any value is nonzero, the random weighting makes cancellation unlikely. The `zerocheck` crate constructs the weighted evaluation table and delegates its transcript to the generic `sumcheck` crate.
+Thus a prover cannot choose the constraint table after learning `τ`. The current binding is transparent because the full table is appended. A commitment-backed version will append an oracle commitment at step 2 and verify openings after Sumcheck.
 
-The web lab lets you toggle one bad constraint and watch the ordinary sumcheck reduction reject the zero claim.
+Tests use BLS12-381 `Fr`, accept an all-zero table, reject a nonzero constraint table, and confirm that changing the bound constraint oracle changes `τ`.
