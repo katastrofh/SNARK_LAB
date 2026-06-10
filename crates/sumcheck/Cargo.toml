@@ -7,6 +7,7 @@ license.workspace = true
 [dependencies]
 ark-ff.workspace = true
 multilinear.workspace = true
+snark-lab-oracle.workspace = true
 snark-lab-transcript.workspace = true
 
 [dev-dependencies]
