@@ -3,6 +3,7 @@ members = [
   "crates/field",
   "crates/multilinear",
   "crates/transcript",
+  "crates/oracle",
   "crates/sumcheck",
   "crates/zerocheck",
   "crates/permcheck",
@@ -28,3 +29,4 @@ zerocheck = { path = "crates/zerocheck" }
 permcheck = { path = "crates/permcheck" }
 snark-lab-transcript = { path = "crates/transcript" }
 snark-lab-interchange = { path = "crates/interchange" }
+snark-lab-oracle = { path = "crates/oracle" }

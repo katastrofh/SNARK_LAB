@@ -510,6 +510,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "snark-lab-oracle"
+version = "0.1.0"
+dependencies = [
+ "ark-bls12-381",
+ "ark-ff",
+ "multilinear",
+ "snark-lab-transcript",
+]
+
+[[package]]
 name = "snark-lab-transcript"
 version = "0.2.0"
 dependencies = [
