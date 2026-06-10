@@ -67,7 +67,9 @@ pub enum TranscriptError {
     InvalidEvaluationCount,
     VariableCountMismatch,
     InvalidMixingPoint,
+    ClaimedSumMismatch,
     ZerocheckClaimMustBeZero,
+    NonZeroConstraint,
     WrongRoundCount,
     WrongRoundIndex { position: usize, declared: usize },
     RoundDoesNotMatchClaim { round: usize },
@@ -87,9 +89,15 @@ impl fmt::Display for TranscriptError {
                 write!(f, "oracle evaluation count must be a non-zero power of two")
             }
             Self::VariableCountMismatch => write!(f, "variable count does not match oracle table"),
+
             Self::InvalidMixingPoint => write!(f, "invalid Zerocheck mixing point"),
+            Self::ClaimedSumMismatch => write!(f, "claimed sum does not match oracle table"),
             Self::ZerocheckClaimMustBeZero => write!(f, "Zerocheck claimed sum must be zero"),
+            Self::NonZeroConstraint => {
+                write!(f, "Zerocheck constraint table contains a nonzero entry")
+            }
             Self::WrongRoundCount => write!(f, "wrong round count"),
+
             Self::WrongRoundIndex { position, declared } => write!(
                 f,
                 "round index mismatch at position {position}: found {declared}"
@@ -129,17 +137,6 @@ fn canonical(value: u64, path: impl Into<String>) -> Result<u64, TranscriptError
     }
 }
 
-fn equality_evaluations(point: &[u64]) -> Vec<u64> {
-    let mut values = vec![1];
-    for &coordinate in point {
-        values = values
-            .into_iter()
-            .flat_map(|value| [mul(value, sub(1, coordinate)), mul(value, coordinate)])
-            .collect();
-    }
-    values
-}
-
 fn evaluate(mut table: Vec<u64>, point: &[u64]) -> u64 {
     for &challenge in point {
         table = table
@@ -148,10 +145,6 @@ fn evaluate(mut table: Vec<u64>, point: &[u64]) -> u64 {
             .collect();
     }
     table[0]
-}
-
-fn challenge(round: usize, claim: u64, g0: u64, g1: u64) -> u64 {
-    (claim * 17 + g0 * 31 + g1 * 43 + round as u64 * 13 + 7) % EDUCATIONAL_MODULUS
 }
 
 pub fn verify_transcript(transcript: &Transcript) -> Result<(), TranscriptError> {
@@ -175,46 +168,47 @@ pub fn verify_transcript(transcript: &Transcript) -> Result<(), TranscriptError>
         return Err(TranscriptError::WrongRoundCount);
     }
 
-    let mut table = transcript
+    let table = transcript
         .claim
         .oracle_evaluations
         .iter()
         .enumerate()
         .map(|(index, &value)| canonical(value, format!("claim.oracle_evaluations[{index}]")))
         .collect::<Result<Vec<_>, _>>()?;
-    table = match transcript.protocol {
+    let claimed_sum = canonical(transcript.claim.claimed_sum, "claim.claimed_sum")?;
+
+    match transcript.protocol {
         Protocol::Sumcheck => {
             if transcript.claim.mixing_point.is_some() {
                 return Err(TranscriptError::InvalidMixingPoint);
             }
-            table
+
+            let table_sum = table.iter().copied().fold(0u64, add);
+            if table_sum != claimed_sum {
+                return Err(TranscriptError::ClaimedSumMismatch);
+            }
         }
         Protocol::Zerocheck => {
-            if transcript.claim.claimed_sum != 0 {
+            if claimed_sum != 0 {
                 return Err(TranscriptError::ZerocheckClaimMustBeZero);
             }
-            let point = transcript
-                .claim
-                .mixing_point
-                .as_ref()
-                .ok_or(TranscriptError::InvalidMixingPoint)?;
-            if point.len() != variables {
-                return Err(TranscriptError::InvalidMixingPoint);
-            }
-            let point = point
-                .iter()
-                .enumerate()
-                .map(|(index, &value)| canonical(value, format!("claim.mixing_point[{index}]")))
-                .collect::<Result<Vec<_>, _>>()?;
-            table
-                .into_iter()
-                .zip(equality_evaluations(&point))
-                .map(|(value, equality)| mul(value, equality))
-                .collect()
-        }
-    };
 
-    let mut claim = canonical(transcript.claim.claimed_sum, "claim.claimed_sum")?;
+            if table.iter().any(|&value| value != 0) {
+                return Err(TranscriptError::NonZeroConstraint);
+            }
+
+            if let Some(point) = &transcript.claim.mixing_point {
+                if point.len() != variables {
+                    return Err(TranscriptError::InvalidMixingPoint);
+                }
+                for (index, &value) in point.iter().enumerate() {
+                    canonical(value, format!("claim.mixing_point[{index}]"))?;
+                }
+            }
+        }
+    }
+
+    let mut claim = claimed_sum;
     let mut point = Vec::with_capacity(variables);
     for (position, round) in transcript.rounds.iter().enumerate() {
         if round.round != position {
@@ -226,7 +220,7 @@ pub fn verify_transcript(transcript: &Transcript) -> Result<(), TranscriptError>
         let g0 = canonical(round.g_at_zero, format!("rounds[{position}].g_at_zero"))?;
         let g1 = canonical(round.g_at_one, format!("rounds[{position}].g_at_one"))?;
         let round_challenge = canonical(round.challenge, format!("rounds[{position}].challenge"))?;
-        if add(g0, g1) != claim || round_challenge != challenge(position, claim, g0, g1) {
+        if add(g0, g1) != claim {
             return Err(TranscriptError::RoundDoesNotMatchClaim { round: position });
         }
         claim = fold(g0, g1, round_challenge);

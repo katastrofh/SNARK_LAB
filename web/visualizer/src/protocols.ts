@@ -15,7 +15,26 @@ export function sumcheck(values:number[], claimed?:number){
   }
   return {claimed:initial,rounds,final:layer[0],accepted:rounds.every(r=>add(r.g0,r.g1)===r.claimIn)&&claim===layer[0]};
 }
-export function parseValues(input:string){const values=input.split(/[\s,]+/).filter(Boolean).map(Number); if(!values.length||values.some(Number.isNaN)||(values.length & (values.length - 1)) !== 0) throw new Error('Enter 2, 4, 8, or 16 integers.'); return values.map(mod);}
+
+export function parseValues(input: string) {
+  const values = input
+    .split(/[\s,]+/)
+    .filter(Boolean)
+    .map((raw) => {
+      const n = Number(raw);
+      if (!Number.isSafeInteger(n)) {
+        throw new Error("Enter only finite integer field elements.");
+      }
+      return mod(n);
+    });
+
+  if (!values.length || (values.length & (values.length - 1)) !== 0) {
+    throw new Error("Enter 2, 4, 8, or 16 integers.");
+  }
+
+  return values;
+}
+
 export const fingerprint=(xs:number[],beta:number)=>xs.reduce((a,x)=>mul(a,add(beta,x)),1);
 export const rational=(xs:number[],beta:number)=>xs.reduce((a,x)=>add(a,inv(add(beta,x))),0);
 export function metrics(n:number){const levels=Math.log2(n); return {product:{passes:levels+1,peak:n,read:n*32*(levels+1),write:n*32*levels,ops:n-1},rational:{passes:1,peak:3,read:n*32,write:0,ops:n*2}};}
