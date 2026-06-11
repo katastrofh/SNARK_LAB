@@ -2,6 +2,8 @@ use ark_ff::PrimeField;
 use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
+use crate::ipa_transcript::IpaTranscriptRound;
+
 use crate::pcs::{
     validate_opening_point, validate_supported_variables, MultilinearPcs, PcsShapeError,
 };
@@ -47,6 +49,7 @@ pub struct IpaCommitment {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct IpaOpening<F: PrimeField> {
     pub claimed_value: F,
+    pub rounds: Vec<IpaTranscriptRound>,
     pub proof_bytes: Vec<u8>,
 }
 
@@ -227,6 +230,7 @@ mod tests {
 
         let opening = IpaOpening {
             claimed_value: Fr::from(7),
+            rounds: Vec::new(),
             proof_bytes: vec![4, 5, 6],
         };
 
@@ -258,6 +262,7 @@ mod tests {
 
         let opening = IpaOpening {
             claimed_value: Fr::from(7),
+            rounds: Vec::new(),
             proof_bytes: vec![4, 5, 6],
         };
 
