@@ -1,24 +1,112 @@
 export const P = 97;
-export const mod = (n: number) => ((n % P) + P) % P;
-export const add = (a: number, b: number) => mod(a + b);
-export const mul = (a: number, b: number) => mod(a * b);
-export const pow = (a: number, n: number) => { let r=1,b=mod(a); while(n){if(n&1)r=mul(r,b);b=mul(b,b);n>>=1;} return r; };
-export const inv = (a: number) => { if(mod(a)===0) throw new Error('pole'); return pow(a,P-2); };
-export type Round={g0:number;g1:number;challenge:number;claimIn:number;claimOut:number;remaining:number[]};
-export function sumcheck(values:number[], claimed?:number){
-  let layer=values.map(mod), claim=claimed===undefined?mod(layer.reduce((a,b)=>a+b,0)):mod(claimed); const initial=claim; const rounds:Round[]=[];
-  for(let i=0;layer.length>1;i++){
-    let g0=0,g1=0; for(let j=0;j<layer.length;j+=2){g0=add(g0,layer[j]);g1=add(g1,layer[j+1]);}
-    const challenge=mod(claim*17+g0*31+g1*43+i*13+7); const next=add(mul(g0,1-challenge),mul(g1,challenge));
-    layer=Array.from({length:layer.length/2},(_,j)=>add(mul(layer[j*2],1-challenge),mul(layer[j*2+1],challenge)));
-    rounds.push({g0,g1,challenge,claimIn:claim,claimOut:next,remaining:layer}); claim=next;
+export const MAX_BROWSER_EVALUATIONS = 1 << 12;
+
+export const mod = (value: number) => ((value % P) + P) % P;
+export const add = (left: number, right: number) => mod(left + right);
+export const mul = (left: number, right: number) => mod(left * right);
+
+export function pow(value: number, exponent: number) {
+  let result = 1;
+  let base = mod(value);
+  let remaining = exponent;
+  while (remaining > 0) {
+    if (remaining & 1) result = mul(result, base);
+    base = mul(base, base);
+    remaining >>= 1;
   }
-  return {claimed:initial,rounds,final:layer[0],accepted:rounds.every(r=>add(r.g0,r.g1)===r.claimIn)&&claim===layer[0]};
+  return result;
 }
-export function parseValues(input:string){const values=input.split(/[\s,]+/).filter(Boolean).map(Number); if(!values.length||values.some(Number.isNaN)||(values.length & (values.length - 1)) !== 0) throw new Error('Enter 2, 4, 8, or 16 integers.'); return values.map(mod);}
-export const fingerprint=(xs:number[],beta:number)=>xs.reduce((a,x)=>mul(a,add(beta,x)),1);
-export const rational=(xs:number[],beta:number)=>xs.reduce((a,x)=>add(a,inv(add(beta,x))),0);
-export function metrics(n:number){const levels=Math.log2(n); return {product:{passes:levels+1,peak:n,read:n*32*(levels+1),write:n*32*levels,ops:n-1},rational:{passes:1,peak:3,read:n*32,write:0,ops:n*2}};}
+
+export function inv(value: number) {
+  if (mod(value) === 0) throw new Error('Denominator is zero in F₉₇.');
+  return pow(value, P - 2);
+}
+
+export type Round = {
+  g0: number;
+  g1: number;
+  challenge: number;
+  claimIn: number;
+  claimOut: number;
+  remaining: number[];
+};
+
+/** Educational F_97 transcript; the Rust core uses Merlin over BLS12-381 Fr. */
+export function sumcheck(values: number[], claimed?: number) {
+  let layer = values.map(mod);
+  let claim = claimed === undefined ? mod(layer.reduce((sum, value) => sum + value, 0)) : mod(claimed);
+  const initial = claim;
+  const rounds: Round[] = [];
+
+  for (let round = 0; layer.length > 1; round += 1) {
+    let g0 = 0;
+    let g1 = 0;
+    for (let index = 0; index < layer.length; index += 2) {
+      g0 = add(g0, layer[index]);
+      g1 = add(g1, layer[index + 1]);
+    }
+    const challenge = mod(claim * 17 + g0 * 31 + g1 * 43 + round * 13 + 7);
+    const claimOut = add(mul(g0, 1 - challenge), mul(g1, challenge));
+    layer = Array.from({ length: layer.length / 2 }, (_, index) =>
+      add(mul(layer[index * 2], 1 - challenge), mul(layer[index * 2 + 1], challenge)),
+    );
+    rounds.push({ g0, g1, challenge, claimIn: claim, claimOut, remaining: layer });
+    claim = claimOut;
+  }
+
+  return {
+    claimed: initial,
+    rounds,
+    final: layer[0],
+    accepted: rounds.every(round => add(round.g0, round.g1) === round.claimIn) && claim === layer[0],
+  };
+}
+
+export function parseValues(input: string) {
+  const tokens = input.split(/[\s,]+/).filter(Boolean);
+  if (!tokens.length || tokens.length > MAX_BROWSER_EVALUATIONS || (tokens.length & (tokens.length - 1)) !== 0) {
+    throw new Error(`Enter a power-of-two table with at most ${MAX_BROWSER_EVALUATIONS} integers.`);
+  }
+  const values = tokens.map(Number);
+  if (values.some(value => !Number.isSafeInteger(value))) {
+    throw new Error('Every evaluation must be a safe integer.');
+  }
+  return values.map(mod);
+}
+
+export function parseClaim(input: string) {
+  const value = Number(input);
+  if (!Number.isSafeInteger(value)) throw new Error('The claim must be a safe integer.');
+  return mod(value);
+}
+
+export const fingerprint = (values: number[], beta: number) =>
+  values.reduce((product, value) => mul(product, add(beta, value)), 1);
+
+export const rational = (values: number[], beta: number) =>
+  values.reduce((sum, value) => add(sum, inv(add(beta, value))), 0);
+
+export function equalityWeights(point: number[]) {
+  let values = [1];
+  point.forEach(coordinate => {
+    values = values.flatMap(value => [mul(value, 1 - coordinate), mul(value, coordinate)]);
+  });
+  return values;
+}
+
+export function metrics(elements: number) {
+  const levels = Math.log2(elements);
+  return {
+    product: {
+      passes: levels + 1,
+      peak: elements,
+      read: elements * 32 * (levels + 1),
+      write: elements * 32 * levels,
+      ops: elements - 1,
+    },
+    rational: { passes: 1, peak: 3, read: elements * 32, write: 0, ops: elements * 2 },
+  };
+}
 
 export type TranscriptJson = {
   version: 1;
@@ -29,7 +117,6 @@ export type TranscriptJson = {
   final: { point: number[]; oracle_evaluation: number };
 };
 
-/** Builds the versioned JSON envelope consumed by snark-lab-cli. */
 export function sumcheckTranscript(values: number[], claimed: number): TranscriptJson {
   const canonicalValues = values.map(mod);
   const proof = sumcheck(canonicalValues, claimed);

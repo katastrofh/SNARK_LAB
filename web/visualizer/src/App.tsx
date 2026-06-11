@@ -1,24 +1,441 @@
 import { useMemo, useState } from 'react';
-import { Activity, ArrowRight, BookOpen, Braces, Check, ChevronRight, CircleDot, Code2, Database, Download, Layers3, Play, RotateCcw, ShieldCheck, Shuffle, Sigma, X, Zap } from 'lucide-react';
-import { fingerprint, metrics, mod, parseValues, P, rational, sumcheck, sumcheckTranscript } from './protocols';
+import {
+  Activity,
+  ArrowRight,
+  Binary,
+  BookOpen,
+  Braces,
+  Check,
+  ChevronRight,
+  CircleDot,
+  Database,
+  Download,
+  Fingerprint,
+  Gauge,
+  Info,
+  Layers3,
+  LockKeyhole,
+  Play,
+  RotateCcw,
+  ShieldCheck,
+  Shuffle,
+  Sigma,
+  Sparkles,
+  TriangleAlert,
+  X,
+  Zap,
+} from 'lucide-react';
+import {
+  equalityWeights,
+  fingerprint,
+  metrics,
+  mod,
+  parseClaim,
+  parseValues,
+  P,
+  rational,
+  sumcheck,
+  sumcheckTranscript,
+} from './protocols';
 
-type Tab='sumcheck'|'zerocheck'|'permcheck'|'scribe';
-const tabs:{id:Tab;label:string;icon:typeof Sigma}[]=[{id:'sumcheck',label:'Sumcheck',icon:Sigma},{id:'zerocheck',label:'Zerocheck',icon:CircleDot},{id:'permcheck',label:'PermCheck',icon:Shuffle},{id:'scribe',label:'Scribe I/O',icon:Database}];
-const fmt=(n:number)=>n>=2**30?`${(n/2**30).toFixed(1)} GiB`:n>=2**20?`${(n/2**20).toFixed(1)} MiB`:`${(n/1024).toFixed(1)} KiB`;
-const downloadJson=(name:string,value:unknown)=>{const blob=new Blob([JSON.stringify(value,null,2)+'\n'],{type:'application/json'});const url=URL.createObjectURL(blob);const anchor=document.createElement('a');anchor.href=url;anchor.download=name;anchor.click();URL.revokeObjectURL(url);};
+type Tab = 'sumcheck' | 'zerocheck' | 'permcheck' | 'scribe';
+type Icon = typeof Sigma;
 
-function Header({tab,setTab}:{tab:Tab;setTab:(t:Tab)=>void}){return <><header><a className="brand" href="#"><span className="brandmark"><Braces size={19}/></span><span>snark<span>-lab</span></span></a><nav>{tabs.map(({id,label,icon:Icon})=><button className={tab===id?'active':''} onClick={()=>setTab(id)} key={id}><Icon size={15}/>{label}</button>)}</nav><div className="head-actions"><span className="field-pill"><i/> FIELD F<sub>97</sub></span><a aria-label="GitHub" href="https://github.com" className="icon-button"><Code2 size={18}/></a></div></header><div className="mobile-tabs">{tabs.map(({id,label})=><button className={tab===id?'active':''} onClick={()=>setTab(id)} key={id}>{label}</button>)}</div></>}
-function Badge({children}:{children:React.ReactNode}){return <span className="eyebrow"><Zap size={12}/>{children}</span>}
-function Formula({children}:{children:React.ReactNode}){return <code className="formula">{children}</code>}
-function Status({ok,label}:{ok:boolean;label:string}){return <span className={`status ${ok?'ok':'bad'}`}>{ok?<Check size={14}/>:<X size={14}/>} {label}</span>}
+const tabs: Array<{ id: Tab; label: string; eyebrow: string; icon: Icon }> = [
+  { id: 'sumcheck', label: 'Sumcheck', eyebrow: 'Reduce a hypercube sum', icon: Sigma },
+  { id: 'zerocheck', label: 'Zerocheck', eyebrow: 'Randomly mix constraints', icon: CircleDot },
+  { id: 'permcheck', label: 'PermCheck', eyebrow: 'Compare tagged multisets', icon: Shuffle },
+  { id: 'scribe', label: 'Streaming', eyebrow: 'Model prover I/O', icon: Database },
+];
 
-function Sumcheck(){const [text,setText]=useState('3, 1, 4, 1, 5, 9, 2, 6'); const [claimText,setClaimText]=useState('31'); const [step,setStep]=useState(0); let values:number[]=[]; let error=''; try{values=parseValues(text)}catch(e){error=(e as Error).message} const proof=useMemo(()=>values.length?sumcheck(values,Number(claimText)):null,[text,claimText]); const max=proof?.rounds.length??0; const visible=proof?.rounds.slice(0,step)??[]; const finalVisible=step>max;
-return <main><section className="hero"><Badge>INTERACTIVE PROTOCOL</Badge><h1>Sumcheck, <em>unfolded.</em></h1><p>Watch an exponential sum collapse into a single evaluation—one verifier challenge at a time.</p></section><div className="workspace"><section className="panel setup"><div className="panel-title"><span>01</span><div><h2>Polynomial table</h2><p>Evaluations over the Boolean hypercube</p></div></div><label>Evaluation vector <small>POWER OF TWO</small></label><textarea value={text} onChange={e=>{setText(e.target.value);setStep(0)}} spellCheck={false}/>{error&&<p className="error">{error}</p>}<div className="meta-row"><span><Layers3 size={14}/>{values.length||0} evaluations</span><span>{values.length?Math.log2(values.length):0} variables</span></div><label>Claimed sum <small>MOD {P}</small></label><input value={claimText} onChange={e=>{setClaimText(e.target.value);setStep(0)}}/><button className="run" disabled={!proof} onClick={()=>setStep(s=>s>max?0:s+1)}>{step===0?<><Play size={16} fill="currentColor"/> Start protocol</>:step<=max?<><ChevronRight size={17}/> Reveal round {step}</>:<><RotateCcw size={16}/> Reset transcript</>}</button><button className="secondary export" disabled={!proof} onClick={()=>proof&&downloadJson('sumcheck-transcript.json',sumcheckTranscript(values,Number(claimText)))}><Download size={16}/> Export transcript JSON</button></section><section className="panel transcript"><div className="transcript-head"><div><span className="section-index">02 / TRANSCRIPT</span><h2>Prover ↔ Verifier</h2></div>{proof&&<Status ok={finalVisible&&proof.accepted} label={finalVisible?(proof.accepted?'ACCEPTED':'REJECTED'):'IN PROGRESS'}/>}</div>{step===0?<div className="empty"><div className="orb"><Sigma size={30}/></div><h3>Ready to prove</h3><p>The prover claims the table sums to <Formula>{proof?.claimed??'—'}</Formula>. Start the protocol to inspect every message.</p></div>:<div className="rounds"><div className="claim-line"><span>Initial claim</span><Formula>H₀ = {proof?.claimed}</Formula></div>{visible.map((r,i)=><article className="round" key={i}><div className="round-number">{i+1}</div><div className="round-body"><div className="round-top"><strong>Round {i+1}</strong><span>{r.remaining.length} folded value{r.remaining.length!==1?'s':''} remain</span></div><div className="message"><span className="actor prover">P</span><div><small>PROVER SENDS LINEAR POLYNOMIAL</small><Formula>g<sub>{i+1}</sub>(0) = {r.g0} &nbsp;·&nbsp; g<sub>{i+1}</sub>(1) = {r.g1}</Formula></div></div><div className="checkline"><Check size={13}/> {r.g0} + {r.g1} ≡ {mod(r.g0+r.g1)} = previous claim</div><div className="message verifier-msg"><span className="actor verifier">V</span><div><small>VERIFIER SAMPLES CHALLENGE</small><Formula>r<sub>{i+1}</sub> = {r.challenge}</Formula></div><ArrowRight size={15}/><Formula>new claim = {r.claimOut}</Formula></div></div></article>)}{finalVisible&&proof&&<div className={`verdict ${proof.accepted?'accept':'reject'}`}><ShieldCheck size={25}/><div><strong>{proof.accepted?'Claim accepted':'Claim rejected'}</strong><p>Final claim {proof.rounds.at(-1)?.claimOut} {proof.accepted?'matches':'does not match'} the oracle evaluation {proof.final}.</p></div></div>}</div>}</section><aside className="panel insight"><span className="section-index">WHY IT WORKS</span><h3>One variable disappears per round.</h3><p>The verifier checks <Formula>gᵢ(0) + gᵢ(1) = claim</Formula>, then binds a fresh challenge <Formula>rᵢ</Formula>.</p><div className="complexity"><div><small>PROVER</small><strong>O(N)</strong><span>field ops</span></div><div><small>VERIFIER</small><strong>O(log N)</strong><span>rounds</span></div></div><a href="/docs/sumcheck.md">Read the protocol note <ArrowRight size={14}/></a></aside></div></main>}
+const formatBytes = (bytes: number) => {
+  if (bytes >= 2 ** 30) return `${(bytes / 2 ** 30).toFixed(1)} GiB`;
+  if (bytes >= 2 ** 20) return `${(bytes / 2 ** 20).toFixed(1)} MiB`;
+  return `${(bytes / 2 ** 10).toFixed(1)} KiB`;
+};
 
-function Zerocheck(){const [bad,setBad]=useState(false); const values=bad?[0,0,7,0,0,0,0,0]:Array(8).fill(0); const weights=[6,11,3,8,20,4,17,29]; const weighted=values.map((v,i)=>mod(v*weights[i])); const proof=sumcheck(weighted,0); return <main><section className="hero compact"><Badge>REDUCTION LAB</Badge><h1>Zerocheck → <em>Sumcheck.</em></h1><p>Compress “f vanishes everywhere” into one random, equality-weighted sum.</p></section><div className="flow"><div className="flow-card"><span>CONSTRAINT TABLE</span><h3>f(x) = 0 for every x ∈ {'{0,1}'}³</h3><div className="cells">{values.map((v,i)=><button key={i} className={v?'hot':''} onClick={()=>i===2&&setBad(!bad)}>{v}</button>)}</div><p>Click the highlighted witness cell to introduce or clear a violation.</p></div><ChevronRight className="flow-arrow"/><div className="flow-card"><span>RANDOM MIXING</span><h3>eq(τ, x) · f(x)</h3><div className="weight-list">{weights.slice(0,4).map((w,i)=><span key={i}>{values[i]} × {w} = <b>{weighted[i]}</b></span>)}</div><p>A random equality polynomial prevents violations from hiding.</p></div><ChevronRight className="flow-arrow"/><div className="flow-card result"><span>SUMCHECK CLAIM</span><div className={`big-result ${proof.accepted?'green':'red'}`}>{proof.accepted?<Check/>:<X/>}</div><h3>Σ eq(τ,x)f(x) = 0</h3><Status ok={proof.accepted} label={proof.accepted?'ACCEPTED':'REJECTED'}/><p>{proof.rounds.length} ordinary sumcheck rounds complete the reduction.</p></div></div><section className="explain-strip"><BookOpen/><div><strong>The key reduction</strong><p>If f is zero on the cube, every weighted term is zero. If not, a random τ makes accidental cancellation unlikely.</p></div><Formula>Σ<sub>x∈{'{0,1}'}ⁿ</sub> eq(τ,x) · f(x) = 0</Formula></section></main>}
+function downloadJson(name: string, value: unknown) {
+  const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = name;
+  anchor.rel = 'noopener';
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
 
-function Permcheck(){const [mutated,setMutated]=useState(false); const [beta,setBeta]=useState(17); const a=[3,8,2,9,5,1,7,4], b=mutated?[8,4,3,7,1,5,9,6]:[8,4,3,7,1,5,9,2]; let ratA=0,ratB=0,pole=false;try{ratA=rational(a,beta);ratB=rational(b,beta)}catch{pole=true} const prodA=fingerprint(a,beta),prodB=fingerprint(b,beta); return <main><section className="hero compact"><Badge>MULTISET EQUALITY</Badge><h1>Two ways to prove a <em>permutation.</em></h1><p>Compare the classic grand product with a rational, stream-friendly fingerprint.</p></section><div className="perm-layout"><section className="panel arrays"><div className="panel-title"><span>01</span><div><h2>Witness columns</h2><p>Same values, unknown ordering</p></div></div><label>Column A</label><div className="array-row">{a.map((x,i)=><i key={i}>{x}</i>)}</div><label>Column B</label><div className="array-row blue">{b.map((x,i)=><i className={mutated&&i===7?'mutated':''} key={i}>{x}</i>)}</div><button className="secondary" onClick={()=>setMutated(!mutated)}>{mutated?'Restore permutation':'Mutate one value'}</button><label>Random challenge β = <b>{beta}</b></label><input type="range" min="1" max="40" value={beta} onChange={e=>setBeta(Number(e.target.value))}/></section><section className="compare"><article className="method product"><div className="method-icon"><Layers3/></div><span>GRAND PRODUCT</span><h2>Product PermCheck</h2><Formula>Πᵢ (β + aᵢ) ?= Πᵢ (β + bᵢ)</Formula><div className="fingerprints"><b>{prodA}</b><em>{prodA===prodB?'=':'≠'}</em><b>{prodB}</b></div><Status ok={prodA===prodB} label={prodA===prodB?'MATCH':'MISMATCH'}/><p>Fast arithmetic, but materializing and reducing a product tree creates repeated passes over prover memory.</p></article><article className="method rational"><div className="method-icon"><Activity/></div><span>LOG DERIVATIVE</span><h2>Rational PermCheck</h2><Formula>Σᵢ 1/(β + aᵢ) ?= Σᵢ 1/(β + bᵢ)</Formula><div className="fingerprints"><b>{pole?'pole':ratA}</b><em>{ratA===ratB&&!pole?'=':'≠'}</em><b>{pole?'pole':ratB}</b></div><Status ok={ratA===ratB&&!pole} label={ratA===ratB&&!pole?'MATCH':'MISMATCH'}/><p>Each inverse term can be accumulated in one pass with constant working state—ideal for streamed witnesses.</p></article></section></div></main>}
+function Formula({ children }: { children: React.ReactNode }) {
+  return <code className="formula">{children}</code>;
+}
 
-function Scribe(){const [power,setPower]=useState(20); const n=2**power,m=metrics(n),ratio=(m.product.read+m.product.write)/m.rational.read; const max=m.product.read+m.product.write; return <main><section className="hero compact"><Badge>PERFORMANCE MODEL</Badge><h1>When arithmetic is cheap, <em>I/O wins.</em></h1><p>Model the memory traffic hiding behind Scribe-style streaming provers.</p></section><div className="io-layout"><section className="panel scale"><div className="panel-title"><span>01</span><div><h2>Workload scale</h2><p>32-byte field elements</p></div></div><div className="scale-value"><strong>2<sup>{power}</sup></strong><span>{n.toLocaleString()} elements</span></div><input type="range" min="10" max="26" value={power} onChange={e=>setPower(Number(e.target.value))}/><div className="scale-marks"><span>1K</span><span>1M</span><span>67M</span></div><div className="callout"><Database/><p><strong>{ratio.toFixed(1)}× less modeled I/O</strong> with the rational stream at this scale.</p></div></section><section className="panel chart"><div className="chart-head"><div><span className="section-index">02 / MEMORY TRAFFIC</span><h2>Bytes moved, not just ops</h2></div><span>LOGICAL MODEL</span></div>{[{name:'Product tree · reads',value:m.product.read,color:'orange'},{name:'Product tree · writes',value:m.product.write,color:'gold'},{name:'Rational stream',value:m.rational.read,color:'cyan'}].map(row=><div className="bar-row" key={row.name}><div><span>{row.name}</span><b>{fmt(row.value)}</b></div><div className="bar-track"><i className={row.color} style={{width:`${Math.max(2,row.value/max*100)}%`}}/></div></div>)}<div className="stats"><div><small>PRODUCT PASSES</small><strong>{m.product.passes}</strong></div><div><small>RATIONAL PASSES</small><strong>{m.rational.passes}</strong></div><div><small>STREAM STATE</small><strong>3 <span>elements</span></strong></div></div></section></div><section className="pipeline"><div><span>WITNESS STREAM</span><Database/></div><ArrowRight/><div className="tree-nodes"><i/><i/><i/><i/><i/><i/></div><ArrowRight/><div><span>PRODUCT ROOT</span><Layers3/></div><p>Classic product trees repeatedly read and write intermediate layers.</p><strong>vs.</strong><div><span>WITNESS STREAM</span><Database/></div><ArrowRight/><div className="accumulator">Σ 1/(β+aᵢ)</div><p>Rational accumulation keeps only constant state.</p></section></main>}
+function Status({ ok, children }: { ok: boolean; children: React.ReactNode }) {
+  return (
+    <span className={`status ${ok ? 'status-ok' : 'status-bad'}`}>
+      {ok ? <Check size={14} /> : <X size={14} />}
+      {children}
+    </span>
+  );
+}
 
-export function App(){const [tab,setTab]=useState<Tab>('sumcheck'); return <><Header tab={tab} setTab={setTab}/>{tab==='sumcheck'?<Sumcheck/>:tab==='zerocheck'?<Zerocheck/>:tab==='permcheck'?<Permcheck/>:<Scribe/>}<footer><span><Braces size={15}/> snark-lab</span><p>Built for protocol intuition—not production cryptography.</p><a href="/docs">Docs</a><a href="https://github.com">Source</a></footer></>}
+function Header({ active, onChange }: { active: Tab; onChange: (tab: Tab) => void }) {
+  return (
+    <header className="site-header">
+      <button className="brand" onClick={() => onChange('sumcheck')} aria-label="Open Sumcheck lab">
+        <span className="brand-mark"><Braces size={20} /></span>
+        <span>snark<span>-lab</span></span>
+      </button>
+      <nav aria-label="Protocol labs">
+        {tabs.map(({ id, label, icon: TabIcon }) => (
+          <button key={id} className={active === id ? 'active' : ''} onClick={() => onChange(id)}>
+            <TabIcon size={15} />{label}
+          </button>
+        ))}
+      </nav>
+      <div className="header-meta">
+        <span className="core-pill"><ShieldCheck size={14} /> Rust core: BLS12-381 + Merlin</span>
+        <span className="browser-pill">Browser: F<sub>97</sub></span>
+      </div>
+    </header>
+  );
+}
+
+function SecurityBoundary() {
+  return (
+    <aside className="security-boundary" aria-label="Security boundary">
+      <LockKeyhole size={18} />
+      <div>
+        <strong>Know which path you are using.</strong>
+        <p>This page is an inspectable F₉₇ model. The Rust crates use large fields and Merlin Fiat–Shamir; commitment-backed oracle openings remain roadmap work.</p>
+      </div>
+      <span className="boundary-path">docs/sumcheck.md <ArrowRight size={14} /></span>
+    </aside>
+  );
+}
+
+function PageIntro({ tab, title, accent, children }: { tab: Tab; title: string; accent: string; children: React.ReactNode }) {
+  const item = tabs.find(candidate => candidate.id === tab)!;
+  return (
+    <section className="page-intro">
+      <div className="eyebrow"><Sparkles size={13} /> {item.eyebrow}</div>
+      <h1>{title} <em>{accent}</em></h1>
+      <p>{children}</p>
+    </section>
+  );
+}
+
+function SumcheckLab() {
+  const [tableText, setTableText] = useState('3, 1, 4, 1, 5, 9, 2, 6');
+  const [claimText, setClaimText] = useState('31');
+  const [step, setStep] = useState(0);
+
+  const parsed = useMemo(() => {
+    try {
+      return { values: parseValues(tableText), claim: parseClaim(claimText), error: '' };
+    } catch (error) {
+      return { values: [] as number[], claim: 0, error: (error as Error).message };
+    }
+  }, [tableText, claimText]);
+  const proof = useMemo(
+    () => parsed.values.length ? sumcheck(parsed.values, parsed.claim) : null,
+    [parsed],
+  );
+  const rounds = proof?.rounds ?? [];
+  const finalVisible = Boolean(proof && step > rounds.length);
+  const progress = proof ? Math.min(100, (step / (rounds.length + 1)) * 100) : 0;
+
+  const resetProgress = () => setStep(0);
+  return (
+    <main>
+      <PageIntro tab="sumcheck" title="Turn an exponential sum into" accent="one point.">
+        Follow every prover polynomial, consistency check, and challenge as one Boolean variable disappears per round.
+      </PageIntro>
+      <SecurityBoundary />
+
+      <div className="lab-grid sumcheck-grid">
+        <section className="card controls-card">
+          <div className="card-heading">
+            <span className="step-index">01</span>
+            <div><h2>Define the statement</h2><p>Values are reduced into the browser field F₉₇.</p></div>
+          </div>
+          <label htmlFor="sumcheck-table">Evaluation table <small>POWER OF TWO</small></label>
+          <textarea
+            id="sumcheck-table"
+            value={tableText}
+            onChange={event => { setTableText(event.target.value); resetProgress(); }}
+            spellCheck={false}
+          />
+          <div className="input-meta">
+            <span><Layers3 size={14} /> {parsed.values.length} values</span>
+            <span>{parsed.values.length ? Math.log2(parsed.values.length) : 0} variables</span>
+          </div>
+          <label htmlFor="sumcheck-claim">Claimed sum <small>MOD {P}</small></label>
+          <input
+            id="sumcheck-claim"
+            inputMode="numeric"
+            value={claimText}
+            onChange={event => { setClaimText(event.target.value); resetProgress(); }}
+          />
+          {parsed.error && <p className="inline-error"><TriangleAlert size={14} />{parsed.error}</p>}
+          <button
+            className="primary-action"
+            disabled={!proof}
+            onClick={() => setStep(current => current > rounds.length ? 0 : current + 1)}
+          >
+            {step === 0 ? <><Play size={16} /> Start transcript</> : step <= rounds.length ? <><ChevronRight size={17} /> Reveal round {step}</> : <><RotateCcw size={16} /> Reset</>}
+          </button>
+          <button
+            className="secondary-action"
+            disabled={!proof}
+            onClick={() => proof && downloadJson('sumcheck-transcript.json', sumcheckTranscript(parsed.values, parsed.claim))}
+          >
+            <Download size={16} /> Export educational JSON
+          </button>
+        </section>
+
+        <section className="card transcript-card" aria-live="polite">
+          <div className="transcript-header">
+            <div><span className="section-label">02 / PROTOCOL TRACE</span><h2>Prover ↔ verifier</h2></div>
+            {proof && <Status ok={finalVisible && proof.accepted}>{finalVisible ? (proof.accepted ? 'Accepted' : 'Rejected') : 'In progress'}</Status>}
+          </div>
+          <progress className="progress-track" max={100} value={progress} aria-label="Protocol progress" />
+
+          {step === 0 ? (
+            <div className="empty-state">
+              <div className="protocol-orbit"><Sigma size={30} /><i /><i /><i /></div>
+              <h3>Ready to collapse {parsed.values.length || 'the'} evaluations</h3>
+              <p>Start the transcript to see why checking <Formula>gᵢ(0)+gᵢ(1)=Hᵢ₋₁</Formula> preserves the claim.</p>
+            </div>
+          ) : (
+            <div className="round-list">
+              <div className="initial-claim"><span>Initial claim</span><Formula>H₀ = {proof?.claimed}</Formula></div>
+              {rounds.slice(0, step).map((round, index) => (
+                <article className="round-card" key={index}>
+                  <div className="round-marker">{index + 1}</div>
+                  <div className="round-content">
+                    <div className="round-title"><strong>Round {index + 1}</strong><span>{round.remaining.length} folded values remain</span></div>
+                    <div className="protocol-message">
+                      <span className="actor actor-prover">P</span>
+                      <div><small>PROVER BINDS g{index + 1}</small><Formula>g(0)={round.g0} · g(1)={round.g1}</Formula></div>
+                    </div>
+                    <div className="consistency-check"><Check size={13} /> {round.g0} + {round.g1} ≡ {mod(round.g0 + round.g1)} = H{index}</div>
+                    <div className="protocol-message verifier-message">
+                      <span className="actor actor-verifier">V</span>
+                      <div><small>CHALLENGE AFTER MESSAGE</small><Formula>r{index + 1}={round.challenge}</Formula></div>
+                      <ArrowRight size={15} />
+                      <Formula>H{index + 1}={round.claimOut}</Formula>
+                    </div>
+                    <div className="fold-strip">
+                      {round.remaining.slice(0, 12).map((value, valueIndex) => <i key={valueIndex}>{value}</i>)}
+                    </div>
+                  </div>
+                </article>
+              ))}
+              {finalVisible && proof && (
+                <div className={`verdict ${proof.accepted ? 'verdict-ok' : 'verdict-bad'}`}>
+                  <ShieldCheck size={26} />
+                  <div><strong>{proof.accepted ? 'Final oracle check matches' : 'Claim rejected'}</strong><p>Folded claim {rounds.at(-1)?.claimOut} · oracle evaluation {proof.final}</p></div>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        <aside className="card explainer-card">
+          <span className="section-label">WHY THIS IS SOUND</span>
+          <h3>A dishonest polynomial must survive a fresh point.</h3>
+          <ol className="explanation-steps">
+            <li><b>Bind.</b><span>The prover sends the next univariate polynomial.</span></li>
+            <li><b>Check.</b><span>Its Boolean endpoints must equal the prior claim.</span></li>
+            <li><b>Challenge.</b><span>The verifier samples only after the message is fixed.</span></li>
+            <li><b>Reduce.</b><span>One variable is replaced by the challenge.</span></li>
+          </ol>
+          <div className="complexity-grid"><div><small>PROVER</small><strong>O(N)</strong></div><div><small>ROUNDS</small><strong>log₂N</strong></div></div>
+          <div className="production-note"><LockKeyhole size={16} /><span>Rust uses Merlin; this browser trace is deterministic for teaching and JSON replay.</span></div>
+        </aside>
+      </div>
+    </main>
+  );
+}
+
+function ZerocheckLab() {
+  const [violation, setViolation] = useState(false);
+  const constraints = [0, 0, violation ? 9 : 0, 0, 0, 0, 0, 0];
+  const mixingPoint = [5, 11, 19];
+  const weights = equalityWeights(mixingPoint);
+  const weighted = constraints.map((value, index) => mod(value * weights[index]));
+  const mixedClaim = mod(weighted.reduce((sum, value) => sum + value, 0));
+
+  return (
+    <main>
+      <PageIntro tab="zerocheck" title="Prove every constraint is" accent="zero.">
+        See how one transcript-derived point mixes an entire Boolean constraint table into a single Sumcheck claim.
+      </PageIntro>
+      <SecurityBoundary />
+      <div className="zerocheck-layout">
+        <section className="card constraint-card">
+          <div className="card-heading"><span className="step-index">01</span><div><h2>Constraint oracle</h2><p>Toggle one bad row to follow the failure.</p></div></div>
+          <div className="cube-grid">
+            {constraints.map((value, index) => <div key={index} className={value ? 'violated' : ''}><small>{index.toString(2).padStart(3, '0')}</small><strong>{value}</strong></div>)}
+          </div>
+          <button className={violation ? 'danger-action' : 'secondary-action'} onClick={() => setViolation(value => !value)}>
+            {violation ? <><X size={16} /> Remove violation</> : <><TriangleAlert size={16} /> Inject violation at 010</>}
+          </button>
+        </section>
+        <div className="flow-arrow"><ArrowRight /></div>
+        <section className="card mixing-card">
+          <span className="section-label">02 / RANDOM MIXING</span>
+          <h2>Weight with eq(τ, x)</h2>
+          <Formula>τ = ({mixingPoint.join(', ')})</Formula>
+          <div className="weight-grid">{weights.map((weight, index) => <span key={index}>eq(τ,{index}) <b>{weight}</b></span>)}</div>
+          <p><Info size={14} /> In Rust, the constraint oracle is bound before Merlin derives τ.</p>
+        </section>
+        <div className="flow-arrow"><ArrowRight /></div>
+        <section className="card result-card">
+          <span className="section-label">03 / SUMCHECK CLAIM</span>
+          <div className={`result-orb ${mixedClaim === 0 ? 'result-ok' : 'result-bad'}`}>{mixedClaim === 0 ? <Check /> : <X />}</div>
+          <h2>Σ eq(τ,x)f(x) = {mixedClaim}</h2>
+          <Status ok={mixedClaim === 0}>{mixedClaim === 0 ? 'Zero claim holds' : 'Violation exposed'}</Status>
+          <p>{mixedClaim === 0 ? 'Every weighted constraint contribution is zero.' : 'The bad row contributes a nonzero weighted term.'}</p>
+        </section>
+      </div>
+      <section className="explanation-band"><BookOpen size={20} /><div><strong>The reduction</strong><p>If f vanishes everywhere, every weighted sum is zero. If not, a random equality weighting catches the nonzero polynomial except with field-bounded probability.</p></div><Formula>Σₓ eq(τ,x) · f(x) = 0</Formula></section>
+    </main>
+  );
+}
+
+function PermcheckLab() {
+  const [mutated, setMutated] = useState(false);
+  const left = [1, 5, 9, 2];
+  const right = mutated ? [9, 2, 1, 6] : [9, 2, 1, 5];
+  const beta = 11;
+  const productLeft = fingerprint(left, beta);
+  const productRight = fingerprint(right, beta);
+  const rationalLeft = rational(left, beta);
+  const rationalRight = rational(right, beta);
+
+  return (
+    <main>
+      <PageIntro tab="permcheck" title="Compare multisets without" accent="sorting them.">
+        Contrast a grand product with its logarithmic derivative and inspect why the rational form can stream with constant live state.
+      </PageIntro>
+      <SecurityBoundary />
+      <div className="perm-layout">
+        <section className="card column-card">
+          <div className="card-heading"><span className="step-index">01</span><div><h2>Witness columns</h2><p>β = {beta} in this educational trace.</p></div></div>
+          <Column label="A" values={left} tone="orange" />
+          <Column label="B" values={right} tone="cyan" mutated={mutated} />
+          <button className={mutated ? 'danger-action' : 'secondary-action'} onClick={() => setMutated(value => !value)}>
+            {mutated ? <><RotateCcw size={16} /> Restore permutation</> : <><Shuffle size={16} /> Mutate last value</>}
+          </button>
+          <div className="production-note"><Fingerprint size={16} /><span>Rust binds tagged columns before deriving β and γ from Merlin.</span></div>
+        </section>
+        <div className="method-comparison">
+          <MethodCard
+            icon={Layers3}
+            tone="orange"
+            title="Grand product"
+            formula="Πᵢ (β + aᵢ)"
+            left={productLeft}
+            right={productRight}
+            detail="Natural algebraic identity, but product trees create intermediate layers and repeated memory traffic."
+          />
+          <MethodCard
+            icon={Activity}
+            tone="cyan"
+            title="Rational stream"
+            formula="Σᵢ 1 / (β + aᵢ)"
+            left={rationalLeft}
+            right={rationalRight}
+            detail="One streaming accumulator; production code must define denominator-pole behavior and prove the relation."
+          />
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function Column({ label, values, tone, mutated }: { label: string; values: number[]; tone: string; mutated?: boolean }) {
+  return <div className="column-row"><span>{label}</span><div>{values.map((value, index) => <i className={`${tone} ${mutated && index === values.length - 1 ? 'mutated' : ''}`} key={index}>{value}</i>)}</div></div>;
+}
+
+function MethodCard({ icon: MethodIcon, tone, title, formula, left, right, detail }: { icon: Icon; tone: string; title: string; formula: string; left: number; right: number; detail: string }) {
+  const matches = left === right;
+  return (
+    <section className={`card method-card ${tone}`}>
+      <div className="method-icon"><MethodIcon /></div>
+      <span className="section-label">FINGERPRINT</span>
+      <h2>{title}</h2>
+      <Formula>{formula}</Formula>
+      <div className="fingerprint-values"><b>{left}</b><span>vs</span><b>{right}</b></div>
+      <Status ok={matches}>{matches ? 'Fingerprints match' : 'Mismatch detected'}</Status>
+      <p>{detail}</p>
+    </section>
+  );
+}
+
+function StreamingLab() {
+  const [power, setPower] = useState(20);
+  const elements = 2 ** power;
+  const estimate = metrics(elements);
+  const productTraffic = estimate.product.read + estimate.product.write;
+  const rationalTraffic = estimate.rational.read;
+  const ratio = productTraffic / rationalTraffic;
+
+  return (
+    <main>
+      <PageIntro tab="scribe" title="See where prover time becomes" accent="data movement.">
+        Scale the witness and compare product-tree traffic against a single-pass rational accumulator.
+      </PageIntro>
+      <SecurityBoundary />
+      <div className="stream-layout">
+        <section className="card scale-card">
+          <div className="card-heading"><span className="step-index">01</span><div><h2>Workload scale</h2><p>32-byte field-element model.</p></div></div>
+          <div className="scale-number"><strong>2<sup>{power}</sup></strong><span>{elements.toLocaleString()} elements</span></div>
+          <input aria-label="Workload exponent" type="range" min="10" max="26" value={power} onChange={event => setPower(Number(event.target.value))} />
+          <div className="range-labels"><span>1K</span><span>1M</span><span>67M</span></div>
+          <div className="ratio-callout"><Gauge size={20} /><div><strong>{ratio.toFixed(0)}× less modeled traffic</strong><p>for the rational stream at this scale</p></div></div>
+        </section>
+        <section className="card traffic-card">
+          <div className="traffic-heading"><div><span className="section-label">02 / LOGICAL I/O</span><h2>Bytes moved through the prover</h2></div><span>MODEL, NOT HARDWARE COUNTERS</span></div>
+          <TrafficBar label="Product tree reads" value={estimate.product.read} max={productTraffic} tone="orange" />
+          <TrafficBar label="Product tree writes" value={estimate.product.write} max={productTraffic} tone="gold" />
+          <TrafficBar label="Rational stream reads" value={rationalTraffic} max={productTraffic} tone="cyan" />
+          <div className="metric-grid">
+            <Metric label="PRODUCT PASSES" value={String(estimate.product.passes)} />
+            <Metric label="PRODUCT PEAK" value={formatBytes(estimate.product.peak * 32)} />
+            <Metric label="STREAM PEAK" value="96 B" />
+            <Metric label="TRAFFIC SAVED" value={formatBytes(productTraffic - rationalTraffic)} />
+          </div>
+        </section>
+      </div>
+      <section className="pipeline-card">
+        <div><Binary size={20} /><span>Witness stream</span></div><ArrowRight />
+        <div className="tree-visual"><i /><i /><i /><i /><i /><i /><span>product layers</span></div><span className="versus">versus</span>
+        <div className="accumulator-visual"><Zap size={18} /><Formula>acc += 1 / term</Formula><span>constant live state</span></div>
+      </section>
+    </main>
+  );
+}
+
+function TrafficBar({ label, value, max, tone }: { label: string; value: number; max: number; tone: string }) {
+  return <div className="traffic-row"><div><span>{label}</span><b>{formatBytes(value)}</b></div><progress className={`bar-track ${tone}`} max={max} value={value} aria-label={`${label}: ${formatBytes(value)}`} /></div>;
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return <div><small>{label}</small><strong>{value}</strong></div>;
+}
+
+export default function App() {
+  const [tab, setTab] = useState<Tab>('sumcheck');
+  return (
+    <div className="app-shell">
+      <Header active={tab} onChange={setTab} />
+      {tab === 'sumcheck' && <SumcheckLab />}
+      {tab === 'zerocheck' && <ZerocheckLab />}
+      {tab === 'permcheck' && <PermcheckLab />}
+      {tab === 'scribe' && <StreamingLab />}
+      <footer><span><ShieldCheck size={14} /> No telemetry · local computation</span><p>Educational browser model + production-oriented Rust protocol core.</p><code>docs/</code></footer>
+    </div>
+  );
+}

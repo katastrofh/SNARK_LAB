@@ -4,6 +4,14 @@
 //! derived. The transparent oracle is deliberately separated from a future
 //! polynomial-commitment backend.
 
+pub mod general;
+pub mod round;
+
+pub use general::{
+    prove_general, verify_general, GeneralProof, GeneralVerifyError, SumcheckPolynomial,
+};
+pub use round::DenseRoundPolynomial;
+
 use ark_ff::PrimeField;
 use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
