@@ -10,6 +10,11 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_generators;
+pub use ipa_generators::{
+    bind_ipa_generator_basis, expected_ipa_generator_count, IpaGeneratorBasis,
+    IpaGeneratorBasisError,
+};
 pub mod ipa_proof;
 pub mod ipa_serialization;
 pub use ipa_proof::{validate_ipa_opening_proof_shape, IpaOpeningProof, IpaProofShapeError};
