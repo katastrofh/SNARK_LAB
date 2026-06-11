@@ -10,9 +10,14 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_transcript;
 pub use ipa::{
     IpaBackend, IpaBackendError, IpaCommitment, IpaOpening, IpaProverKey, IpaPublicParameters,
     IpaVerifierKey,
+};
+pub use ipa_transcript::{
+    absorb_ipa_reduction_round, bind_ipa_opening_statement, expected_ipa_rounds,
+    validate_ipa_round_count, IpaRoundSide, IpaTranscriptError, IpaTranscriptRound,
 };
 pub mod pcs;
 pub use pcs::{
