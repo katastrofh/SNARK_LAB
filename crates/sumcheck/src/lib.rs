@@ -5,10 +5,14 @@
 //! polynomial-commitment backend.
 
 pub mod general;
+pub mod oracle;
 pub mod round;
 
 pub use general::{
     prove_general, verify_general, GeneralProof, GeneralVerifyError, SumcheckPolynomial,
+};
+pub use oracle::{
+    prove_with_transparent_oracle, verify_with_oracle, OracleProof, OracleVerifyError,
 };
 pub use round::DenseRoundPolynomial;
 
