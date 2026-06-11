@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Dense multilinear extensions in little-endian Boolean-cube order.
 
 use ark_ff::Field;

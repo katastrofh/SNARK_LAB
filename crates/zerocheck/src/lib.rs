@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Fiat–Shamir Zerocheck reduced to equality-weighted Sumcheck.
 
 use ark_ff::PrimeField;

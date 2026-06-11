@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Educational F_97 JSON interchange used by the browser visualizer.
 //! The production-sized Rust protocol core lives in the Sumcheck, Zerocheck,
 //! PermCheck, and transcript crates.

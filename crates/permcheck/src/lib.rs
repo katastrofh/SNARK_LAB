@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Transcript-bound product and rational permutation fingerprints.
 
 use ark_ff::PrimeField;
