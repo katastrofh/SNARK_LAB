@@ -1,0 +1,17 @@
+[package]
+name = "zerocheck"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+ark-ff.workspace = true
+multilinear.workspace = true
+sumcheck.workspace = true
+snark-lab-transcript.workspace = true
+
+[dev-dependencies]
+ark-bls12-381.workspace = true
+
+[lints]
+workspace = true

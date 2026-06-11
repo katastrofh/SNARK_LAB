@@ -1,0 +1,15 @@
+[package]
+name = "snark-lab-benches"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+field.workspace = true
+multilinear.workspace = true
+permcheck.workspace = true
+sumcheck.workspace = true
+snark-lab-transcript.workspace = true
+
+[lints]
+workspace = true
