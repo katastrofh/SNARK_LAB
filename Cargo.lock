@@ -535,6 +535,7 @@ dependencies = [
  "ark-bls12-381",
  "ark-ff",
  "multilinear",
+ "snark-lab-oracle",
  "snark-lab-transcript",
 ]
 
