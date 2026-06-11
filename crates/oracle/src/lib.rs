@@ -11,7 +11,11 @@ use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
 pub mod ipa_proof;
+pub mod ipa_serialization;
 pub use ipa_proof::{validate_ipa_opening_proof_shape, IpaOpeningProof, IpaProofShapeError};
+pub use ipa_serialization::{
+    decode_ipa_opening_proof, encode_ipa_opening_proof, IpaProofCodecError,
+};
 pub mod ipa_transcript;
 pub use ipa::{
     IpaBackend, IpaBackendError, IpaCommitment, IpaOpening, IpaProverKey, IpaPublicParameters,
