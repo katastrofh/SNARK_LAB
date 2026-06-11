@@ -2,7 +2,7 @@ use ark_ff::PrimeField;
 
 use crate::{Proof, RoundPolynomial};
 
-const MAGIC: &[u8; 8] = b"SL-SUM1";
+const MAGIC: &[u8] = b"SL-SUM1";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum SumcheckCodecError {
@@ -22,7 +22,9 @@ fn read_exact<'a>(
     cursor: &mut usize,
     len: usize,
 ) -> Result<&'a [u8], SumcheckCodecError> {
-    let end = cursor.checked_add(len).ok_or(SumcheckCodecError::LengthOverflow)?;
+    let end = cursor
+        .checked_add(len)
+        .ok_or(SumcheckCodecError::LengthOverflow)?;
     if end > input.len() {
         return Err(SumcheckCodecError::Truncated);
     }
@@ -61,15 +63,20 @@ fn write_field<F: PrimeField>(out: &mut Vec<u8>, value: &F) {
     out.extend_from_slice(&bytes);
 }
 
-fn read_field<F: PrimeField>(
-    input: &[u8],
-    cursor: &mut usize,
-) -> Result<F, SumcheckCodecError> {
+fn read_field<F: PrimeField>(input: &[u8], cursor: &mut usize) -> Result<F, SumcheckCodecError> {
     let len = field_bytes_len::<F>();
     let bytes = read_exact(input, cursor, len)?;
-    F::from_le_bytes_mod_order(bytes)
-        .into()
-        .ok_or(SumcheckCodecError::InvalidFieldElement)
+
+    let decoded = F::from_le_bytes_mod_order(bytes);
+
+    let mut canonical = Vec::with_capacity(len);
+    write_field(&mut canonical, &decoded);
+
+    if canonical.as_slice() != bytes {
+        return Err(SumcheckCodecError::InvalidFieldElement);
+    }
+
+    Ok(decoded)
 }
 
 pub fn encode_proof<F: PrimeField>(proof: &Proof<F>) -> Result<Vec<u8>, SumcheckCodecError> {
