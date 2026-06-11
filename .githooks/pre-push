@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Running production readiness checks before push..."
+scripts/check-production-ready.sh
