@@ -8,6 +8,7 @@
 pub mod general;
 pub mod oracle;
 pub mod round;
+pub mod serialization;
 
 pub use general::{
     prove_general, verify_general, GeneralProof, GeneralVerifyError, SumcheckPolynomial,
@@ -16,6 +17,7 @@ pub use oracle::{
     prove_with_transparent_oracle, verify_with_oracle, OracleProof, OracleVerifyError,
 };
 pub use round::DenseRoundPolynomial;
+pub use serialization::{decode_proof, encode_proof, SumcheckCodecError};
 
 use ark_ff::PrimeField;
 use multilinear::Multilinear;
