@@ -10,6 +10,10 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_prover;
+pub use ipa_prover::{
+    commit_with_ipa_prover_key, IpaCurveProverKey, IpaProverCommitError, IpaProverCommitment,
+};
 pub mod ipa_commitment;
 pub use ipa_commitment::{
     check_ipa_commitment_equation, commit_ipa_polynomial, validate_ipa_commitment_inputs,
