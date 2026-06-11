@@ -7,11 +7,15 @@
 
 pub mod general;
 pub mod oracle;
+pub mod oracle_serialization;
 pub mod round;
 pub mod serialization;
 
 pub use general::{
     prove_general, verify_general, GeneralProof, GeneralVerifyError, SumcheckPolynomial,
+};
+pub use oracle_serialization::{
+    decode_transparent_oracle_proof, encode_transparent_oracle_proof, OracleProofCodecError,
 };
 pub use oracle::{
     prove_with_transparent_oracle, verify_with_oracle, OracleProof, OracleVerifyError,
