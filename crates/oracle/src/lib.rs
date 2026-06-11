@@ -9,6 +9,11 @@ use ark_ff::PrimeField;
 use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
+pub mod pcs;
+pub use pcs::{
+    validate_opening_point, validate_supported_variables, MultilinearPcs, PcsShapeError,
+};
+
 /// Commitment/opening interface for multilinear evaluation oracles.
 pub trait MultilinearOracle<F: PrimeField> {
     type Commitment: Clone + core::fmt::Debug + PartialEq + Eq;
