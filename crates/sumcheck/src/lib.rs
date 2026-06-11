@@ -14,11 +14,11 @@ pub mod serialization;
 pub use general::{
     prove_general, verify_general, GeneralProof, GeneralVerifyError, SumcheckPolynomial,
 };
-pub use oracle_serialization::{
-    decode_transparent_oracle_proof, encode_transparent_oracle_proof, OracleProofCodecError,
-};
 pub use oracle::{
     prove_with_transparent_oracle, verify_with_oracle, OracleProof, OracleVerifyError,
+};
+pub use oracle_serialization::{
+    decode_transparent_oracle_proof, encode_transparent_oracle_proof, OracleProofCodecError,
 };
 pub use round::DenseRoundPolynomial;
 pub use serialization::{decode_proof, encode_proof, SumcheckCodecError};

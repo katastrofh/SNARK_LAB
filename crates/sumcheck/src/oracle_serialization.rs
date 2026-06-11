@@ -69,10 +69,7 @@ fn write_field<F: PrimeField>(out: &mut Vec<u8>, value: &F) {
     out.extend_from_slice(&bytes);
 }
 
-fn read_field<F: PrimeField>(
-    input: &[u8],
-    cursor: &mut usize,
-) -> Result<F, OracleProofCodecError> {
+fn read_field<F: PrimeField>(input: &[u8], cursor: &mut usize) -> Result<F, OracleProofCodecError> {
     let len = field_bytes_len::<F>();
     let bytes = read_exact(input, cursor, len)?;
 
@@ -104,8 +101,8 @@ pub fn encode_transparent_oracle_proof<F: PrimeField>(
         .try_into()
         .map_err(|_| OracleProofCodecError::LengthOverflow)?;
 
-    let inner_sumcheck = encode_proof(&proof.sumcheck_proof)
-        .map_err(OracleProofCodecError::InnerSumcheck)?;
+    let inner_sumcheck =
+        encode_proof(&proof.sumcheck_proof).map_err(OracleProofCodecError::InnerSumcheck)?;
 
     let inner_len: u64 = inner_sumcheck
         .len()
@@ -194,7 +191,6 @@ mod tests {
     use super::*;
     use ark_bls12_381::Fr;
     use multilinear::Multilinear;
-    use snark_lab_oracle::MultilinearOracle;
     use snark_lab_transcript::MerlinTranscript;
 
     use crate::{prove_with_transparent_oracle, verify_with_oracle};
