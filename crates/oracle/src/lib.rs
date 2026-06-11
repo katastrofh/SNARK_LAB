@@ -9,6 +9,11 @@ use ark_ff::PrimeField;
 use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
+pub mod ipa;
+pub use ipa::{
+    IpaBackend, IpaBackendError, IpaCommitment, IpaOpening, IpaProverKey, IpaPublicParameters,
+    IpaVerifierKey,
+};
 pub mod pcs;
 pub use pcs::{
     validate_opening_point, validate_supported_variables, MultilinearPcs, PcsShapeError,
