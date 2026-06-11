@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Fiat–Shamir Sumcheck for transparent multilinear evaluation tables.
 //!
 //! Prover messages are bound to a Merlin transcript before each challenge is

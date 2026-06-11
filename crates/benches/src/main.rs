@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use field::DefaultField as Fr;
 use multilinear::Multilinear;
 use permcheck::{

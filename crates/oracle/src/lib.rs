@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Oracle abstraction for commitment-backed protocol plumbing.
 //!
 //! The first backend is transparent and non-succinct. The point of this crate

@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Fiat–Shamir transcripts for non-interactive public-coin protocols.
 
 use ark_ff::{BigInteger, PrimeField};

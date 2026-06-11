@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 //! Production-sized field choices for the Rust protocol core.
 //!
 //! Browser-only educational examples use F_97 in TypeScript. Rust protocols use

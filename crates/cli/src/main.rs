@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 use snark_lab_interchange::{parse_and_verify, Protocol};
 use std::{env, fs, process};
 
