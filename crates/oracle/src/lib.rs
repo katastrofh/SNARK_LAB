@@ -10,6 +10,10 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_curve;
+pub use ipa_curve::{
+    bind_ipa_curve_generator_basis, IpaCurveGeneratorBasis, IpaCurvePoint, IpaCurvePointError,
+};
 pub mod ipa_generators;
 pub use ipa_generators::{
     bind_ipa_generator_basis, expected_ipa_generator_count, IpaGeneratorBasis,
