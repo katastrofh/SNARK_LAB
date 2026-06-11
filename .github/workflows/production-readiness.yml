@@ -1,0 +1,31 @@
+name: production-readiness
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  production-readiness:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/visualizer/package-lock.json
+
+      - name: Install visualizer dependencies
+        run: npm --prefix web/visualizer ci
+
+      - name: Run production readiness checks
+        run: scripts/check-production-ready.sh
