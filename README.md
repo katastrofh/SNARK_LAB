@@ -546,3 +546,12 @@ See:
     docs/production-deployment-evidence.md
 
 The target is a production system, but production-secure claims require audit evidence, side-channel review, and production SRS ceremony evidence.
+
+## Production SRS ceremony specification
+
+See:
+
+    docs/production-srs-ceremony-spec.md
+    ceremony/README.md
+
+The repository now defines a production SRS/public-parameter ceremony manifest format and verifier. A real production ceremony still requires real artifacts, digests, transcript evidence, and audit status.

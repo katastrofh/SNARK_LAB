@@ -87,3 +87,13 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] Security proof sketch
 - [ ] Release process
 - [ ] Public audit notes
+
+## SRS ceremony
+
+- [x] Production SRS ceremony specification documented
+- [x] SRS ceremony manifest example added
+- [x] SRS ceremony manifest verifier added
+- [ ] Real production SRS artifact published
+- [ ] Real production SRS digest published
+- [ ] Real ceremony transcript published
+- [ ] External review of SRS ceremony completed
