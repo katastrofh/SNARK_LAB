@@ -10,6 +10,12 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_reduction;
+pub use ipa_reduction::{
+    bind_ipa_reduction_round_context, fold_ipa_evaluation_vector, fold_ipa_polynomial_vector,
+    validate_ipa_reduction_input_length, validate_ipa_vector_fold, IpaReductionRound,
+    IpaReductionRoundError,
+};
 pub mod ipa_opening_statement;
 pub use ipa_opening_statement::{
     bind_ipa_opening_statement_context, opening_statement_from_witness,
