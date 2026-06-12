@@ -686,3 +686,12 @@ See:
     fuzz/smoke-evidence/v0.2.0-rc.1/all-targets/manifest.json
 
 All fuzz targets have short nightly smoke evidence. This is not long-campaign or production-security evidence.
+
+## Fuzz crash regression suite
+
+See:
+
+    docs/fuzz-crash-regression-suite.md
+    fuzz/regressions/README.md
+
+Fuzz-discovered crashes are converted into stable regression tests.

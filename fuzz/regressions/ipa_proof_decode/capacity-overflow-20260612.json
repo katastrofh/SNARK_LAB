@@ -1,0 +1,12 @@
+{
+  "schema": "snark-lab-fuzz-regression-v1",
+  "target": "ipa_proof_decode",
+  "date_utc": "2026-06-12",
+  "status": "fixed",
+  "bug_class": "capacity-overflow-panic",
+  "expected_behavior": "decode-error-no-panic",
+  "expected_error": "LengthOverflow",
+  "source": "nightly cargo-fuzz smoke run",
+  "base64": "U0wtSVBBLVBST09GMf8AAAAAAAAA////////oqKioqKiogAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////////////////////////////////////////8K",
+  "notes": "Malformed IPA proof bytes used unbounded count fields. Decoder must reject without allocation panic."
+}

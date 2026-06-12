@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Fuzz crash regression suite
+
 - All fuzz targets nightly smoke evidence
 
 - Nightly IPA proof decoder fuzz smoke evidence

@@ -219,3 +219,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] All-target smoke evidence marked non-production
 - [ ] Long fuzz campaign completed
 - [ ] Crash corpus regression suite completed
+
+## Fuzz crash regression suite
+
+- [x] Fuzz crash regression suite added
+- [x] IPA proof decoder capacity-overflow crash regression added
+- [x] Regression metadata validation added
+- [x] Regression test checks no panic
+- [ ] More crash corpus cases added as fuzzing discovers them

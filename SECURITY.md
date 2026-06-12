@@ -272,3 +272,11 @@ See:
     docs/all-fuzz-targets-smoke-evidence.md
 
 All parser fuzz targets have short smoke evidence. Long-duration fuzz campaign evidence is still required for production-secure claims.
+
+## Fuzz crash regression suite
+
+See:
+
+    docs/fuzz-crash-regression-suite.md
+
+Known parser crashes must become regression tests and must return decode errors rather than panics.
