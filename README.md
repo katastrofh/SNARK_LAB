@@ -460,3 +460,11 @@ See:
 
     docs/threat-model-and-security-notes.md
     docs/security-review-checklist.md
+
+## Security proof sketch
+
+See:
+
+    docs/security-proof-sketch.md
+
+This is a proof-outline for the implemented research prototype. It is not an audit and not a production deployment claim.

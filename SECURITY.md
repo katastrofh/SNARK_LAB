@@ -52,3 +52,11 @@ See:
     docs/security-review-checklist.md
 
 The project is not audited. Do not use it for production funds, custody, mainnet systems, consensus-critical infrastructure, or security-critical deployments.
+
+## Security proof sketch
+
+See:
+
+    docs/security-proof-sketch.md
+
+The proof sketch documents assumptions and reductions for the research prototype. It is not an external audit.
