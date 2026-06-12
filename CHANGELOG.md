@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Production release checklist and tagging tools
+
 - Release-candidate evidence summary tooling
 
 - Audit readiness packet

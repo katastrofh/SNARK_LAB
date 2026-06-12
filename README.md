@@ -582,3 +582,12 @@ See:
     release-candidates/README.md
 
 The repository can summarize generated deployment evidence packs into small release-candidate evidence records.
+
+## Production release checklist and tagging
+
+See:
+
+    docs/production-release-checklist-and-tagging.md
+    release/PRODUCTION_RELEASE_CHECKLIST.md
+
+The repository now includes release-checklist validation and safe annotated tag preparation for release candidates.
