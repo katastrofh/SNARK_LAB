@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Production SRS placeholder policy
+
 - Production deployment guide and operator runbook
 
 - Long fuzz campaign evidence tooling
