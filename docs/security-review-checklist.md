@@ -138,3 +138,12 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] Annotated release candidate tag created
 - [ ] Release candidate tag pushed
 - [ ] GitHub release created
+
+## GitHub release artifacts
+
+- [x] GitHub release artifact tooling added
+- [x] Release checksum generation added
+- [x] GitHub release draft added
+- [ ] GitHub pre-release created
+- [ ] Release artifacts attached
+- [ ] SHA256SUMS attached
