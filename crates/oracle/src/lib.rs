@@ -10,6 +10,11 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_generator_folding;
+pub use ipa_generator_folding::{
+    fold_ipa_evaluation_generators, fold_ipa_generator_basis, fold_ipa_polynomial_generators,
+    IpaGeneratorFoldingError,
+};
 pub mod ipa_round_commitments;
 pub use ipa_round_commitments::{
     compute_ipa_round_commitments, IpaRoundCommitmentError, IpaRoundCommitments,
