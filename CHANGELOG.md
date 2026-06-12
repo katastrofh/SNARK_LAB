@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Audit readiness packet
+
 - Deployment evidence pack process
 
 - Production SRS ceremony specification and manifest verifier

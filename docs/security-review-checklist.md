@@ -105,3 +105,14 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Deployment attestation template added
 - [ ] Real release-candidate evidence pack generated
 - [ ] Production evidence pack archived with release
+
+## Audit readiness
+
+- [x] Audit readiness packet added
+- [x] Audit scope documented
+- [x] Audit finding template added
+- [x] Remediation log added
+- [x] Audit triage policy added
+- [ ] External audit completed
+- [ ] Critical/high findings resolved
+- [ ] Final audit report linked

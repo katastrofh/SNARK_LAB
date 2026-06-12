@@ -1,0 +1,32 @@
+{
+  "schema": "snark-lab-audit-status-v1",
+  "status": "audit-ready-not-audited",
+  "repository": "katastrofh/SNARK_LAB",
+  "commit_under_review": "",
+  "external_audit_completed": false,
+  "side_channel_review_completed": false,
+  "production_srs_ceremony_completed": false,
+  "production_deployment_approved": false,
+  "production_secure": false,
+  "auditor": {
+    "name": "",
+    "organization": "",
+    "contact": "",
+    "report_url": ""
+  },
+  "findings": {
+    "critical_open": 0,
+    "high_open": 0,
+    "medium_open": 0,
+    "low_open": 0,
+    "informational_open": 0
+  },
+  "evidence": {
+    "deployment_evidence_pack": "",
+    "srs_manifest": "",
+    "srs_digest": "",
+    "fuzz_campaign_summary": "",
+    "release_tag": ""
+  },
+  "notes": "This example status file documents required audit state. It is not an audit report."
+}
