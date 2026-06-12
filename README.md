@@ -880,3 +880,11 @@ See:
 
     release/v0.2.0-rc.2.md
     release/GITHUB_RELEASE_PAGE_v0.2.0-rc.2.md
+
+## GitHub Release rc2 publication evidence
+
+See:
+
+    release/publication/v0.2.0-rc.2/README.md
+
+The repository records evidence that the v0.2.0-rc.2 GitHub Release page was published with expected assets.
