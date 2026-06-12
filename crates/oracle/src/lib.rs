@@ -10,6 +10,10 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_round_commitments;
+pub use ipa_round_commitments::{
+    compute_ipa_round_commitments, IpaRoundCommitmentError, IpaRoundCommitments,
+};
 pub mod ipa_reduction;
 pub use ipa_reduction::{
     bind_ipa_reduction_round_context, fold_ipa_evaluation_vector, fold_ipa_polynomial_vector,
