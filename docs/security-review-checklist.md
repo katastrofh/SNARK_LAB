@@ -278,3 +278,10 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] v0.2.0-rc.2 release asset list validated
 - [x] v0.2.0-rc.2 release URL recorded
 - [x] v0.2.0-rc.2 publication evidence marked non-production
+
+## Final project positioning and roadmap
+
+- [x] Final project positioning added
+- [x] Roadmap added
+- [x] Non-goals documented
+- [x] Production-security boundary preserved
