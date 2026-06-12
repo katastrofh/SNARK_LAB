@@ -1,5 +1,7 @@
 name: production-readiness
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 on:
   push:
     branches:
@@ -26,6 +28,17 @@ jobs:
 
       - name: Install visualizer dependencies
         run: npm --prefix web/visualizer ci
+
+      - name: Pre-fetch Rust dependencies with retry
+        run: |
+          for attempt in 1 2 3; do
+            echo "cargo fetch attempt ${attempt}"
+            if cargo fetch --locked; then
+              exit 0
+            fi
+            sleep $((attempt * 20))
+          done
+          cargo fetch --locked
 
       - name: Run production readiness checks
         run: scripts/check-production-ready.sh
