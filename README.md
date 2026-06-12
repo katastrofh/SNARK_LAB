@@ -869,3 +869,14 @@ See:
     release/publication/v0.2.0-rc.1/README.md
 
 The repository records evidence that the v0.2.0-rc.1 GitHub Release page was published with expected assets.
+
+## Current release candidate
+
+The current main-branch release candidate is:
+
+    v0.2.0-rc.2
+
+See:
+
+    release/v0.2.0-rc.2.md
+    release/GITHUB_RELEASE_PAGE_v0.2.0-rc.2.md
