@@ -454,3 +454,9 @@ study Scribe-style polynomial commitment integration choices
 
 MIT
 
+## Security boundary documents
+
+See:
+
+    docs/threat-model-and-security-notes.md
+    docs/security-review-checklist.md

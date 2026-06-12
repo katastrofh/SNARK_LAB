@@ -38,3 +38,17 @@ A production release is blocked until all of the following are complete:
 4. batch-verification and domain-separation review;
 5. fuzzing and property testing of proof deserialization and verifier paths;
 6. independent cryptographic audit and published test vectors.
+
+## Threat model
+
+See:
+
+    docs/threat-model-and-security-notes.md
+
+## Security review checklist
+
+See:
+
+    docs/security-review-checklist.md
+
+The project is not audited. Do not use it for production funds, custody, mainnet systems, consensus-critical infrastructure, or security-critical deployments.
