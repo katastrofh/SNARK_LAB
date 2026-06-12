@@ -888,3 +888,12 @@ See:
     release/publication/v0.2.0-rc.2/README.md
 
 The repository records evidence that the v0.2.0-rc.2 GitHub Release page was published with expected assets.
+
+## Project positioning and roadmap
+
+For a concise explanation of what this repository is, what it is not, and where it is going, see:
+
+    docs/project-positioning.md
+    ROADMAP.md
+
+SNARK_LAB is positioned as a research prototype and protocol lab, not audited production-secure software.

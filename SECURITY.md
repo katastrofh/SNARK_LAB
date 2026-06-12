@@ -336,3 +336,13 @@ See:
     docs/github-release-rc2-publication.md
 
 Release publication evidence confirms asset publication only. It does not claim production security.
+
+## Final project positioning and roadmap
+
+See:
+
+    docs/final-project-positioning-and-roadmap.md
+    docs/project-positioning.md
+    ROADMAP.md
+
+The roadmap keeps future engineering and research work separate from production-security claims.
