@@ -792,6 +792,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <Header active={tab} onChange={handleTabChange} />
+      {tab === 'system' && <SystemFlowLab />}
       {tab === 'sumcheck' && <SumcheckLab />}
       {tab === 'zerocheck' && <ZerocheckLab />}
       {tab === 'permcheck' && <PermcheckLab />}
