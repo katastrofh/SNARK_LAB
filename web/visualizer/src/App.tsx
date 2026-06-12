@@ -34,6 +34,7 @@ import {
   parseValues,
   P,
   rational,
+  ipaTrace,
   sumcheck,
   sumcheckTranscript,
 } from './protocols';
@@ -107,7 +108,7 @@ function SecurityBoundary() {
       <LockKeyhole size={18} />
       <div>
         <strong>Know which path you are using.</strong>
-        <p>This page is an inspectable F₉₇ model. The Rust crates use large fields and Merlin Fiat–Shamir; commitment-backed oracle openings remain roadmap work.</p>
+        <p>This page is an inspectable F₉₇ model. The Rust crates use BLS12-381, Merlin Fiat–Shamir, typed IPA openings, SRS validation, and negative proof tests.</p>
       </div>
       <span className="boundary-path">docs/sumcheck.md <ArrowRight size={14} /></span>
     </aside>
@@ -429,29 +430,14 @@ function Metric({ label, value }: { label: string; value: string }) {
 
 
 function IpaPcsLab() {
-  const implemented = [
-    'PCS backend trait boundary',
-    'IPA transcript round schedule',
-    'Typed IPA opening proof shape',
-    'Canonical IPA proof serialization',
-    'Generator-basis validation',
-    'Curve-point serialization and subgroup validation',
-    'Curve commitment equation C = <a,G> + rH',
-    'Prover-side commit path',
-  ];
-
-  const pending = [
-    'Evaluation-basis vector for v = f(z)',
-    'IPA reduction-round prover',
-    'IPA opening verifier',
-    'Backend integration into MultilinearPcs::open / verify',
-    'Benchmarks against transparent oracle and future KZG/FRI backends',
-  ];
+  const trace = useMemo(() => ipaTrace(), []);
+  const [selectedRound, setSelectedRound] = useState(0);
+  const activeRound = trace.rounds[selectedRound] ?? trace.rounds[0];
 
   return (
     <main>
-      <PageIntro tab="ipa" title="Build a real polynomial commitment" accent="one layer at a time.">
-        Inspect the production IPA backend roadmap. The Rust core now has curve-aware commitment infrastructure, but full opening verification is still intentionally not claimed.
+      <PageIntro tab="ipa" title="Follow the IPA opening" accent="from table to verifier.">
+        The browser mirrors the vector algebra in F₉₇ while the Rust implementation verifies typed BLS12-381 IPA openings with canonical encodings and negative tests.
       </PageIntro>
       <SecurityBoundary />
 
@@ -460,77 +446,178 @@ function IpaPcsLab() {
           <div className="card-heading">
             <span className="step-index">01</span>
             <div>
-              <h2>Implemented backend layers</h2>
-              <p>These are present in the Rust oracle crate.</p>
+              <h2>Statement and evaluation basis</h2>
+              <p>Educational F₉₇ trace of v = f(z).</p>
             </div>
           </div>
+
           <div className="metric-grid">
-            <Metric label="ORACLE TESTS" value="49+" />
-            <Metric label="CURVE" value="BLS12-381" />
-            <Metric label="PCS STATUS" value="Commit path" />
-            <Metric label="OPENING VERIFY" value="Pending" />
+            <Metric label="VARIABLES" value={String(trace.point.length)} />
+            <Metric label="TABLE SIZE" value={String(trace.table.length)} />
+            <Metric label="CLAIMED v" value={String(trace.claimedValue)} />
+            <Metric label="ROUNDS" value={String(trace.rounds.length)} />
           </div>
-          <ol className="explanation-steps">
-            {implemented.map(item => (
-              <li key={item}><b><Check size={14} /></b><span>{item}</span></li>
-            ))}
-          </ol>
+
+          <div className="initial-claim">
+            <span>Opening point</span>
+            <Formula>z = ({trace.point.join(', ')})</Formula>
+          </div>
+
+          <div className="traffic-row">
+            <div><span>Evaluation table a</span><b>{trace.table.join(', ')}</b></div>
+            <progress className="bar-track cyan" max={trace.table.length} value={trace.table.length} aria-label="IPA table length" />
+          </div>
+
+          <div className="traffic-row">
+            <div><span>Basis b = eq(z, x)</span><b>{trace.basis.join(', ')}</b></div>
+            <progress className="bar-track orange" max={trace.basis.length} value={trace.basis.length} aria-label="IPA basis length" />
+          </div>
+
+          <div className="production-note">
+            <LockKeyhole size={16} />
+            <span>Rust path uses BLS12-381 and Merlin. The browser uses F₉₇ so the round algebra is inspectable.</span>
+          </div>
         </section>
 
         <section className="card traffic-card">
           <div className="traffic-heading">
             <div>
-              <span className="section-label">02 / COMMITMENT EQUATION</span>
-              <h2>Current cryptographic boundary</h2>
+              <span className="section-label">02 / RUST DEMO VECTOR</span>
+              <h2>Committed public test vector</h2>
             </div>
-            <span>PROVER-SIDE</span>
+            <span>VERIFIED</span>
           </div>
+
+          <div className="metric-grid">
+            <Metric label="RUST VARIABLES" value="2" />
+            <Metric label="RUST CLAIM" value="23" />
+            <Metric label="COMMITMENT" value={`${trace.commitmentBytes} B`} />
+            <Metric label="OPENING" value={`${trace.encodedOpeningBytes} B`} />
+          </div>
+
           <div className="empty-state">
-            <div className="protocol-orbit"><LockKeyhole size={30} /><i /><i /><i /></div>
-            <h3>Commitment computation is real; opening verification is next.</h3>
-            <p>The implemented equation commits to the full multilinear evaluation vector with an explicit blinding scalar.</p>
-            <Formula>C = &lt;a, G&gt; + rH</Formula>
-          </div>
-          <div className="production-note">
-            <TriangleAlert size={16} />
-            <span>This is not a public verifier yet. A verifier must eventually check an IPA opening proof without seeing a or r.</span>
+            <div className="protocol-orbit"><ShieldCheck size={30} /><i /><i /><i /></div>
+            <h3>Rust verifies the blinded IPA opening.</h3>
+            <p>The committed test vector is checked by the production gate and records the decoded IPA round count.</p>
+            <Formula>decoded_rounds = {trace.decodedRounds}</Formula>
           </div>
         </section>
       </div>
 
+      <section className="card transcript-card">
+        <div className="transcript-header">
+          <div>
+            <span className="section-label">03 / IPA REDUCTION TRACE</span>
+            <h2>Round-by-round folding</h2>
+          </div>
+          <Status ok={trace.accepted}>Browser algebra trace ready</Status>
+        </div>
+        <progress className="progress-track" max={trace.rounds.length} value={selectedRound + 1} aria-label="IPA round progress" />
+
+        <div className="round-list">
+          <div className="initial-claim">
+            <span>Claimed opening</span>
+            <Formula>v = &lt;a,b&gt; = {trace.claimedValue}</Formula>
+          </div>
+
+          <div className="method-comparison">
+            {trace.rounds.map((round, index) => (
+              <button
+                key={round.round}
+                className={selectedRound === index ? 'primary-action' : 'secondary-action'}
+                onClick={() => setSelectedRound(index)}
+              >
+                Round {index + 1}: {round.inputLength} → {round.outputLength}
+              </button>
+            ))}
+          </div>
+
+          <article className="round-card">
+            <div className="round-marker">{selectedRound + 1}</div>
+            <div className="round-content">
+              <div className="round-title">
+                <strong>Reduction round {selectedRound + 1}</strong>
+                <span>{activeRound.inputLength} inputs folded to {activeRound.outputLength}</span>
+              </div>
+
+              <div className="protocol-message">
+                <span className="actor actor-prover">P</span>
+                <div>
+                  <small>PROVER BINDS CROSS COMMITMENTS</small>
+                  <Formula>{activeRound.leftCommitment} · {activeRound.rightCommitment}</Formula>
+                </div>
+              </div>
+
+              <div className="protocol-message verifier-message">
+                <span className="actor actor-verifier">V</span>
+                <div>
+                  <small>CHALLENGE AFTER L/R</small>
+                  <Formula>x={activeRound.challenge} · x⁻¹={activeRound.challengeInverse}</Formula>
+                </div>
+                <ArrowRight size={15} />
+                <Formula>fold</Formula>
+              </div>
+
+              <div className="fold-strip">
+                {activeRound.polynomialAfter.map((value, index) => <i key={`a-${index}`}>a'{index}:{value}</i>)}
+              </div>
+
+              <div className="fold-strip">
+                {activeRound.evaluationAfter.map((value, index) => <i key={`b-${index}`}>b'{index}:{value}</i>)}
+              </div>
+
+              <div className="consistency-check">
+                <Check size={13} /> Browser relation moved from inner product {activeRound.innerProductBefore} to folded relation {activeRound.innerProductAfter}. In Rust, L/R commitments carry the verifier equation.
+              </div>
+            </div>
+          </article>
+
+          <div className="verdict verdict-ok">
+            <ShieldCheck size={26} />
+            <div>
+              <strong>Final folded scalars are explicit</strong>
+              <p>a_final = {trace.finalPolynomialScalar} · b_final = {trace.finalEvaluationScalar}. Rust checks the final commitment relation, not a fake success flag.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="pipeline-card">
-        <div><Binary size={20} /><span>Multilinear table a</span></div>
+        <div><Binary size={20} /><span>table a</span></div>
         <ArrowRight />
-        <div className="accumulator-visual"><LockKeyhole size={18} /><Formula>&lt;a,G&gt; + rH</Formula><span>curve commitment</span></div>
+        <div className="accumulator-visual"><Formula>b = eq(z,x)</Formula><span>evaluation basis</span></div>
         <ArrowRight />
-        <div><ShieldCheck size={20} /><span>IPA opening proof pending</span></div>
+        <div className="tree-visual"><i /><i /><i /><i /><span>L/R folds</span></div>
+        <ArrowRight />
+        <div><ShieldCheck size={20} /><span>verified opening</span></div>
       </section>
 
       <div className="method-comparison">
         <section className="card method-card cyan">
           <div className="method-icon"><ShieldCheck /></div>
-          <span className="section-label">DONE</span>
-          <h2>Backend foundation</h2>
-          <p>Curve points, canonical compressed serialization, generator basis validation, and prover commitment path are in place.</p>
-          <Status ok={true}>Safe to present as infrastructure</Status>
+          <span className="section-label">IMPLEMENTED</span>
+          <h2>Rust core status</h2>
+          <ol className="explanation-steps">
+            <li><b><Check size={14} /></b><span>Typed IPA opening proof path</span></li>
+            <li><b><Check size={14} /></b><span>Blinded commit/open/verify integration</span></li>
+            <li><b><Check size={14} /></b><span>Canonical proof and SRS codecs</span></li>
+            <li><b><Check size={14} /></b><span>Negative fixtures and randomized roundtrips</span></li>
+            <li><b><Check size={14} /></b><span>Public test vector checked by production gate</span></li>
+          </ol>
+          <Status ok>Production-grade research prototype</Status>
         </section>
 
         <section className="card method-card orange">
           <div className="method-icon"><TriangleAlert /></div>
-          <span className="section-label">NEXT</span>
-          <h2>Opening proof system</h2>
-          <ol className="explanation-steps">
-            {pending.map(item => (
-              <li key={item}><b><ChevronRight size={14} /></b><span>{item}</span></li>
-            ))}
-          </ol>
-          <Status ok={false}>Do not claim full IPA verifier yet</Status>
+          <span className="section-label">BOUNDARY</span>
+          <h2>Still not an audit</h2>
+          <p>The browser shows a small-field educational trace. Production-security claims still require external audit, long fuzz evidence, side-channel review, and a production SRS story.</p>
+          <Status ok={false}>Not production-secure deployment software</Status>
         </section>
       </div>
     </main>
   );
 }
-
 
 export default function App() {
   const [tab, setTab] = useState<Tab>('sumcheck');

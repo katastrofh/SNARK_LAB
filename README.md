@@ -512,3 +512,11 @@ See:
     docs/long-fuzz-campaign-notes.md
 
 The production gate compile-checks fuzz targets. Long-running fuzz campaign artifacts are required before stronger production-security claims.
+
+## Visualizer IPA flow
+
+See:
+
+    docs/visualizer-real-ipa-flow.md
+
+The browser IPA tab now shows the real IPA opening flow at educational scale while preserving the Rust/BLS12-381 security boundary.
