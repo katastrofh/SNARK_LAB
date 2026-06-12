@@ -206,3 +206,12 @@ See:
     docs/long-fuzz-campaign-evidence.md
 
 Fuzz campaign evidence improves parser-hardening confidence. It does not replace external audit, side-channel review, or production SRS evidence.
+
+## Production deployment guide
+
+See:
+
+    docs/production-deployment-guide.md
+    docs/operator-runbook.md
+
+The current release-candidate may be used for review and demonstration. It must not be deployed as production-secure software.

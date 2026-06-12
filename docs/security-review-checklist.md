@@ -156,3 +156,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] Real long fuzz campaign completed
 - [ ] Long fuzz campaign logs archived
 - [ ] Fuzz crash regressions added
+
+## Production deployment guide
+
+- [x] Production deployment guide added
+- [x] Operator runbook added
+- [x] Deployment decision template added
+- [x] Production readiness index added
+- [ ] Production deployment approved

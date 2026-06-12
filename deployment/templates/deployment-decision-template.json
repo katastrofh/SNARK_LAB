@@ -1,0 +1,23 @@
+{
+  "schema": "snark-lab-deployment-decision-v1",
+  "release": "",
+  "tag": "",
+  "commit": "",
+  "decision": "reject",
+  "allowed_values": [
+    "reject",
+    "internal-review-only",
+    "release-candidate-demo",
+    "production-secure-approved"
+  ],
+  "production_gate_passed": false,
+  "release_artifacts_verified": false,
+  "external_audit_completed": false,
+  "side_channel_review_completed": false,
+  "production_srs_evidence_complete": false,
+  "long_fuzz_campaign_complete": false,
+  "rollback_plan_present": false,
+  "operator": "",
+  "decision_utc": "",
+  "notes": "Do not approve production-secure deployment unless every required evidence field is true."
+}
