@@ -365,3 +365,12 @@ See:
     docs/reviewer-onboarding-branch-notes.md
 
 The onboarding guide helps reviewers inspect the repository without weakening the stated security boundary.
+
+## Examples gallery
+
+See:
+
+    examples/README.md
+    docs/examples-gallery.md
+
+The examples are for review and education. They are not deployment instructions for security-critical settings.

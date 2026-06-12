@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Examples gallery
+
 - Reviewer onboarding guide
 
 - Final repository health report
