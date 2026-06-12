@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Repository topic and README badge polish
+
 - Visualizer screenshot assets for README
 
 - GitHub-facing README polish

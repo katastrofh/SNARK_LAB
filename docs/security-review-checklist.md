@@ -241,3 +241,10 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Visualizer screenshot assets added
 - [x] Visualizer screenshot checker added
 - [x] README references screenshot assets
+
+## Repository topic and badge polish
+
+- [x] Repository discovery metadata added
+- [x] README badges added
+- [x] Badge security-boundary checker added
+- [x] Suggested GitHub topics documented

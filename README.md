@@ -2,6 +2,22 @@
 
 # SNARK_LAB
 
+<!-- SNARK_LAB_BADGES_V1 -->
+
+<p align="center">
+  <img alt="status: research prototype" src="https://img.shields.io/badge/status-research%20prototype-blue">
+  <img alt="release: v0.2.0-rc.1" src="https://img.shields.io/badge/release-v0.2.0--rc.1-orange">
+  <img alt="language: Rust" src="https://img.shields.io/badge/language-Rust-informational">
+  <img alt="fuzzing: smoke and regressions" src="https://img.shields.io/badge/fuzzing-smoke%20%2B%20regressions-success">
+  <img alt="visualizer: available" src="https://img.shields.io/badge/visualizer-available-success">
+  <img alt="license: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-lightgrey">
+</p>
+
+<p align="center">
+  <strong>Research prototype.</strong>
+  Not audited production-secure software.
+</p>
+
 **A Rust protocol lab for SNARK building blocks: Sumcheck, Zerocheck, PermCheck, and IPA polynomial commitments.**
 
 SNARK_LAB connects the math of interactive proofs to executable Rust code, public test vectors, fuzzing, release evidence, and an educational visualizer.
