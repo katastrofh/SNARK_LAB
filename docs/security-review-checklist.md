@@ -263,3 +263,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Release asset list validated
 - [x] Release URL recorded
 - [x] Publication evidence marked non-production
+
+## v0.2.0-rc.2 current-main release candidate
+
+- [x] v0.2.0-rc.2 release candidate docs added
+- [x] v0.2.0-rc.2 GitHub Release page body added
+- [x] v0.2.0-rc.2 security boundary documented
+- [ ] v0.2.0-rc.2 tag created
+- [ ] v0.2.0-rc.2 GitHub Release published
