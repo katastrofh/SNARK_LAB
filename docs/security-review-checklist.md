@@ -164,3 +164,12 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Deployment decision template added
 - [x] Production readiness index added
 - [ ] Production deployment approved
+
+## Production SRS artifact policy
+
+- [x] Production SRS placeholder policy added
+- [x] Fake production SRS artifact check added
+- [x] Production SRS status example added
+- [ ] Real production SRS artifact published
+- [ ] Real production SRS digest published
+- [ ] Real production SRS transcript published

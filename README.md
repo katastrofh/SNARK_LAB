@@ -627,3 +627,12 @@ See:
     docs/operator-runbook.md
 
 The repository now has a release-candidate deployment guide and operator runbook. It is not yet production-secure.
+
+## Production SRS placeholder policy
+
+See:
+
+    docs/production-srs-artifact-placeholder-policy.md
+    srs/PRODUCTION_SRS_POLICY.md
+
+The repository rejects fake or placeholder production SRS artifacts. Production SRS material must be published with digest, manifest, transcript, and verifier evidence.

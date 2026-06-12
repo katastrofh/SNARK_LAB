@@ -215,3 +215,12 @@ See:
     docs/operator-runbook.md
 
 The current release-candidate may be used for review and demonstration. It must not be deployed as production-secure software.
+
+## Production SRS placeholder policy
+
+See:
+
+    docs/production-srs-artifact-placeholder-policy.md
+    srs/PRODUCTION_SRS_POLICY.md
+
+Example manifests do not imply production SRS completion. Fake production SRS artifacts must not be committed.

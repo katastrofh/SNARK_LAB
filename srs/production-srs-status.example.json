@@ -1,0 +1,13 @@
+{
+  "schema": "snark-lab-production-srs-status-v1",
+  "status": "no-production-srs-in-repo",
+  "production_srs_artifact_committed": false,
+  "production_srs_artifact_published": false,
+  "production_srs_digest_published": false,
+  "production_srs_manifest_published": false,
+  "production_srs_transcript_published": false,
+  "production_srs_verifier_output_present": false,
+  "production_srs_ceremony_completed": false,
+  "production_ready": false,
+  "notes": "Example status only. This file does not claim production SRS completion."
+}

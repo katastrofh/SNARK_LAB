@@ -1,0 +1,5 @@
+*
+!.gitignore
+!README.md
+!PRODUCTION_SRS_POLICY.md
+!production-srs-status.example.json
