@@ -1,0 +1,6 @@
+ipa-demo: verified blinded IPA opening
+variables=2
+claimed_value=23
+commitment_bytes=48
+encoded_opening_bytes=585
+decoded_rounds=3

@@ -70,3 +70,12 @@ Release and versioning policy:
     CHANGELOG.md
 
 All pre-1.0 releases are research-preview releases unless a later document explicitly says otherwise.
+
+## Public test vectors
+
+See:
+
+    docs/public-test-vectors.md
+    test-vectors/README.md
+
+The committed vectors are deterministic regression artifacts, not production SRS material or audit evidence.
