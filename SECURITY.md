@@ -95,3 +95,12 @@ See:
     docs/dependency-update-policy.md
 
 Do not merge cryptographic dependency updates unless the entire dependency stack is upgraded coherently and all production gates pass.
+
+## Fuzzing boundary
+
+See:
+
+    FUZZING.md
+    docs/long-fuzz-campaign-notes.md
+
+Fuzzing hardens malformed external byte parsers. It does not replace external audit or formal security review.

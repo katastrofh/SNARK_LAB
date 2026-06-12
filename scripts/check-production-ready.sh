@@ -14,7 +14,7 @@ echo "[3/9] cargo test"
 cargo test --locked --workspace
 
 echo "[4/9] fuzz target build"
-cargo check --locked --manifest-path fuzz/Cargo.toml --bins
+scripts/check-fuzz-targets.sh
 
 echo "[5/9] public test vectors"
 scripts/check-test-vectors.sh

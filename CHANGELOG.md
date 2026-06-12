@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Fuzz campaign runner and documentation
+
 - Threat model and security notes
 - Security proof sketch
 - Security review checklist
