@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Release-candidate evidence summary tooling
+
 - Audit readiness packet
 
 - Deployment evidence pack process

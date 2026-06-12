@@ -573,3 +573,12 @@ See:
     audits/packet/README.md
 
 The repository now includes audit scope, finding templates, remediation tracking, triage policy, and audit status structure.
+
+## Release-candidate evidence
+
+See:
+
+    docs/release-candidate-evidence-run.md
+    release-candidates/README.md
+
+The repository can summarize generated deployment evidence packs into small release-candidate evidence records.
