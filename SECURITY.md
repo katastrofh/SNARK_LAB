@@ -146,3 +146,12 @@ See:
     ceremony/README.md
 
 The manifest verifier checks ceremony metadata and SRS digests. Production-security claims require real ceremony artifacts and external review.
+
+## Deployment evidence pack
+
+See:
+
+    docs/deployment-evidence-pack.md
+    deployment/README.md
+
+Deployment evidence records what was actually run. It does not replace external audit, side-channel review, or production SRS ceremony evidence.

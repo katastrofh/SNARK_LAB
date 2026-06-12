@@ -97,3 +97,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] Real production SRS digest published
 - [ ] Real ceremony transcript published
 - [ ] External review of SRS ceremony completed
+
+## Deployment evidence
+
+- [x] Deployment evidence pack process documented
+- [x] Deployment evidence collector added
+- [x] Deployment attestation template added
+- [ ] Real release-candidate evidence pack generated
+- [ ] Production evidence pack archived with release

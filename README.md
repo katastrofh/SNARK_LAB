@@ -555,3 +555,12 @@ See:
     ceremony/README.md
 
 The repository now defines a production SRS/public-parameter ceremony manifest format and verifier. A real production ceremony still requires real artifacts, digests, transcript evidence, and audit status.
+
+## Deployment evidence pack
+
+See:
+
+    docs/deployment-evidence-pack.md
+    deployment/README.md
+
+The repository can generate deployment evidence packs containing commit hashes, toolchain versions, gate outputs, public vector checks, SRS manifest checks, and artifact digests.

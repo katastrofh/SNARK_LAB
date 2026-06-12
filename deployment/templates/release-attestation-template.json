@@ -1,0 +1,16 @@
+{
+  "schema": "snark-lab-release-attestation-v1",
+  "status": "template-not-production",
+  "release": "",
+  "tag": "",
+  "commit": "",
+  "generated_utc": "",
+  "production_gate_passed": false,
+  "public_vectors_passed": false,
+  "srs_manifest_verified": false,
+  "strict_production_srs_manifest_verified": false,
+  "external_audit_completed": false,
+  "side_channel_review_completed": false,
+  "artifact_sha256s": {},
+  "notes": "Fill this from real generated evidence. Do not fabricate production status."
+}

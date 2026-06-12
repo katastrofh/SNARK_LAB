@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Deployment evidence pack process
+
 - Production SRS ceremony specification and manifest verifier
 
 - Side-channel boundary notes

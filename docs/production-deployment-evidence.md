@@ -114,3 +114,11 @@ Required command:
     python3 scripts/verify-srs-ceremony-manifest.py <manifest.json> --strict-production
 
 The production SRS manifest must not contain placeholder digests.
+
+## Evidence pack generation
+
+Generate release/deployment evidence with:
+
+    scripts/collect-deployment-evidence.sh
+
+The generated pack records commit hash, git status, toolchain versions, gate outputs, public vector checks, SRS manifest checks, dependency tree, and artifact digests.
