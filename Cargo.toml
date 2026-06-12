@@ -21,7 +21,7 @@ repository = "https://github.com/katastrofh/SNARK_LAB"
 
 [workspace.dependencies]
 ark-ff = "0.5"
-ark-bls12-381 = "0.5"
+ark-bls12-381 = "0.6"
 field = { path = "crates/field" }
 multilinear = { path = "crates/multilinear" }
 sumcheck = { path = "crates/sumcheck" }
