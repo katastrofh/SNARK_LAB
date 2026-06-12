@@ -40,10 +40,10 @@ scripts/check-release-checklist.sh
 echo "[12/19] GitHub release artifact tooling"
 scripts/check-github-release-artifacts.sh
 
-echo "[14/19] long fuzz campaign evidence"
+echo "[13/19] long fuzz campaign evidence"
 scripts/check-long-fuzz-campaign-evidence.sh
 
-echo "[13/19] fuzz nightly runner policy"
+echo "[14/19] fuzz nightly runner policy"
 scripts/check-fuzz-nightly-runner.sh
 
 echo "[15/19] production deployment guide"

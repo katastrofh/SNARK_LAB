@@ -232,3 +232,11 @@ See:
     docs/fuzz-nightly-runner-fix.md
 
 Stable CI compiles fuzz targets. Nightly is required for actual sanitizer-backed cargo-fuzz campaign execution.
+
+## Fuzz campaign runner hardening
+
+See:
+
+    docs/fuzz-campaign-runner-hardening.md
+
+Failed fuzz runs are not production evidence. Crashes require triage and regression tests.

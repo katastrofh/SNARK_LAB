@@ -181,3 +181,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Runner records fuzz toolchain in campaign manifest
 - [ ] Nightly smoke campaign completed
 - [ ] Long nightly fuzz campaign completed
+
+## Fuzz campaign runner hardening
+
+- [x] Fuzz generated artifacts ignored
+- [x] Failed fuzz run diagnostic tail added
+- [x] Failed fuzz runs explicitly not evidence
+- [ ] Failed smoke run triaged
+- [ ] Successful smoke campaign archived

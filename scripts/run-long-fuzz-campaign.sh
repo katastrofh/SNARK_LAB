@@ -68,6 +68,11 @@ for target in "${TARGETS[@]}"; do
   ) > "$OUT/$target.log" 2>&1 || {
     echo "target failed: $target" | tee -a "$OUT/SUMMARY.md"
     echo "see: $OUT/$target.log" | tee -a "$OUT/SUMMARY.md"
+    echo "" | tee -a "$OUT/SUMMARY.md"
+    echo "last 80 log lines:" | tee -a "$OUT/SUMMARY.md"
+    tail -80 "$OUT/$target.log" | tee -a "$OUT/SUMMARY.md"
+    echo "" | tee -a "$OUT/SUMMARY.md"
+    echo "This failed run is not long-fuzz evidence." | tee -a "$OUT/SUMMARY.md"
     exit 1
   }
 

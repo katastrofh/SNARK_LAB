@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Fuzz campaign runner hardening
+
 - Fuzz nightly runner policy
 
 - Production SRS placeholder policy
