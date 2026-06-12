@@ -564,3 +564,12 @@ See:
     deployment/README.md
 
 The repository can generate deployment evidence packs containing commit hashes, toolchain versions, gate outputs, public vector checks, SRS manifest checks, and artifact digests.
+
+## Audit readiness packet
+
+See:
+
+    docs/audit-readiness-packet.md
+    audits/packet/README.md
+
+The repository now includes audit scope, finding templates, remediation tracking, triage policy, and audit status structure.

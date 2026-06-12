@@ -122,3 +122,11 @@ Generate release/deployment evidence with:
     scripts/collect-deployment-evidence.sh
 
 The generated pack records commit hash, git status, toolchain versions, gate outputs, public vector checks, SRS manifest checks, dependency tree, and artifact digests.
+
+## Audit packet reference
+
+The deployment evidence pack should reference:
+
+    audits/packet/README.md
+
+A production deployment should include final audit status and remediation state.

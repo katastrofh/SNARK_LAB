@@ -155,3 +155,12 @@ See:
     deployment/README.md
 
 Deployment evidence records what was actually run. It does not replace external audit, side-channel review, or production SRS ceremony evidence.
+
+## Audit readiness packet
+
+See:
+
+    docs/audit-readiness-packet.md
+    audits/packet/README.md
+
+The audit packet prepares SNARK_LAB for external review. It does not itself mean an audit has been completed.
