@@ -1,0 +1,1 @@
+Rust protocol lab for SNARK building blocks: Sumcheck, Zerocheck, PermCheck, IPA polynomial commitments, fuzzing, release evidence, and visualizer.

@@ -296,3 +296,11 @@ See:
     docs/visualizer-screenshot-assets.md
 
 Visualizer screenshots are documentation assets only. They are not cryptographic evidence.
+
+## Repository topic and badge polish
+
+See:
+
+    docs/repository-topic-and-badge-polish.md
+
+Badges and discovery metadata must not claim audited production security, custody safety, or mainnet readiness.
