@@ -1,3 +1,130 @@
+<!-- SNARK_LAB_STAR_POLISH_V1 -->
+
+# SNARK_LAB
+
+**A Rust protocol lab for SNARK building blocks: Sumcheck, Zerocheck, PermCheck, and IPA polynomial commitments.**
+
+SNARK_LAB connects the math of interactive proofs to executable Rust code, public test vectors, fuzzing, release evidence, and an educational visualizer.
+
+It is built for people who want to understand how SNARK protocols actually fit together, not just read theorem statements.
+
+## Why this repository matters
+
+Most SNARK learning material stops at equations. Most production libraries hide the protocol mechanics behind APIs.
+
+SNARK_LAB sits in the middle:
+
+- readable protocol implementations
+- transcript-bound proof flows
+- IPA commitment/opening path
+- malformed-proof rejection tests
+- fuzz targets and fuzz regression tracking
+- public vectors and reference comparisons
+- release-candidate evidence
+- browser visualizer for protocol flow
+
+## Current status
+
+| Area | Status |
+|---|---|
+| Sumcheck | Implemented and tested |
+| Zerocheck | Implemented and tested |
+| PermCheck | Implemented and tested |
+| IPA PCS path | Implemented as a research prototype |
+| IPA proof codecs | Fuzzed and regression-tested |
+| SRS loader/provenance | Implemented with production-boundary checks |
+| Visualizer | Implemented |
+| Release candidate | v0.2.0-rc.1 |
+| Production-secure deployment | Not claimed |
+| External audit | Not yet completed |
+
+## What this is
+
+SNARK_LAB is:
+
+- a serious research/engineering prototype
+- a protocol-learning laboratory
+- a reproducible SNARK component testbed
+- a release-candidate artifact with evidence gates
+
+## What this is not
+
+SNARK_LAB is not yet:
+
+- audited deployment-ready cryptographic software
+- mainnet-ready cryptographic infrastructure
+- custody-safe software
+- a replacement for external review
+- a production SRS ceremony
+
+Do not use this repository for production funds, custody, consensus-critical systems, or security-critical deployment.
+
+## Quickstart
+
+Run the full production-readiness gate:
+
+    scripts/check-production-ready.sh
+
+Run Rust tests:
+
+    cargo test --workspace
+
+Run the visualizer:
+
+    cd web/visualizer
+    npm ci
+    npm run dev
+
+Build release artifacts for the current release candidate:
+
+    scripts/build-github-release-artifacts.sh v0.2.0-rc.1
+
+## Protocol map
+
+| Protocol | Purpose |
+|---|---|
+| Sumcheck | Proves claims about sums over Boolean hypercubes |
+| Zerocheck | Reduces constraint satisfaction to polynomial zero checks |
+| PermCheck | Checks multiset/permutation consistency |
+| IPA PCS | Commits to multilinear polynomials and proves openings |
+| SRS tooling | Validates public parameter provenance and artifact boundaries |
+
+## Evidence and hardening
+
+| Evidence layer | Location |
+|---|---|
+| Production gate | `scripts/check-production-ready.sh` |
+| Release candidate evidence | `release-candidates/LATEST.md` |
+| Public vectors | `test-vectors/` |
+| Fuzz targets | `fuzz/fuzz_targets/` |
+| Fuzz smoke evidence | `fuzz/smoke-evidence/` |
+| Fuzz crash regressions | `fuzz/regressions/` |
+| SRS policy | `srs/PRODUCTION_SRS_POLICY.md` |
+| Deployment guide | `docs/production-deployment-guide.md` |
+| Audit packet | `audits/packet/README.md` |
+
+## Suggested reading order
+
+1. `README.md`
+2. `docs/production-readiness-index.md`
+3. `docs/security-review-checklist.md`
+4. `docs/ipa-proof-decoder-fuzz-regression.md`
+5. `release/v0.2.0-rc.1.md`
+6. `web/visualizer/`
+
+## Release candidate
+
+Current release candidate:
+
+    v0.2.0-rc.1
+
+The release candidate is suitable for review, reproducibility checks, and protocol study. It is not production-secure.
+
+---
+
+
+## Existing detailed documentation
+
 # SNARK_LAB
 
 **Build, inspect, test, and benchmark SNARK protocol components.**

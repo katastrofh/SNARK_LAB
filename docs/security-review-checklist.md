@@ -227,3 +227,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Regression metadata validation added
 - [x] Regression test checks no panic
 - [ ] More crash corpus cases added as fuzzing discovers them
+
+## README public boundary
+
+- [x] README public security boundary checked
+- [x] README evidence table added
+- [x] README quickstart added
+- [x] README release-candidate status added
+- [ ] Visualizer screenshot or GIF added
