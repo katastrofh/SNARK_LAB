@@ -617,3 +617,13 @@ See:
     docs/long-fuzz-campaign-evidence.md
 
 The repository includes tooling to run and archive long fuzz campaign evidence for IPA proof/opening/SRS byte parsers.
+
+## Production readiness index
+
+See:
+
+    docs/production-readiness-index.md
+    docs/production-deployment-guide.md
+    docs/operator-runbook.md
+
+The repository now has a release-candidate deployment guide and operator runbook. It is not yet production-secure.
