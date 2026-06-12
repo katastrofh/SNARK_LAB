@@ -10,6 +10,12 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_backend_integration;
+pub use ipa_backend_integration::{
+    commit_ipa_backend, open_ipa_backend, trim_ipa_integrated_keys, verify_ipa_backend,
+    IpaBackendIntegrationError, IpaIntegratedCommitmentWitness, IpaIntegratedOpening,
+    IpaIntegratedProverKey, IpaIntegratedVerifierKey,
+};
 pub mod ipa_blinded_path;
 pub use ipa_blinded_path::{
     blinded_extension_point, prove_blinded_ipa_opening, verify_blinded_ipa_opening,
