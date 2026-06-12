@@ -10,7 +10,11 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_srs_loader;
 pub mod ipa_srs_provenance;
+pub use ipa_srs_loader::{
+    decode_ipa_srs_file, encode_ipa_srs_file, read_ipa_srs_file, IpaSrsFileError,
+};
 pub use ipa_srs_provenance::{
     canonical_ipa_srs_digest, validate_ipa_srs_provenance, IpaSrsProvenance, IpaSrsProvenanceError,
     IpaSrsSource, IpaVerifiedSrs,
