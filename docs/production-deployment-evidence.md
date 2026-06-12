@@ -106,3 +106,11 @@ Do not use:
     audited
     mainnet-ready
     custody-safe
+
+## SRS ceremony manifest verification
+
+Required command:
+
+    python3 scripts/verify-srs-ceremony-manifest.py <manifest.json> --strict-production
+
+The production SRS manifest must not contain placeholder digests.

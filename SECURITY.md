@@ -137,3 +137,12 @@ See:
     docs/production-deployment-evidence.md
 
 Do not describe SNARK_LAB as production-secure until side-channel review, external audit, and production SRS ceremony evidence exist.
+
+## Production SRS ceremony specification
+
+See:
+
+    docs/production-srs-ceremony-spec.md
+    ceremony/README.md
+
+The manifest verifier checks ceremony metadata and SRS digests. Production-security claims require real ceremony artifacts and external review.

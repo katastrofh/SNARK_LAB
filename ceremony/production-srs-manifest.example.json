@@ -1,0 +1,37 @@
+{
+  "manifest_version": "1",
+  "status": "example-not-production",
+  "scheme": "ipa-multilinear-pcs",
+  "curve": "BLS12-381",
+  "field": "Fr",
+  "max_variables": 20,
+  "generator_derivation": {
+    "method": "hash-to-curve",
+    "domain_separator": "SNARK_LAB_IPA_SRS_V1",
+    "public_beacon": "example-public-beacon-not-production",
+    "notes": "Production manifests must replace this with a real public randomness beacon or ceremony transcript root."
+  },
+  "artifacts": {
+    "final_srs_path": "",
+    "final_srs_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "verification_command": "cargo run --release -p snark-lab-cli -- srs-verify --path <final-srs-file>"
+  },
+  "participants": [
+    {
+      "name": "example",
+      "role": "specification-placeholder",
+      "contribution_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "transcript": {
+    "transcript_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "transcript_path": "",
+    "public_logs_path": ""
+  },
+  "security_statement": {
+    "trusted_setup_required": false,
+    "toxic_waste_expected": false,
+    "production_ready": false,
+    "audit_required_before_production_claim": true
+  }
+}
