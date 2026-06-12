@@ -189,3 +189,130 @@ footer { display: flex; gap: 22px; align-items: center; margin-top: 58px; paddin
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* Demo polish */
+.card, .security-boundary, .pipeline-card {
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.card:hover, .pipeline-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(100, 232, 219, .34);
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.035),
+    0 24px 70px rgba(0,0,0,.22);
+}
+
+.brand {
+  text-decoration: none;
+}
+
+.site-header nav button {
+  white-space: nowrap;
+}
+
+.round-card {
+  scroll-margin-top: 96px;
+}
+
+.fold-strip {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.fold-strip::-webkit-scrollbar {
+  height: 6px;
+}
+
+.fold-strip::-webkit-scrollbar-thumb {
+  background: #2a4952;
+  border-radius: 999px;
+}
+
+.pipeline-card {
+  margin-block: 18px;
+}
+
+@media (max-width: 980px) {
+  .site-header {
+    height: auto;
+    min-height: 70px;
+    flex-wrap: wrap;
+    padding-block: 12px;
+  }
+
+  nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .header-meta {
+    margin-left: auto;
+  }
+
+  .stream-layout,
+  .method-comparison,
+  .sumcheck-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .controls-card {
+    position: relative;
+    top: auto;
+  }
+
+  .security-boundary {
+    grid-template-columns: auto 1fr;
+  }
+
+  .boundary-path {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 620px) {
+  main, footer {
+    width: min(100% - 24px, 1440px);
+  }
+
+  .page-intro h1 {
+    font-size: 40px;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pipeline-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-card svg {
+    transform: rotate(90deg);
+    margin: 0 auto;
+  }
+}
+
+@media print {
+  body {
+    background: #071014;
+  }
+
+  .site-header,
+  footer,
+  button {
+    display: none !important;
+  }
+
+  main {
+    width: 100%;
+  }
+
+  .card,
+  .pipeline-card,
+  .security-boundary {
+    break-inside: avoid;
+  }
+}

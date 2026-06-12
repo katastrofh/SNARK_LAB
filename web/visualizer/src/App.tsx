@@ -50,6 +50,33 @@ const tabs: Array<{ id: Tab; label: string; eyebrow: string; icon: Icon }> = [
   { id: 'ipa', label: 'IPA PCS', eyebrow: 'Curve commitment backend', icon: LockKeyhole },
 ];
 
+function isTab(value: string | null): value is Tab {
+  return value === 'sumcheck'
+    || value === 'zerocheck'
+    || value === 'permcheck'
+    || value === 'scribe'
+    || value === 'ipa';
+}
+
+function readInitialTab(): Tab {
+  if (typeof window === 'undefined') return 'sumcheck';
+
+  const requested = new URLSearchParams(window.location.search).get('tab');
+  return isTab(requested) ? requested : 'sumcheck';
+}
+
+function writeTabToUrl(tab: Tab) {
+  const url = new URL(window.location.href);
+
+  if (tab === 'sumcheck') {
+    url.searchParams.delete('tab');
+  } else {
+    url.searchParams.set('tab', tab);
+  }
+
+  window.history.replaceState({}, '', url);
+}
+
 const formatBytes = (bytes: number) => {
   if (bytes >= 2 ** 30) return `${(bytes / 2 ** 30).toFixed(1)} GiB`;
   if (bytes >= 2 ** 20) return `${(bytes / 2 ** 20).toFixed(1)} MiB`;
@@ -620,10 +647,16 @@ function IpaPcsLab() {
 }
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>('sumcheck');
+  const [tab, setTab] = useState<Tab>(readInitialTab);
+
+  const handleTabChange = (nextTab: Tab) => {
+    setTab(nextTab);
+    writeTabToUrl(nextTab);
+  };
+
   return (
     <div className="app-shell">
-      <Header active={tab} onChange={setTab} />
+      <Header active={tab} onChange={handleTabChange} />
       {tab === 'sumcheck' && <SumcheckLab />}
       {tab === 'zerocheck' && <ZerocheckLab />}
       {tab === 'permcheck' && <PermcheckLab />}

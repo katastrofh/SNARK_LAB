@@ -112,3 +112,11 @@ See:
     docs/visualizer-real-ipa-flow.md
 
 The browser IPA flow is educational and small-field. It is not an audit and not production deployment evidence.
+
+## Visualizer demo boundary
+
+See:
+
+    docs/visualizer-polish-and-demo.md
+
+Visualizer screenshots and GIFs are educational assets. They are not audit evidence.

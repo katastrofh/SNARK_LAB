@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Visualizer demo polish and direct tab links
+
 - Real IPA opening flow in the visualizer
 
 - Fuzz campaign runner and documentation
