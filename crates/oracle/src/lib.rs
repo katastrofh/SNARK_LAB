@@ -10,6 +10,10 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_backend_codec;
+pub use ipa_backend_codec::{
+    decode_ipa_integrated_opening, encode_ipa_integrated_opening, IpaBackendOpeningCodecError,
+};
 pub mod ipa_backend_integration;
 pub use ipa_backend_integration::{
     commit_ipa_backend, open_ipa_backend, trim_ipa_integrated_keys, verify_ipa_backend,
