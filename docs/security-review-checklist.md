@@ -301,3 +301,13 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Review order documented
 - [x] Evidence locations documented
 - [x] Security boundary preserved
+
+## Examples gallery
+
+- [x] Examples gallery added
+- [x] Sumcheck example linked
+- [x] Zerocheck example linked
+- [x] PermCheck example linked
+- [x] IPA example linked
+- [x] Release evidence example linked
+- [x] Visualizer example linked

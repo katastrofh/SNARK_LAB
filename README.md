@@ -914,3 +914,12 @@ For outside reviewers, start here:
     docs/reviewer-onboarding-guide.md
 
 The reviewer guide explains the main evidence gate, release artifacts, protocol areas, fuzzing evidence, and security boundary.
+
+## Examples gallery
+
+For guided examples, see:
+
+    examples/README.md
+    docs/examples-gallery.md
+
+The gallery gives quick review paths for Sumcheck, Zerocheck, PermCheck, IPA, release evidence, and the visualizer.
