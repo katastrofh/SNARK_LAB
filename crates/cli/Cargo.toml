@@ -5,4 +5,9 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
+ark-bls12-381.workspace = true
+ark-ec = "0.5"
+multilinear.workspace = true
 snark-lab-interchange.workspace = true
+snark-lab-oracle.workspace = true
+snark-lab-transcript.workspace = true
