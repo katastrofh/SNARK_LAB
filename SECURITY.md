@@ -346,3 +346,12 @@ See:
     ROADMAP.md
 
 The roadmap keeps future engineering and research work separate from production-security claims.
+
+## Final repository health report
+
+See:
+
+    docs/final-repo-health-report.md
+    docs/final-repo-health-report-notes.md
+
+The health report summarizes repository evidence and remaining review blockers without making stronger security claims.

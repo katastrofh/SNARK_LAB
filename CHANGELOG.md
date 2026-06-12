@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Final repository health report
+
 - Final project positioning and roadmap
 
 - GitHub Release rc2 publication evidence

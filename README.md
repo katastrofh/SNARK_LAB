@@ -897,3 +897,11 @@ For a concise explanation of what this repository is, what it is not, and where 
     ROADMAP.md
 
 SNARK_LAB is positioned as a research prototype and protocol lab, not audited production-secure software.
+
+## Final repository health report
+
+For a concise repository status snapshot, see:
+
+    docs/final-repo-health-report.md
+
+The report summarizes release candidates, evidence, automated gates, strong points, remaining blockers, and recommended next work.
