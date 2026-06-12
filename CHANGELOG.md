@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- GitHub-facing README polish
+
 - Fuzz crash regression suite
 
 - All fuzz targets nightly smoke evidence

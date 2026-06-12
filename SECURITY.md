@@ -280,3 +280,11 @@ See:
     docs/fuzz-crash-regression-suite.md
 
 Known parser crashes must become regression tests and must return decode errors rather than panics.
+
+## Public README security boundary
+
+See:
+
+    docs/readme-star-polish.md
+
+The README is required to state that the release candidate is not production-secure and not externally audited.
