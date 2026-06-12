@@ -79,3 +79,11 @@ See:
     test-vectors/README.md
 
 The committed vectors are deterministic regression artifacts, not production SRS material or audit evidence.
+
+## Reference implementation comparison
+
+See:
+
+    docs/reference-implementation-comparison.md
+
+Reference comparison tests are regression-hardening checks. They are not an external audit.

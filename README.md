@@ -487,3 +487,11 @@ See:
     docs/public-test-vectors.md
 
 The committed vectors are regression artifacts for the research prototype. They are not production SRS material.
+
+## Reference implementation comparison
+
+See:
+
+    docs/reference-implementation-comparison.md
+
+The reference tests compare selected production algebra against an independent slow implementation.
