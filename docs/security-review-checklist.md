@@ -51,7 +51,7 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Integrated commit, open, and verify API implemented
 - [x] Negative malformed-proof fixtures
 - [x] Randomized roundtrip tests
-- [ ] Independent reference implementation comparison
+- [x] Independent reference implementation comparison
 - [ ] Public test vectors
 - [ ] Formal proof sketch
 
