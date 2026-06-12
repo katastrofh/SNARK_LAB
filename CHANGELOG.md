@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- IPA fuzz runtime requirement documentation
+
 - Fuzz campaign runner hardening
 
 - Fuzz nightly runner policy

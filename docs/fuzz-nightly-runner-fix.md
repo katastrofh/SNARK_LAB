@@ -45,3 +45,11 @@ Run:
 Stable CI compiles fuzz targets.
 
 Nightly campaign runs are separate evidence-generation runs and should be archived as release evidence.
+
+## Nightly rust-src component
+
+Some cargo-fuzz sanitizer builds require the nightly rust-src component.
+
+Install it with:
+
+    rustup component add rust-src --toolchain nightly

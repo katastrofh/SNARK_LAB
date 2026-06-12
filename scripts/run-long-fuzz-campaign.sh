@@ -32,6 +32,12 @@ if ! cargo +${FUZZ_TOOLCHAIN} fuzz --help >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! rustup component list --toolchain "${FUZZ_TOOLCHAIN}" | grep -q '^rust-src.*installed'; then
+  echo "nightly rust-src component is required for sanitizer-backed fuzzing" >&2
+  echo "install with: rustup component add rust-src --toolchain ${FUZZ_TOOLCHAIN}" >&2
+  exit 1
+fi
+
 mkdir -p "$OUT"
 
 {

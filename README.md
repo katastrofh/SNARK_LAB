@@ -652,3 +652,11 @@ See:
     docs/fuzz-campaign-runner-hardening.md
 
 Failed fuzz runs are not treated as evidence. Generated fuzz corpora and artifacts are ignored by default.
+
+## IPA fuzz runtime requirements
+
+See:
+
+    docs/ipa-fuzz-target-runtime-fix.md
+
+Stable CI compiles fuzz targets. Actual cargo-fuzz execution requires nightly Rust and rust-src.
