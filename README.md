@@ -1,16 +1,14 @@
-<!-- SNARK_LAB_STAR_POLISH_V1 -->
+<!-- SNARK_LAB_README_PUBLIC_V2 -->
 
 # SNARK_LAB
 
-<!-- SNARK_LAB_BADGES_V1 -->
-
 <p align="center">
   <img alt="status: research prototype" src="https://img.shields.io/badge/status-research%20prototype-blue">
-  <img alt="release: v0.2.0-rc.1" src="https://img.shields.io/badge/release-v0.2.0--rc.1-orange">
+  <img alt="release: v0.2.0-rc.2" src="https://img.shields.io/badge/release-v0.2.0--rc.2-orange">
   <img alt="language: Rust" src="https://img.shields.io/badge/language-Rust-informational">
   <img alt="fuzzing: smoke and regressions" src="https://img.shields.io/badge/fuzzing-smoke%20%2B%20regressions-success">
   <img alt="visualizer: available" src="https://img.shields.io/badge/visualizer-available-success">
-  <img alt="license: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-lightgrey">
+  <img alt="license: MIT" src="https://img.shields.io/badge/license-MIT-lightgrey">
 </p>
 
 <p align="center">
@@ -18,11 +16,13 @@
   Not audited production-secure software.
 </p>
 
-**A Rust protocol lab for SNARK building blocks: Sumcheck, Zerocheck, PermCheck, and IPA polynomial commitments.**
+**SNARK_LAB is a Rust protocol lab for SNARK building blocks: Sumcheck, Zerocheck, PermCheck, and IPA polynomial commitments.**
 
-SNARK_LAB connects the math of interactive proofs to executable Rust code, public test vectors, fuzzing, release evidence, and an educational visualizer.
+It connects the math of interactive proofs to executable Rust code, transcript-bound proof flows, public test vectors, fuzzing evidence, release-candidate artifacts, and an educational browser visualizer.
 
-It is built for people who want to understand how SNARK protocols actually fit together, not just read theorem statements.
+The goal is simple: make SNARK protocol mechanics inspectable.
+
+---
 
 ## Why this repository matters
 
@@ -30,81 +30,127 @@ Most SNARK learning material stops at equations. Most production libraries hide 
 
 SNARK_LAB sits in the middle:
 
-- readable protocol implementations
-- transcript-bound proof flows
-- IPA commitment/opening path
-- malformed-proof rejection tests
-- fuzz targets and fuzz regression tracking
-- public vectors and reference comparisons
-- release-candidate evidence
-- browser visualizer for protocol flow
+* readable Rust implementations of core SNARK components
+* Fiat–Shamir transcript ordering
+* Sumcheck, Zerocheck, and PermCheck flows
+* an IPA polynomial-commitment research path
+* malformed-proof rejection tests
+* canonical proof/SRS decoding boundaries
+* fuzz targets and fuzz regression tracking
+* public vectors and reference comparisons
+* release-candidate evidence
+* a browser visualizer for protocol flow
+
+This repository is built for students, researchers, reviewers, and engineers who want to understand how SNARK components fit together.
+
+---
 
 ## Current status
 
-| Area | Status |
-|---|---|
-| Sumcheck | Implemented and tested |
-| Zerocheck | Implemented and tested |
-| PermCheck | Implemented and tested |
-| IPA PCS path | Implemented as a research prototype |
-| IPA proof codecs | Fuzzed and regression-tested |
-| SRS loader/provenance | Implemented with production-boundary checks |
-| Visualizer | Implemented |
-| Release candidate | v0.2.0-rc.1 |
-| Production-secure deployment | Not claimed |
-| External audit | Not yet completed |
+| Area                         | Status                                      |
+| ---------------------------- | ------------------------------------------- |
+| Sumcheck                     | Implemented and tested                      |
+| Zerocheck                    | Implemented and tested                      |
+| PermCheck                    | Implemented and tested                      |
+| IPA PCS path                 | Implemented as a research prototype         |
+| IPA proof codecs             | Fuzzed and regression-tested                |
+| SRS loader/provenance        | Implemented with production-boundary checks |
+| Browser visualizer           | Implemented                                 |
+| Public test vectors          | Implemented                                 |
+| Release evidence             | Implemented                                 |
+| Current release candidate    | `v0.2.0-rc.2`                               |
+| External audit               | Not completed                               |
+| Production-secure deployment | Not claimed                                 |
+
+---
 
 ## What this is
 
 SNARK_LAB is:
 
-- a serious research/engineering prototype
-- a protocol-learning laboratory
-- a reproducible SNARK component testbed
-- a release-candidate artifact with evidence gates
+* a reviewer-facing research prototype
+* a protocol-learning laboratory
+* a reproducible SNARK component testbed
+* an evidence-driven release-candidate artifact
+* a bridge between SNARK math and executable protocol code
 
 ## What this is not
 
-SNARK_LAB is not yet:
+SNARK_LAB is not:
 
-- audited deployment-ready cryptographic software
-- mainnet-ready cryptographic infrastructure
-- custody-safe software
-- a replacement for external review
-- a production SRS ceremony
+* audited deployment-ready cryptographic software
+* mainnet-ready cryptographic infrastructure
+* custody-safe software
+* a replacement for external review
+* a production SRS ceremony
+* a library to protect real funds or consensus-critical systems
 
-Do not use this repository for production funds, custody, consensus-critical systems, or security-critical deployment.
+Do **not** use this repository for production funds, custody, consensus-critical systems, or security-critical deployment.
+
+---
 
 ## Quickstart
 
-Run the full production-readiness gate:
+Clone the repository:
 
-    scripts/check-production-ready.sh
+```bash
+git clone https://github.com/katastrofh/SNARK_LAB.git
+cd SNARK_LAB
+```
 
-Run Rust tests:
+Run the full repository gate:
 
-    cargo test --workspace
+```bash
+scripts/check-production-ready.sh
+```
+
+Run all Rust tests:
+
+```bash
+cargo test --workspace
+```
+
+Run the IPA commit/open/verify demo:
+
+```bash
+cargo run -p snark-lab-cli -- ipa-demo
+```
 
 Run the visualizer:
 
-    cd web/visualizer
-    npm ci
-    npm run dev
+```bash
+cd web/visualizer
+npm ci
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
 
 Build release artifacts for the current release candidate:
 
-    scripts/build-github-release-artifacts.sh v0.2.0-rc.1
+```bash
+scripts/build-github-release-artifacts.sh v0.2.0-rc.2
+```
+
+---
 
 ## Protocol map
 
-| Protocol | Purpose |
-|---|---|
-| Sumcheck | Proves claims about sums over Boolean hypercubes |
-| Zerocheck | Reduces constraint satisfaction to polynomial zero checks |
-| PermCheck | Checks multiset/permutation consistency |
-| IPA PCS | Commits to multilinear polynomials and proves openings |
-| SRS tooling | Validates public parameter provenance and artifact boundaries |
+| Protocol/component | Purpose                                                       |
+| ------------------ | ------------------------------------------------------------- |
+| Sumcheck           | Proves claims about sums over Boolean hypercubes              |
+| Zerocheck          | Reduces constraint satisfaction to polynomial zero checks     |
+| PermCheck          | Checks multiset/permutation consistency                       |
+| Transparent oracle | Provides simple inspectable opening/verification flow         |
+| IPA PCS            | Commits to multilinear polynomials and proves openings        |
+| SRS tooling        | Validates public-parameter provenance and artifact boundaries |
+| Interchange format | Connects the educational visualizer to deterministic examples |
 
+---
 
 ## Visualizer screenshots
 
@@ -119,170 +165,32 @@ The visualizer shows how the protocol components fit together.
   <img src="docs/assets/visualizer/sumcheck-flow.png" alt="SNARK_LAB sumcheck flow visualizer" width="70%">
 </p>
 
+---
+
 ## Evidence and hardening
 
-| Evidence layer | Location |
-|---|---|
-| Production gate | `scripts/check-production-ready.sh` |
-| Release candidate evidence | `release-candidates/LATEST.md` |
-| Public vectors | `test-vectors/` |
-| Fuzz targets | `fuzz/fuzz_targets/` |
-| Fuzz smoke evidence | `fuzz/smoke-evidence/` |
-| Fuzz crash regressions | `fuzz/regressions/` |
-| SRS policy | `srs/PRODUCTION_SRS_POLICY.md` |
-| Deployment guide | `docs/production-deployment-guide.md` |
-| Audit packet | `audits/packet/README.md` |
-
-## Suggested reading order
-
-1. `README.md`
-2. `docs/production-readiness-index.md`
-3. `docs/security-review-checklist.md`
-4. `docs/ipa-proof-decoder-fuzz-regression.md`
-5. `release/v0.2.0-rc.1.md`
-6. `web/visualizer/`
-
-## Release candidate
-
-Current release candidate:
-
-    v0.2.0-rc.1
-
-The release candidate is suitable for review, reproducibility checks, and protocol study. It is not production-secure.
+| Evidence layer             | Location                                      |
+| -------------------------- | --------------------------------------------- |
+| Production-readiness gate  | `scripts/check-production-ready.sh`           |
+| GitHub workflows           | `.github/workflows/`                          |
+| Release candidate evidence | `release-candidates/LATEST.md`                |
+| Current release notes      | `release/v0.2.0-rc.2.md`                      |
+| GitHub release page draft  | `release/GITHUB_RELEASE_PAGE_v0.2.0-rc.2.md`  |
+| Public vectors             | `test-vectors/`                               |
+| Reference comparisons      | `docs/reference-implementation-comparison.md` |
+| Fuzz targets               | `fuzz/fuzz_targets/`                          |
+| Fuzz smoke evidence        | `fuzz/smoke-evidence/`                        |
+| Fuzz crash regressions     | `fuzz/regressions/`                           |
+| SRS policy                 | `srs/PRODUCTION_SRS_POLICY.md`                |
+| Deployment guide           | `docs/production-deployment-guide.md`         |
+| Audit packet               | `audits/packet/README.md`                     |
 
 ---
 
-
-## Existing detailed documentation
-
-# SNARK_LAB
-
-**Build, inspect, test, and benchmark SNARK protocol components.**
-
-`SNARK_LAB` is a Rust + TypeScript research lab for understanding and engineering SNARK building blocks: Sumcheck, Zerocheck, PermCheck, streaming bottlenecks, transcript binding, and an experimental Inner Product Argument (IPA) polynomial-commitment path.
-
-The Rust core is built with Arkworks primitives, BLS12-381 scalar-field support, Merlin Fiat–Shamir transcripts, checked serialization boundaries, local production gates, and a browser visualizer for interactive protocol inspection.
-
-> **Security boundary:** this repository is serious protocol infrastructure and a production-grade research prototype, but it is **not audited** and must **not** be used to protect funds, production systems, or security-critical deployments. The code intentionally labels educational components, rejects fake success paths, and keeps unsupported cryptographic configurations explicit.
-
----
-
-## Status
-
-| Component                                          | Status        |
-| -------------------------------------------------- | ------------- |
-| Fiat–Shamir Sumcheck                               | Implemented   |
-| Zerocheck reduction                                | Implemented   |
-| PermCheck product/rational fingerprints            | Implemented   |
-| Transparent multilinear oracle                     | Implemented   |
-| Browser-to-Rust educational transcript interchange | Implemented   |
-| IPA commitment equation                            | Implemented   |
-| IPA reduction-round state                          | Implemented   |
-| IPA vector and generator folding                   | Implemented   |
-| IPA L/R curve commitments                          | Implemented   |
-| IPA prover opening loop                            | Implemented   |
-| IPA verifier reduction loop                        | Implemented   |
-| IPA proof codec                                    | Implemented   |
-| Blinded IPA opening path                           | Implemented   |
-| Integrated IPA commit/open/verify API              | Implemented   |
-| IPA CLI demo                                       | Implemented   |
-| IPA SRS provenance validation                      | Implemented   |
-| IPA SRS file loader                                | Implemented   |
-| IPA SRS validation CLI                             | Implemented   |
-| Negative malformed-proof fixtures                  | Implemented   |
-| Randomized IPA roundtrip tests                     | Implemented   |
-| CLI SRS tooling integration tests                  | Implemented   |
-| Fuzzing                                            | Implemented   |
-| Benchmark suite for IPA path                       | Implemented   |
-| Security proof sketch / threat model               | Planned       |
-| External audit                                     | Not performed |
-
----
-
-## Quick Start
-
-### Run the full production gate
-
-```bash
-scripts/check-production-ready.sh
-```
-
-This gate runs:
+## Repository layout
 
 ```text
-cargo fmt
-cargo clippy with warnings denied
-cargo test
-visualizer production build
-unsafe Rust rejection
-visualizer NaN-footgun rejection
-git working-tree summary
-```
-
-### Run all Rust tests
-
-```bash
-cargo test --workspace
-```
-
-### Run the IPA commit/open/verify demo
-
-```bash
-cargo run -p snark-lab-cli -- ipa-demo
-```
-
-Expected output includes:
-
-```text
-ipa-demo: verified blinded IPA opening
-variables=2
-commitment_bytes=48
-decoded_rounds=3
-```
-
-### Validate an IPA SRS file
-
-```bash
-cargo run -p snark-lab-cli -- ipa-srs-validate --curve bls12-381-g1 ./path/to/ipa.srs
-```
-
-This command loads an SRS file, decodes canonical curve points, checks provenance, verifies the canonical SHA-256 basis digest, and rejects malformed or non-production SRS material.
-
-### Run the browser visualizer
-
-```bash
-cd web/visualizer
-npm install
-npm run dev
-```
-
-Open:
-
-```text
-http://localhost:5173
-```
-
-The browser lab uses small educational arithmetic where appropriate so protocol state remains inspectable. The Rust core uses Arkworks field and curve types.
-
----
-
-## What Is Implemented?
-
-| Protocol Component     | Rust Core                                                                                                                             | Browser Lab                               |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Sumcheck               | Generic multilinear Sumcheck with transcript-bound round polynomials and Merlin challenges                                            | Step-by-step educational visualization    |
-| Zerocheck              | Constraint table bound before equality-mixing challenge; delegates to Fiat–Shamir Sumcheck                                            | Toggle violated constraints               |
-| PermCheck              | Transcript-bound β, γ, tagged product/rational fingerprints, explicit denominator-pole errors                                         | Compare product and rational fingerprints |
-| Scribe-style pressure  | Large-field runtime benchmark plus explicit logical I/O model                                                                         | Product-tree vs. streaming traffic        |
-| Transcript interchange | Educational JSON verifier isolated in `crates/interchange`                                                                            | Export current Sumcheck experiment        |
-| IPA PCS                | Typed IPA commitment/opening path with checked curve commitments, proof codec, blinding extension, SRS provenance, and CLI validation | IPA PCS panel                             |
-
----
-
-## Repository Layout
-
-```text
-snark-lab/
+SNARK_LAB/
 ├── crates/
 │   ├── field/          # default BLS12-381 scalar field helpers
 │   ├── multilinear/    # dense multilinear extensions and equality basis
@@ -295,102 +203,76 @@ snark-lab/
 │   ├── cli/            # transcript verifier, IPA demo, SRS validator
 │   └── benches/        # runtime and logical I/O benchmarks
 ├── web/visualizer/     # React + TypeScript protocol workbench
-├── examples/transcripts/
-├── notebooks/
-├── docs/
-├── scripts/
-└── .github/workflows/
+├── examples/           # guided examples and transcripts
+├── test-vectors/       # deterministic public regression vectors
+├── fuzz/               # fuzz targets, smoke evidence, regressions
+├── docs/               # protocol notes and evidence documentation
+├── release/            # release notes and GitHub release pages
+├── release-candidates/ # release-candidate evidence
+├── scripts/            # local gates and artifact tooling
+└── .github/workflows/  # CI, audit, and release workflows
 ```
 
 ---
 
-## CLI Commands
+## Implemented protocol areas
 
-### Verify an educational browser transcript
+### Sumcheck
 
-```bash
-cargo run -p snark-lab-cli -- verify-transcript examples/transcripts/sumcheck-valid.json
-cargo run -p snark-lab-cli -- verify-transcript examples/transcripts/sumcheck-bad-round.json
-```
+* Fiat–Shamir transcript-bound round challenges
+* multilinear table support
+* deterministic proof serialization
+* malformed-round rejection tests
+* transparent-oracle integration path
 
-The version-1 interchange format is deterministic for visualizer compatibility and is explicitly educational. It does not drive the Rust cryptographic protocol challenges.
+### Zerocheck
 
-### Run a real IPA backend demo
+* constraint table binding before mixing challenge
+* reduction to Sumcheck
+* rejected nonzero constraint tables
+* educational visualizer flow
 
-```bash
-cargo run -p snark-lab-cli -- ipa-demo
-```
+### PermCheck
 
-This executes:
+* product/rational fingerprints
+* transcript-bound β and γ challenges
+* explicit denominator-pole errors
+* permutation/mutation rejection tests
 
-```text
-commit
-open
-encode public opening
-decode public opening
-verify
-```
-
-### Validate an IPA SRS file
-
-```bash
-cargo run -p snark-lab-cli -- ipa-srs-validate [--curve bls12-381-g1] <path.srs>
-```
-
-Validation checks:
-
-```text
-file read
-format magic
-canonical SRS decode
-curve-point decode
-identity rejection
-duplicate rejection
-generator-count validation
-provenance validation
-canonical basis digest validation
-```
-
-Unsupported curves fail before file access.
-
----
-
-## IPA PCS Path
+### IPA polynomial-commitment path
 
 The IPA path currently includes:
 
-```text
-typed curve-point wrapper
-canonical compressed point serialization
-curve generator basis validation
-commitment equation
-prover commitment path
-evaluation-basis construction
-opening statement binding
-reduction-round state
-L/R round commitment computation
-vector folding
-generator folding
-prover opening loop
-verifier reduction loop
-final commitment relation check
-proof shape validation
-proof codec
-blinded opening extension
-integrated commit/open/verify API
-SRS provenance validation
-SRS file loader
-SRS validation CLI
-negative fixtures
-randomized roundtrip tests
-CLI tooling tests
-```
+* typed curve-point wrapper
+* canonical compressed point serialization
+* generator-basis validation
+* commitment equation
+* prover commitment path
+* evaluation-basis construction
+* opening-statement binding
+* reduction-round state
+* L/R round commitment computation
+* vector folding
+* generator folding
+* prover opening loop
+* verifier reduction loop
+* final commitment relation check
+* proof shape validation
+* proof codec
+* blinded opening extension
+* integrated commit/open/verify API
+* SRS provenance validation
+* SRS file loader
+* SRS validation CLI
+* negative proof fixtures
+* randomized roundtrip tests
+* fuzz regression tests
 
-The typed integrated IPA backend is the supported path. Older shape-only backend surfaces remain explicit and must not fake successful proving or verification without the required curve, SRS, and blinding material.
+The typed integrated IPA backend is the supported research path. Unsupported cryptographic configurations fail explicitly rather than pretending to verify.
 
 ---
 
-## SRS Provenance Model
+## SRS provenance boundary
 
 Production SRS material must have provenance.
 
@@ -417,165 +299,122 @@ evaluation generators
 blinding generator
 ```
 
-The loader returns only `IpaVerifiedSrs`, meaning decoded material has already passed validation.
+The loader returns only verified SRS material after validation.
 
 The repository does **not** claim that test fixture generators are production SRS material.
 
 ---
 
-## Fiat–Shamir Ordering
+## Design principles
 
-Challenges are derived only after the relevant statement and prior prover message have been transcript-bound.
-
-```text
-bind protocol domain + public statement + oracle commitment
-                              │
-                              ▼
-                     append prover message
-                              │
-                              ▼
-                    derive challenge
-                              │
-                              ▼
-                     append next message
-                              │
-                              ▼
-                    derive next challenge
-```
-
-For Zerocheck, the constraint oracle is bound before the mixing point is derived.
-
-For PermCheck, tagged columns are bound before β and γ are derived.
-
-For IPA, opening statements and reduction-round commitments are absorbed before each folding challenge.
-
----
-
-## Design Principles
-
-1. **Messages before challenges.** Fiat–Shamir challenges are derived only after binding the relevant prior data.
-2. **No fake success paths.** Unsupported cryptographic paths must return explicit errors.
+1. **Messages before challenges.** Fiat–Shamir challenges are derived only after binding the relevant statement and prior prover message.
+2. **No fake success paths.** Unsupported cryptographic paths return explicit errors.
 3. **Checked curve material.** IPA curve points reject identity points and use canonical compressed serialization.
 4. **SRS provenance is mandatory.** Production SRS material must be externally supplied or derived with auditable provenance.
 5. **Educational components stay labeled.** Browser and interchange examples are not confused with the Rust cryptographic path.
-6. **Fail closed on malformed inputs.** Decoders, proof checks, and CLI validators reject corrupt data.
-7. **No unsafe Rust.** The production gate rejects unsafe Rust.
-8. **Measured vs. modeled.** Runtime measurements and logical I/O models are kept distinct.
+6. **Malformed inputs fail closed.** Decoders, proof checks, and CLI validators reject corrupt data.
+7. **No unsafe Rust.** The production-readiness gate rejects unsafe Rust.
+8. **Measured and modeled results stay separate.** Runtime measurements and logical I/O models are not conflated.
 
 ---
 
-## Browser Visualizer
-
-The browser workbench includes visual panels for:
-
-```text
-Sumcheck
-Zerocheck
-PermCheck
-Scribe-style streaming pressure
-IPA PCS
-educational transcript export
-```
-
-Browser arithmetic is educational where small fields improve readability. The Rust protocol core is separate.
-
----
-
-## Documentation
-
-Key documentation lives in `docs/`, including:
-
-```text
-Fiat–Shamir Sumcheck
-Zerocheck reduction
-PermCheck fingerprints
-Scribe streaming bottleneck
-transparent oracle abstraction
-IPA transcript rounds
-IPA proof shape
-IPA proof serialization
-IPA generator basis
-IPA curve types
-IPA commitment equation
-IPA prover commit path
-IPA opening statement
-IPA reduction rounds
-IPA round commitments
-IPA generator folding
-IPA prover opening loop
-IPA verifier opening loop
-IPA blinding extension
-IPA blinded prover/verifier path
-IPA backend integration
-IPA proof codec integration
-IPA negative proof fixtures
-IPA randomized roundtrip tests
-IPA SRS provenance
-IPA SRS loader
-IPA SRS CLI
-IPA SRS tooling tests
-CI matrix and audit
-local production gates
-```
-
----
-
-## Testing and Hardening
+## Testing and CI
 
 Current checks include:
 
-```text
-unit tests
-negative malformed-proof tests
-randomized roundtrip tests
-CLI integration tests
-canonical codec tests
-production gate script
-GitHub production-readiness workflow
-Linux + macOS CI matrix
-RustSec cargo-audit workflow
-npm high-severity audit
-Dependabot for Cargo, npm, and GitHub Actions
-unsafe Rust rejection
-visualizer production build
+* unit tests
+* negative malformed-proof tests
+* randomized IPA roundtrip tests
+* CLI integration tests
+* canonical codec tests
+* public test-vector checks
+* independent reference comparisons
+* fuzz target compile checks
+* fuzz smoke evidence checks
+* fuzz crash regression tests
+* visualizer production build
+* GitHub production-readiness workflow
+* Linux/macOS CI matrix
+* RustSec cargo-audit workflow
+* npm audit for the visualizer
+* unsafe Rust rejection
+* visualizer `Number.isNaN` footgun rejection
+
+Run the local gate:
+
+```bash
+scripts/check-production-ready.sh
 ```
 
-Planned hardening:
+---
 
-```text
-fuzzing for proof and SRS decoders
-larger IPA benchmark suite
-memory profiling
-dependency audit
-CI matrix across Linux/macOS and stable Rust
-threat model document
-security theorem / proof sketch
-side-channel review
-external audit
-```
+## Suggested reading order
+
+For a quick review path:
+
+1. `README.md`
+2. `REVIEWERS.md`
+3. `docs/project-positioning.md`
+4. `docs/final-repo-health-report.md`
+5. `docs/production-readiness-index.md`
+6. `docs/security-review-checklist.md`
+7. `docs/paper-style-technical-overview.md`
+8. `release/v0.2.0-rc.2.md`
+9. `web/visualizer/`
+
+For protocol internals:
+
+1. `crates/sumcheck/`
+2. `crates/zerocheck/`
+3. `crates/permcheck/`
+4. `crates/oracle/`
+5. `crates/cli/`
+6. `test-vectors/`
+7. `fuzz/`
 
 ---
 
 ## Benchmarks
 
-Run the existing benchmark driver:
+Run the benchmark driver:
 
 ```bash
 cargo run --release -p snark-lab-benches -- 18 8 3
 ```
 
-The optional argument is `log₂(N)`, capped by the benchmark harness.
-
-Current benchmark outputs distinguish measured runtime from modeled logical I/O. The benchmark binary includes PermCheck, Sumcheck, and IPA commit/open/verify timing. Future work will add memory profiles and hardware-counter-backed reports.
+The benchmark binary includes PermCheck, Sumcheck, and IPA commit/open/verify timing. Benchmark outputs distinguish measured runtime from modeled logical I/O.
 
 ---
 
-## Security Policy
+## Release candidate
+
+Current release candidate:
+
+```text
+v0.2.0-rc.2
+```
+
+See:
+
+```text
+release/v0.2.0-rc.2.md
+release/GITHUB_RELEASE_PAGE_v0.2.0-rc.2.md
+release/publication/v0.2.0-rc.2/README.md
+```
+
+Release candidates are for protocol review, artifact review, reproducibility checks, and audit preparation. They are not production-secure deployment releases.
+
+---
+
+## Security policy
 
 See:
 
 ```text
 SECURITY.md
+docs/threat-model-and-security-notes.md
+docs/security-review-checklist.md
+docs/security-proof-sketch.md
 ```
 
 This repository is not audited. Do not use it for production funds, mainnet systems, custody, consensus-critical infrastructure, or security-critical deployments.
@@ -584,363 +423,26 @@ This repository is not audited. Do not use it for production funds, mainnet syst
 
 ## Roadmap
 
-### Near-Term
+See:
 
 ```text
-refresh README and public-facing docs
-add SRS CLI tooling tests
-add fuzzing targets for proof/SRS decoders
-add IPA benchmark suite
-add threat model and security proof sketch
-update browser IPA panel to show real opening flow
+ROADMAP.md
+docs/project-positioning.md
+docs/final-repo-health-report.md
 ```
 
-### Research Direction
+Near-term work:
 
-```text
-compose Zerocheck + PermCheck + Sumcheck into a small HyperPlonk/Scribe-style proving pipeline
-evaluate streaming and memory pressure in commitment-backed protocols
-compare product-tree and rational PermCheck variants
-measure prover I/O and memory bottlenecks
-study Scribe-style polynomial commitment integration choices
-```
+* external review
+* longer fuzz campaigns
+* benchmark reports
+* memory profiling
+* side-channel review notes
+* protocol-composition experiments
+* clearer HyperPlonk/Scribe-style pipeline integration
 
 ---
 
 ## License
 
 MIT
-
-## Security boundary documents
-
-See:
-
-    docs/threat-model-and-security-notes.md
-    docs/security-review-checklist.md
-
-## Security proof sketch
-
-See:
-
-    docs/security-proof-sketch.md
-
-This is a proof-outline for the implemented research prototype. It is not an audit and not a production deployment claim.
-
-## Release and versioning
-
-See:
-
-    RELEASE.md
-    VERSIONING.md
-    CHANGELOG.md
-
-Current releases are research-preview releases. They are not audited and are not production-secure deployment software.
-
-## Public test vectors
-
-See:
-
-    test-vectors/README.md
-    docs/public-test-vectors.md
-
-The committed vectors are regression artifacts for the research prototype. They are not production SRS material.
-
-## Reference implementation comparison
-
-See:
-
-    docs/reference-implementation-comparison.md
-
-The reference tests compare selected production algebra against an independent slow implementation.
-
-## Dependency update policy
-
-See:
-
-    docs/dependency-update-policy.md
-
-Cryptographic dependencies are reviewed manually. Arkworks minor/major updates are intentionally not merged one crate at a time.
-
-## Fuzzing
-
-See:
-
-    FUZZING.md
-    docs/long-fuzz-campaign-notes.md
-
-The production gate compile-checks fuzz targets. Long-running fuzz campaign artifacts are required before stronger production-security claims.
-
-## Visualizer IPA flow
-
-See:
-
-    docs/visualizer-real-ipa-flow.md
-
-The browser IPA tab now shows the real IPA opening flow at educational scale while preserving the Rust/BLS12-381 security boundary.
-
-## Visualizer demo
-
-See:
-
-    web/visualizer/README.md
-    docs/visualizer-polish-and-demo.md
-
-The IPA tab is the recommended GitHub Pages demo entry point.
-
-## System flow visualizer
-
-See:
-
-    docs/visualizer-system-flow.md
-
-The System tab shows the actual repository pipeline from statement input to protocol reductions, IPA PCS, codecs, SRS validation, CLI vectors, fuzzing, and CI gates.
-
-## Side-channel and deployment evidence
-
-See:
-
-    docs/side-channel-boundary-notes.md
-    docs/production-deployment-evidence.md
-
-The target is a production system, but production-secure claims require audit evidence, side-channel review, and production SRS ceremony evidence.
-
-## Production SRS ceremony specification
-
-See:
-
-    docs/production-srs-ceremony-spec.md
-    ceremony/README.md
-
-The repository now defines a production SRS/public-parameter ceremony manifest format and verifier. A real production ceremony still requires real artifacts, digests, transcript evidence, and audit status.
-
-## Deployment evidence pack
-
-See:
-
-    docs/deployment-evidence-pack.md
-    deployment/README.md
-
-The repository can generate deployment evidence packs containing commit hashes, toolchain versions, gate outputs, public vector checks, SRS manifest checks, and artifact digests.
-
-## Audit readiness packet
-
-See:
-
-    docs/audit-readiness-packet.md
-    audits/packet/README.md
-
-The repository now includes audit scope, finding templates, remediation tracking, triage policy, and audit status structure.
-
-## Release-candidate evidence
-
-See:
-
-    docs/release-candidate-evidence-run.md
-    release-candidates/README.md
-
-The repository can summarize generated deployment evidence packs into small release-candidate evidence records.
-
-## Production release checklist and tagging
-
-See:
-
-    docs/production-release-checklist-and-tagging.md
-    release/PRODUCTION_RELEASE_CHECKLIST.md
-
-The repository now includes release-checklist validation and safe annotated tag preparation for release candidates.
-
-## Release candidate
-
-Current release-candidate notes:
-
-    release/v0.2.0-rc.1.md
-
-The release candidate is for protocol review, artifact review, and audit preparation. It is not production-secure.
-
-## GitHub release artifacts and checksums
-
-See:
-
-    docs/github-release-artifacts-and-checksums.md
-
-Release artifacts can be generated with:
-
-    scripts/build-github-release-artifacts.sh v0.2.0-rc.1
-
-## Long fuzz campaign evidence
-
-See:
-
-    docs/long-fuzz-campaign-evidence.md
-
-The repository includes tooling to run and archive long fuzz campaign evidence for IPA proof/opening/SRS byte parsers.
-
-## Production readiness index
-
-See:
-
-    docs/production-readiness-index.md
-    docs/production-deployment-guide.md
-    docs/operator-runbook.md
-
-The repository now has a release-candidate deployment guide and operator runbook. It is not yet production-secure.
-
-## Production SRS placeholder policy
-
-See:
-
-    docs/production-srs-artifact-placeholder-policy.md
-    srs/PRODUCTION_SRS_POLICY.md
-
-The repository rejects fake or placeholder production SRS artifacts. Production SRS material must be published with digest, manifest, transcript, and verifier evidence.
-
-## Fuzz campaign runner
-
-See:
-
-    docs/fuzz-nightly-runner-fix.md
-
-Fuzz targets compile on stable, while actual cargo-fuzz campaigns require a nightly Rust toolchain.
-
-## Fuzz campaign runner hardening
-
-See:
-
-    docs/fuzz-campaign-runner-hardening.md
-
-Failed fuzz runs are not treated as evidence. Generated fuzz corpora and artifacts are ignored by default.
-
-## IPA fuzz runtime requirements
-
-See:
-
-    docs/ipa-fuzz-target-runtime-fix.md
-
-Stable CI compiles fuzz targets. Actual cargo-fuzz execution requires nightly Rust and rust-src.
-
-## IPA proof decoder fuzz regression
-
-See:
-
-    docs/ipa-proof-decoder-fuzz-regression.md
-
-A fuzz-discovered capacity-overflow panic in the IPA proof decoder is covered by a regression test.
-
-## Nightly fuzz smoke evidence
-
-See:
-
-    docs/nightly-fuzz-smoke-evidence.md
-    fuzz/smoke-evidence/v0.2.0-rc.1/manifest.json
-
-The repository records successful nightly smoke fuzz evidence for the IPA proof decoder. This is not long-campaign or production-security evidence.
-
-## All fuzz targets smoke evidence
-
-See:
-
-    docs/all-fuzz-targets-smoke-evidence.md
-    fuzz/smoke-evidence/v0.2.0-rc.1/all-targets/manifest.json
-
-All fuzz targets have short nightly smoke evidence. This is not long-campaign or production-security evidence.
-
-## Fuzz crash regression suite
-
-See:
-
-    docs/fuzz-crash-regression-suite.md
-    fuzz/regressions/README.md
-
-Fuzz-discovered crashes are converted into stable regression tests.
-
-## GitHub Release page
-
-See:
-
-    release/GITHUB_RELEASE_PAGE_v0.2.0-rc.1.md
-    scripts/print-github-release-command.sh
-
-The release page records assets, checksums, evidence locations, and the non-production security boundary.
-
-## GitHub Release publication evidence
-
-See:
-
-    release/publication/v0.2.0-rc.1/README.md
-
-The repository records evidence that the v0.2.0-rc.1 GitHub Release page was published with expected assets.
-
-## Current release candidate
-
-The current main-branch release candidate is:
-
-    v0.2.0-rc.2
-
-See:
-
-    release/v0.2.0-rc.2.md
-    release/GITHUB_RELEASE_PAGE_v0.2.0-rc.2.md
-
-## GitHub Release rc2 publication evidence
-
-See:
-
-    release/publication/v0.2.0-rc.2/README.md
-
-The repository records evidence that the v0.2.0-rc.2 GitHub Release page was published with expected assets.
-
-## Project positioning and roadmap
-
-For a concise explanation of what this repository is, what it is not, and where it is going, see:
-
-    docs/project-positioning.md
-    ROADMAP.md
-
-SNARK_LAB is positioned as a research prototype and protocol lab, not audited production-secure software.
-
-## Final repository health report
-
-For a concise repository status snapshot, see:
-
-    docs/final-repo-health-report.md
-
-The report summarizes release candidates, evidence, automated gates, strong points, remaining blockers, and recommended next work.
-
-## Reviewer onboarding
-
-For outside reviewers, start here:
-
-    REVIEWERS.md
-    docs/reviewer-onboarding-guide.md
-
-The reviewer guide explains the main evidence gate, release artifacts, protocol areas, fuzzing evidence, and security boundary.
-
-## Examples gallery
-
-For guided examples, see:
-
-    examples/README.md
-    docs/examples-gallery.md
-
-The gallery gives quick review paths for Sumcheck, Zerocheck, PermCheck, IPA, release evidence, and the visualizer.
-
-## Paper-style technical overview
-
-For a compact paper-like technical summary, see:
-
-    docs/paper-style-technical-overview.md
-    docs/protocol-stack-summary.md
-
-These documents summarize the motivation, protocol stack, IPA path, evidence model, release model, visualizer role, and limitations.
-
-## Release-candidate freeze
-
-The current release-candidate phase is frozen for public review.
-
-See:
-
-    FREEZE.md
-    docs/final-repo-polish-and-freeze.md
-    docs/post-freeze-maintenance-policy.md
-
-Future changes should be bug fixes, review-driven corrections, evidence updates, benchmark reports, or clearly justified follow-up work.
