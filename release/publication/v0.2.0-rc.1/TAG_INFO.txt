@@ -1,0 +1,19 @@
+tag v0.2.0-rc.1
+Tagger:     katastrofh <alballa@uth.gr>
+TaggerDate: Fri Jun 12 21:14:15 2026 +0800
+
+SNARK_LAB v0.2.0-rc.1 release candidate
+
+Commit: f43953f50136fd219755beb6485d6ca6fb449c00
+Evidence: release-candidates/LATEST.json
+
+This tag does not claim production-secure status unless release notes explicitly include completed audit, side-channel review, and production SRS ceremony evidence.
+
+commit f43953f50136fd219755beb6485d6ca6fb449c00
+Merge: 44d031e 6337356
+Author:     katastrofh <alballa@uth.gr>
+AuthorDate: Fri Jun 12 21:12:36 2026 +0800
+Commit:     katastrofh <alballa@uth.gr>
+CommitDate: Fri Jun 12 21:12:36 2026 +0800
+
+    Merge v0.2.0-rc.1 release candidate notes

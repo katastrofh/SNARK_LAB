@@ -255,4 +255,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Release asset list included
 - [x] Checksum verification command included
 - [x] Non-production security boundary included
-- [ ] GitHub Release published manually
+- [x] GitHub Release published manually
+
+## Manual GitHub Release publication evidence
+
+- [x] GitHub Release publication evidence recorded
+- [x] Release asset list validated
+- [x] Release URL recorded
+- [x] Publication evidence marked non-production

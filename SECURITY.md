@@ -312,3 +312,11 @@ See:
     docs/github-release-page-finalization.md
 
 The release page must not claim external audit, production SRS completion, custody safety, mainnet readiness, or production-secure deployment.
+
+## Manual GitHub Release publication evidence
+
+See:
+
+    docs/manual-github-release-publication-evidence.md
+
+Release publication evidence confirms asset publication only. It does not claim production security.
