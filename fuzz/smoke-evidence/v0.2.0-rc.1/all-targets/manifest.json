@@ -1,0 +1,34 @@
+{
+  "schema": "snark-lab-all-fuzz-targets-smoke-v1",
+  "status": "smoke-complete",
+  "targets": [
+    {
+      "target": "ipa_proof_decode",
+      "status": "smoke-complete",
+      "runs": 5017484,
+      "seconds": 11,
+      "tail_log": "ipa_proof_decode.tail.log"
+    },
+    {
+      "target": "ipa_integrated_opening_decode",
+      "status": "smoke-complete",
+      "runs": 14163810,
+      "seconds": 11,
+      "tail_log": "ipa_integrated_opening_decode.tail.log"
+    },
+    {
+      "target": "ipa_srs_file_decode",
+      "status": "smoke-complete",
+      "runs": 467929,
+      "seconds": 11,
+      "tail_log": "ipa_srs_file_decode.tail.log"
+    }
+  ],
+  "toolchain": "rustc 1.98.0-nightly (b30f3df3b 2026-06-11)",
+  "commit": "48eff6d0b125c9e00debdf03dad5990c6062c32c",
+  "branch": "all-fuzz-targets-smoke-evidence",
+  "generated_utc": "2026-06-12T14:07:45Z",
+  "production_security_claim": false,
+  "long_campaign_claim": false,
+  "notes": "All fuzz targets completed short smoke runs. This is not long-campaign evidence."
+}

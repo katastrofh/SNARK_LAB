@@ -264,3 +264,11 @@ See:
     docs/nightly-fuzz-smoke-evidence.md
 
 Smoke fuzz evidence confirms the target can run briefly under nightly cargo-fuzz. It does not replace long fuzz campaigns or external audit.
+
+## All fuzz targets smoke evidence
+
+See:
+
+    docs/all-fuzz-targets-smoke-evidence.md
+
+All parser fuzz targets have short smoke evidence. Long-duration fuzz campaign evidence is still required for production-secure claims.
