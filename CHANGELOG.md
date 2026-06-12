@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Paper-style technical overview
+
 - Examples gallery
 
 - Reviewer onboarding guide

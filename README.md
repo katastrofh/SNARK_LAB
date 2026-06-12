@@ -923,3 +923,12 @@ For guided examples, see:
     docs/examples-gallery.md
 
 The gallery gives quick review paths for Sumcheck, Zerocheck, PermCheck, IPA, release evidence, and the visualizer.
+
+## Paper-style technical overview
+
+For a compact paper-like technical summary, see:
+
+    docs/paper-style-technical-overview.md
+    docs/protocol-stack-summary.md
+
+These documents summarize the motivation, protocol stack, IPA path, evidence model, release model, visualizer role, and limitations.
