@@ -304,3 +304,11 @@ See:
     docs/repository-topic-and-badge-polish.md
 
 Badges and discovery metadata must not claim audited production security, custody safety, or mainnet readiness.
+
+## GitHub Release page finalization
+
+See:
+
+    docs/github-release-page-finalization.md
+
+The release page must not claim external audit, production SRS completion, custody safety, mainnet readiness, or production-secure deployment.

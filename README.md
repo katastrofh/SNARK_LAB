@@ -852,3 +852,12 @@ See:
     fuzz/regressions/README.md
 
 Fuzz-discovered crashes are converted into stable regression tests.
+
+## GitHub Release page
+
+See:
+
+    release/GITHUB_RELEASE_PAGE_v0.2.0-rc.1.md
+    scripts/print-github-release-command.sh
+
+The release page records assets, checksums, evidence locations, and the non-production security boundary.

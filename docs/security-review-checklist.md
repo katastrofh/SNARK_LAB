@@ -248,3 +248,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] README badges added
 - [x] Badge security-boundary checker added
 - [x] Suggested GitHub topics documented
+
+## GitHub Release page finalization
+
+- [x] GitHub Release page body added
+- [x] Release asset list included
+- [x] Checksum verification command included
+- [x] Non-production security boundary included
+- [ ] GitHub Release published manually
