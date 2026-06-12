@@ -520,3 +520,12 @@ See:
     docs/visualizer-real-ipa-flow.md
 
 The browser IPA tab now shows the real IPA opening flow at educational scale while preserving the Rust/BLS12-381 security boundary.
+
+## Visualizer demo
+
+See:
+
+    web/visualizer/README.md
+    docs/visualizer-polish-and-demo.md
+
+The IPA tab is the recommended GitHub Pages demo entry point.
