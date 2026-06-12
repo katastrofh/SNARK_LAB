@@ -189,3 +189,10 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Failed fuzz runs explicitly not evidence
 - [ ] Failed smoke run triaged
 - [ ] Successful smoke campaign archived
+
+## IPA fuzz runtime
+
+- [x] Nightly rust-src fuzz preflight added
+- [x] IPA fuzz runtime requirements documented
+- [ ] IPA fuzz smoke run completed
+- [ ] IPA fuzz long campaign completed

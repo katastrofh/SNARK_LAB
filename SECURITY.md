@@ -240,3 +240,11 @@ See:
     docs/fuzz-campaign-runner-hardening.md
 
 Failed fuzz runs are not production evidence. Crashes require triage and regression tests.
+
+## IPA fuzz runtime requirements
+
+See:
+
+    docs/ipa-fuzz-target-runtime-fix.md
+
+A successful smoke fuzz run is not production fuzz evidence. Long campaign logs still need to be archived and triaged.

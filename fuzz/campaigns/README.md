@@ -54,3 +54,11 @@ Install nightly with:
 The runner defaults to:
 
     FUZZ_TOOLCHAIN=nightly
+
+## Nightly rust-src component
+
+Some cargo-fuzz sanitizer builds require the nightly rust-src component.
+
+Install it with:
+
+    rustup component add rust-src --toolchain nightly
