@@ -861,3 +861,11 @@ See:
     scripts/print-github-release-command.sh
 
 The release page records assets, checksums, evidence locations, and the non-production security boundary.
+
+## GitHub Release publication evidence
+
+See:
+
+    release/publication/v0.2.0-rc.1/README.md
+
+The repository records evidence that the v0.2.0-rc.1 GitHub Release page was published with expected assets.
