@@ -36,7 +36,7 @@ The Rust core is built with Arkworks primitives, BLS12-381 scalar-field support,
 | Randomized IPA roundtrip tests                     | Implemented   |
 | CLI SRS tooling integration tests                  | Implemented   |
 | Fuzzing                                            | Planned       |
-| Benchmark suite for IPA path                       | Planned       |
+| Benchmark suite for IPA path                       | Implemented   |
 | Security proof sketch / threat model               | Planned       |
 | External audit                                     | Not performed |
 
@@ -399,12 +399,12 @@ external audit
 Run the existing benchmark driver:
 
 ```bash
-cargo run --release -p snark-lab-benches -- 20
+cargo run --release -p snark-lab-benches -- 18 8 3
 ```
 
 The optional argument is `log₂(N)`, capped by the benchmark harness.
 
-Current benchmark outputs distinguish measured runtime from modeled logical I/O. Future benchmark work will add richer IPA-path measurements, memory profiles, and hardware-counter-backed reports.
+Current benchmark outputs distinguish measured runtime from modeled logical I/O. The benchmark binary includes PermCheck, Sumcheck, and IPA commit/open/verify timing. Future work will add memory profiles and hardware-counter-backed reports.
 
 ---
 
