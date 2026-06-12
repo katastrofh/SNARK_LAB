@@ -8,7 +8,7 @@ echo "[1/3] cargo audit"
 if ! command -v cargo-audit >/dev/null 2>&1; then
   cargo install cargo-audit --locked
 fi
-cargo audit --locked
+cargo audit
 
 echo "[2/3] npm audit"
 (

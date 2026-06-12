@@ -109,4 +109,4 @@ jobs:
         run: cargo install cargo-audit --locked
 
       - name: Audit
-        run: cargo audit --locked
+        run: cargo audit
