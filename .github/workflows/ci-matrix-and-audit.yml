@@ -1,5 +1,7 @@
 name: CI Matrix and Audit
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 on:
   push:
     branches: [main]
@@ -40,6 +42,17 @@ jobs:
 
       - name: Format
         run: cargo fmt --all -- --check
+
+      - name: Pre-fetch Rust dependencies with retry
+        run: |
+          for attempt in 1 2 3; do
+            echo "cargo fetch attempt ${attempt}"
+            if cargo fetch --locked; then
+              exit 0
+            fi
+            sleep $((attempt * 20))
+          done
+          cargo fetch --locked
 
       - name: Locked metadata
         run: cargo metadata --locked --format-version 1 > /dev/null

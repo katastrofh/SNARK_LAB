@@ -1,5 +1,7 @@
 name: Release
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 on:
   push:
     tags:
@@ -33,6 +35,17 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: web/visualizer/package-lock.json
+
+      - name: Pre-fetch Rust dependencies with retry
+        run: |
+          for attempt in 1 2 3; do
+            echo "cargo fetch attempt ${attempt}"
+            if cargo fetch --locked; then
+              exit 0
+            fi
+            sleep $((attempt * 20))
+          done
+          cargo fetch --locked
 
       - name: Run production gate
         run: scripts/check-production-ready.sh
