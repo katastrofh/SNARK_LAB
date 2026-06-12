@@ -196,3 +196,10 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] IPA fuzz runtime requirements documented
 - [ ] IPA fuzz smoke run completed
 - [ ] IPA fuzz long campaign completed
+
+## IPA proof decoder fuzz regression
+
+- [x] IPA proof decoder capacity-overflow fuzz regression added
+- [x] IPA proof variables bound checked before allocation
+- [x] IPA proof round count bound checked before allocation
+- [ ] Full IPA proof decoder fuzz campaign completed

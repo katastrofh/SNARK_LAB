@@ -4,6 +4,7 @@ use crate::ipa_proof::{validate_ipa_opening_proof_shape, IpaOpeningProof, IpaPro
 use crate::ipa_transcript::{IpaTranscriptError, IpaTranscriptRound};
 
 const MAGIC: &[u8] = b"SL-IPA-PROOF1";
+const MAX_ENCODED_IPA_VARIABLES: usize = 64;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum IpaProofCodecError {
@@ -37,6 +38,33 @@ fn u64_to_usize(value: u64) -> Result<usize, IpaProofCodecError> {
     value
         .try_into()
         .map_err(|_| IpaProofCodecError::LengthOverflow)
+}
+
+fn validate_decoded_ipa_variable_count(value: usize) -> Result<(), IpaProofCodecError> {
+    if value > MAX_ENCODED_IPA_VARIABLES {
+        return Err(IpaProofCodecError::LengthOverflow);
+    }
+
+    Ok(())
+}
+
+fn validate_decoded_ipa_round_count(
+    variables: usize,
+    round_count: usize,
+) -> Result<(), IpaProofCodecError> {
+    validate_decoded_ipa_variable_count(variables)?;
+    validate_decoded_ipa_variable_count(round_count)?;
+
+    if round_count != variables {
+        return Err(IpaProofCodecError::InvalidProofShape(
+            IpaProofShapeError::Transcript(IpaTranscriptError::RoundCountMismatch {
+                expected: variables,
+                actual: round_count,
+            }),
+        ));
+    }
+
+    Ok(())
 }
 
 fn push_u64(out: &mut Vec<u8>, value: u64) {
@@ -170,9 +198,13 @@ pub fn decode_ipa_opening_proof<F: PrimeField>(
     }
 
     let variables = u64_to_usize(read_u64(input, &mut cursor)?)?;
+    validate_decoded_ipa_variable_count(variables)?;
+
     let claimed_value = read_field(input, &mut cursor)?;
 
     let round_count = u64_to_usize(read_u64(input, &mut cursor)?)?;
+    validate_decoded_ipa_round_count(variables, round_count)?;
+
     let mut rounds = Vec::with_capacity(round_count);
 
     for _ in 0..round_count {
@@ -304,6 +336,21 @@ mod tests {
             Err(IpaProofCodecError::InvalidProofShape(
                 IpaProofShapeError::EmptyFinalCommitment
             ))
+        );
+    }
+    #[test]
+    fn rejects_fuzzed_oversized_round_count_without_panic() {
+        let data = [
+            83u8, 76, 45, 73, 80, 65, 45, 80, 82, 79, 79, 70, 49, 255, 0, 0, 0, 0, 0, 0, 0, 255,
+            255, 255, 255, 255, 255, 162, 162, 162, 162, 162, 162, 162, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 10,
+        ];
+
+        assert_eq!(
+            decode_ipa_opening_proof::<Fr>(&data),
+            Err(IpaProofCodecError::LengthOverflow)
         );
     }
 }

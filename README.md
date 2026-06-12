@@ -660,3 +660,11 @@ See:
     docs/ipa-fuzz-target-runtime-fix.md
 
 Stable CI compiles fuzz targets. Actual cargo-fuzz execution requires nightly Rust and rust-src.
+
+## IPA proof decoder fuzz regression
+
+See:
+
+    docs/ipa-proof-decoder-fuzz-regression.md
+
+A fuzz-discovered capacity-overflow panic in the IPA proof decoder is covered by a regression test.
