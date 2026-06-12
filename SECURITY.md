@@ -190,3 +190,11 @@ See:
     release/v0.2.0-rc.1.md
 
 The release candidate is not production-secure. Production-secure status requires external audit, side-channel review, production SRS evidence, and deployment approval.
+
+## Release artifacts and checksums
+
+See:
+
+    docs/github-release-artifacts-and-checksums.md
+
+Checksums improve release reproducibility. They do not imply production-secure status without audit, side-channel review, and production SRS evidence.

@@ -599,3 +599,13 @@ Current release-candidate notes:
     release/v0.2.0-rc.1.md
 
 The release candidate is for protocol review, artifact review, and audit preparation. It is not production-secure.
+
+## GitHub release artifacts and checksums
+
+See:
+
+    docs/github-release-artifacts-and-checksums.md
+
+Release artifacts can be generated with:
+
+    scripts/build-github-release-artifacts.sh v0.2.0-rc.1
