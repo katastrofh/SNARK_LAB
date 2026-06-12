@@ -256,3 +256,11 @@ See:
     docs/ipa-proof-decoder-fuzz-regression.md
 
 Malformed IPA proof count fields must fail closed with decode errors, not panics.
+
+## Nightly fuzz smoke evidence
+
+See:
+
+    docs/nightly-fuzz-smoke-evidence.md
+
+Smoke fuzz evidence confirms the target can run briefly under nightly cargo-fuzz. It does not replace long fuzz campaigns or external audit.

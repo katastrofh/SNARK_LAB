@@ -668,3 +668,12 @@ See:
     docs/ipa-proof-decoder-fuzz-regression.md
 
 A fuzz-discovered capacity-overflow panic in the IPA proof decoder is covered by a regression test.
+
+## Nightly fuzz smoke evidence
+
+See:
+
+    docs/nightly-fuzz-smoke-evidence.md
+    fuzz/smoke-evidence/v0.2.0-rc.1/manifest.json
+
+The repository records successful nightly smoke fuzz evidence for the IPA proof decoder. This is not long-campaign or production-security evidence.

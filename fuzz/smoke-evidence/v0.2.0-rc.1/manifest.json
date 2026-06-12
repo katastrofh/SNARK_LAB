@@ -1,0 +1,15 @@
+{
+  "schema": "snark-lab-nightly-fuzz-smoke-v1",
+  "status": "smoke-complete",
+  "target": "ipa_proof_decode",
+  "command": "cargo +nightly fuzz run ipa_proof_decode -- -max_total_time=10",
+  "runs": 5053927,
+  "seconds": 11,
+  "toolchain": "rustc 1.98.0-nightly (b30f3df3b 2026-06-11)",
+  "commit": "0509cbf6ae09b043a024135b3a3d403ebfd09535",
+  "branch": "nightly-fuzz-smoke-evidence",
+  "generated_utc": "2026-06-12T14:01:41Z",
+  "production_security_claim": false,
+  "long_campaign_claim": false,
+  "notes": "Smoke fuzz evidence only. Not a long campaign and not production-security evidence."
+}

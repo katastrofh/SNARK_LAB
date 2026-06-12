@@ -203,3 +203,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] IPA proof variables bound checked before allocation
 - [x] IPA proof round count bound checked before allocation
 - [ ] Full IPA proof decoder fuzz campaign completed
+
+## Nightly fuzz smoke evidence
+
+- [x] IPA proof decoder nightly fuzz smoke run completed
+- [x] Smoke evidence manifest added
+- [x] Smoke evidence marked non-production
+- [ ] All fuzz targets smoke-run cleanly
+- [ ] Long fuzz campaign completed
