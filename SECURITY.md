@@ -182,3 +182,11 @@ See:
     release/PRODUCTION_RELEASE_CHECKLIST.md
 
 A release tag does not imply production-secure status unless audit, side-channel review, SRS ceremony evidence, and deployment evidence are complete.
+
+## Release candidate security status
+
+See:
+
+    release/v0.2.0-rc.1.md
+
+The release candidate is not production-secure. Production-secure status requires external audit, side-channel review, production SRS evidence, and deployment approval.

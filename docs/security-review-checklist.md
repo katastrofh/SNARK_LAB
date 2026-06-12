@@ -131,3 +131,10 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Release checklist checker added
 - [ ] Release candidate tag created
 - [ ] Release artifacts attached to GitHub release
+
+## Release candidate tag
+
+- [x] Release candidate notes added
+- [ ] Annotated release candidate tag created
+- [ ] Release candidate tag pushed
+- [ ] GitHub release created

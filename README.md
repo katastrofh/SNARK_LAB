@@ -591,3 +591,11 @@ See:
     release/PRODUCTION_RELEASE_CHECKLIST.md
 
 The repository now includes release-checklist validation and safe annotated tag preparation for release candidates.
+
+## Release candidate
+
+Current release-candidate notes:
+
+    release/v0.2.0-rc.1.md
+
+The release candidate is for protocol review, artifact review, and audit preparation. It is not production-secure.

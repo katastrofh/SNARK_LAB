@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Release candidate notes for v0.2.0-rc.1
+
 - Production release checklist and tagging tools
 
 - Release-candidate evidence summary tooling
