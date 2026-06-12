@@ -60,3 +60,13 @@ See:
     docs/security-proof-sketch.md
 
 The proof sketch documents assumptions and reductions for the research prototype. It is not an external audit.
+
+## Release security boundary
+
+Release and versioning policy:
+
+    RELEASE.md
+    VERSIONING.md
+    CHANGELOG.md
+
+All pre-1.0 releases are research-preview releases unless a later document explicitly says otherwise.

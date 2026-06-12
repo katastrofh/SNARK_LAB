@@ -6,11 +6,11 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 ark-ec = "0.5"
-ark-ff = "0.6"
+ark-ff = "0.5"
 ark-serialize = "0.5"
 multilinear = { path = "../multilinear" }
 snark-lab-transcript = { path = "../transcript" }
-sha2 = "0.11"
+sha2 = "0.10"
 
 [dev-dependencies]
 ark-bls12-381 = "0.5"
