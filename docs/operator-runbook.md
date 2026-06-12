@@ -83,8 +83,8 @@ Do not publish as:
 
     audited
     production-secure
-    mainnet-ready
-    custody-safe
+    ready for mainnet deployment
+    safe for custody use
     consensus-critical safe
 
 ## 10. Rollback
