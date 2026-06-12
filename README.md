@@ -468,3 +468,13 @@ See:
     docs/security-proof-sketch.md
 
 This is a proof-outline for the implemented research prototype. It is not an audit and not a production deployment claim.
+
+## Release and versioning
+
+See:
+
+    RELEASE.md
+    VERSIONING.md
+    CHANGELOG.md
+
+Current releases are research-preview releases. They are not audited and are not production-secure deployment software.

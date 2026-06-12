@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-build:
+    name: Release build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install stable Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/visualizer/package-lock.json
+
+      - name: Run production gate
+        run: scripts/check-production-ready.sh
+
+      - name: Build release binaries
+        run: cargo build --locked --release -p snark-lab-cli -p snark-lab-benches
+
+      - name: Package release artifacts
+        run: |
+          mkdir -p dist
+          cp target/release/snark-lab-cli dist/
+          cp target/release/snark-lab-benches dist/
+          cp README.md SECURITY.md RELEASE.md VERSIONING.md CHANGELOG.md dist/
+          sha256sum dist/* > dist/SHA256SUMS.txt
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: snark-lab-release-artifacts
+          path: dist/

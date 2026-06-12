@@ -17,10 +17,10 @@ resolver = "2"
 version = "0.2.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/example/snark-lab"
+repository = "https://github.com/katastrofh/SNARK_LAB"
 
 [workspace.dependencies]
-ark-ff = "0.6"
+ark-ff = "0.5"
 ark-bls12-381 = "0.5"
 field = { path = "crates/field" }
 multilinear = { path = "crates/multilinear" }
