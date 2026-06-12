@@ -13,6 +13,8 @@ pub mod ipa;
 pub mod ipa_backend_codec;
 #[cfg(test)]
 mod ipa_negative_fixtures;
+#[cfg(test)]
+mod ipa_randomized_roundtrip;
 pub use ipa_backend_codec::{
     decode_ipa_integrated_opening, encode_ipa_integrated_opening, IpaBackendOpeningCodecError,
 };
