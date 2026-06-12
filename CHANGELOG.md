@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- All fuzz targets nightly smoke evidence
+
 - Nightly IPA proof decoder fuzz smoke evidence
 
 - IPA proof decoder fuzz-discovered capacity overflow regression

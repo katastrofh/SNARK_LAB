@@ -677,3 +677,12 @@ See:
     fuzz/smoke-evidence/v0.2.0-rc.1/manifest.json
 
 The repository records successful nightly smoke fuzz evidence for the IPA proof decoder. This is not long-campaign or production-security evidence.
+
+## All fuzz targets smoke evidence
+
+See:
+
+    docs/all-fuzz-targets-smoke-evidence.md
+    fuzz/smoke-evidence/v0.2.0-rc.1/all-targets/manifest.json
+
+All fuzz targets have short nightly smoke evidence. This is not long-campaign or production-security evidence.

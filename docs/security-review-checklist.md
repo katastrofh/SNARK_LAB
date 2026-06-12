@@ -211,3 +211,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Smoke evidence marked non-production
 - [ ] All fuzz targets smoke-run cleanly
 - [ ] Long fuzz campaign completed
+
+## All fuzz targets smoke evidence
+
+- [x] All fuzz targets smoke-run cleanly
+- [x] All-target smoke evidence manifest added
+- [x] All-target smoke evidence marked non-production
+- [ ] Long fuzz campaign completed
+- [ ] Crash corpus regression suite completed
