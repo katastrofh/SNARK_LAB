@@ -495,3 +495,11 @@ See:
     docs/reference-implementation-comparison.md
 
 The reference tests compare selected production algebra against an independent slow implementation.
+
+## Dependency update policy
+
+See:
+
+    docs/dependency-update-policy.md
+
+Cryptographic dependencies are reviewed manually. Arkworks minor/major updates are intentionally not merged one crate at a time.

@@ -23,7 +23,7 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Unsafe Rust rejected by production gate
 - [x] Crate roots forbid unsafe code where added
 - [ ] Review all dependencies for unsafe-heavy internals
-- [ ] Document dependency trust assumptions
+- [x] Document dependency trust assumptions
 
 ## Serialization
 

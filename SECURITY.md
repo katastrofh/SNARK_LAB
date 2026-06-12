@@ -87,3 +87,11 @@ See:
     docs/reference-implementation-comparison.md
 
 Reference comparison tests are regression-hardening checks. They are not an external audit.
+
+## Dependency update policy
+
+See:
+
+    docs/dependency-update-policy.md
+
+Do not merge cryptographic dependency updates unless the entire dependency stack is upgraded coherently and all production gates pass.
