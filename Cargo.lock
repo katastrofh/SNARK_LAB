@@ -498,7 +498,12 @@ dependencies = [
 name = "snark-lab-cli"
 version = "0.2.0"
 dependencies = [
+ "ark-bls12-381",
+ "ark-ec",
+ "multilinear",
  "snark-lab-interchange",
+ "snark-lab-oracle",
+ "snark-lab-transcript",
 ]
 
 [[package]]
