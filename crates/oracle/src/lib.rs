@@ -10,6 +10,11 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_srs_provenance;
+pub use ipa_srs_provenance::{
+    canonical_ipa_srs_digest, validate_ipa_srs_provenance, IpaSrsProvenance, IpaSrsProvenanceError,
+    IpaSrsSource, IpaVerifiedSrs,
+};
 pub mod ipa_backend_codec;
 #[cfg(test)]
 mod ipa_negative_fixtures;
