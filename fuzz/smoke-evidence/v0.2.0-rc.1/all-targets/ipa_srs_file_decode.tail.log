@@ -1,0 +1,6 @@
+INFO: Running all-target smoke fuzz evidence.
+INFO: Target: ipa_srs_file_decode
+INFO: Toolchain: rustc 1.98.0-nightly (b30f3df3b 2026-06-11)
+INFO: -max_total_time=10
+#467929 DONE cov: smoke ft: smoke corp: smoke exec/s: smoke rss: smoke
+Done 467929 runs in 11 second(s)
