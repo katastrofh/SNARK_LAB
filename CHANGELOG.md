@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Nightly IPA proof decoder fuzz smoke evidence
+
 - IPA proof decoder fuzz-discovered capacity overflow regression
 
 - IPA fuzz runtime requirement documentation
