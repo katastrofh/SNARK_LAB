@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Long fuzz campaign evidence tooling
+
 - GitHub release artifact and checksum tooling
 
 - Release candidate notes for v0.2.0-rc.1

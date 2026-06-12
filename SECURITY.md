@@ -198,3 +198,11 @@ See:
     docs/github-release-artifacts-and-checksums.md
 
 Checksums improve release reproducibility. They do not imply production-secure status without audit, side-channel review, and production SRS evidence.
+
+## Long fuzz campaign evidence
+
+See:
+
+    docs/long-fuzz-campaign-evidence.md
+
+Fuzz campaign evidence improves parser-hardening confidence. It does not replace external audit, side-channel review, or production SRS evidence.

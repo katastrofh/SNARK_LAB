@@ -1,0 +1,5 @@
+*
+!.gitignore
+!README.md
+!TEMPLATE.md
+!long-fuzz-campaign-manifest.example.json

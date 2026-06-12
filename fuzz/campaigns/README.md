@@ -1,17 +1,44 @@
-# Fuzz Campaign Logs
+# Fuzz Campaign Evidence
 
-This directory is reserved for selected fuzz campaign summaries.
+This directory describes long-running fuzz campaign evidence for SNARK_LAB.
 
-Do not commit large raw corpora.
+## Current status
 
-Recommended committed artifacts:
+The repository has fuzz targets and compile checks.
 
-- short campaign summaries
-- minimized regression inputs
-- notes for crashes that were fixed
-- release-candidate fuzz evidence
+A real long-running fuzz campaign must be run separately and archived as release evidence.
 
-Current status:
+## Targets
 
-- fuzz targets compile in CI
-- long-running campaign logs are not yet committed
+Current fuzz targets:
+
+- ipa_proof_decode
+- ipa_integrated_opening_decode
+- ipa_srs_file_decode
+
+## Generate a campaign
+
+Run:
+
+    scripts/run-long-fuzz-campaign.sh
+
+For a short local smoke run:
+
+    FUZZ_SECONDS_PER_TARGET=30 scripts/run-long-fuzz-campaign.sh
+
+For a serious campaign, use hours per target, not seconds.
+
+## Evidence policy
+
+Generated campaign logs are ignored by default.
+
+A production release should archive:
+
+- campaign manifest
+- target logs
+- duration per target
+- machine/environment
+- crashes found
+- minimized artifacts
+- regression tests created from crashes
+- final status
