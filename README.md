@@ -35,7 +35,7 @@ The Rust core is built with Arkworks primitives, BLS12-381 scalar-field support,
 | Negative malformed-proof fixtures                  | Implemented   |
 | Randomized IPA roundtrip tests                     | Implemented   |
 | CLI SRS tooling integration tests                  | Implemented   |
-| Fuzzing                                            | Planned       |
+| Fuzzing                                            | Implemented   |
 | Benchmark suite for IPA path                       | Implemented   |
 | Security proof sketch / threat model               | Planned       |
 | External audit                                     | Not performed |
@@ -357,6 +357,7 @@ IPA SRS provenance
 IPA SRS loader
 IPA SRS CLI
 IPA SRS tooling tests
+CI matrix and audit
 local production gates
 ```
 
@@ -374,6 +375,10 @@ CLI integration tests
 canonical codec tests
 production gate script
 GitHub production-readiness workflow
+Linux + macOS CI matrix
+RustSec cargo-audit workflow
+npm high-severity audit
+Dependabot for Cargo, npm, and GitHub Actions
 unsafe Rust rejection
 visualizer production build
 ```
@@ -430,8 +435,6 @@ add SRS CLI tooling tests
 add fuzzing targets for proof/SRS decoders
 add IPA benchmark suite
 add threat model and security proof sketch
-add GitHub CI matrix
-add dependency audit workflow
 update browser IPA panel to show real opening flow
 ```
 

@@ -1,0 +1,35 @@
+version: 2
+
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:00"
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - rust
+
+  - package-ecosystem: npm
+    directory: /web/visualizer
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:20"
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - visualizer
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "04:40"
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci
