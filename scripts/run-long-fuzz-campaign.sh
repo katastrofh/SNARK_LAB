@@ -5,6 +5,7 @@ ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
 DURATION_PER_TARGET="${FUZZ_SECONDS_PER_TARGET:-300}"
+FUZZ_TOOLCHAIN="${FUZZ_TOOLCHAIN:-nightly}"
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
 OUT="fuzz/campaigns/${STAMP}"
 
@@ -14,8 +15,19 @@ TARGETS=(
   ipa_srs_file_decode
 )
 
-if ! command -v cargo-fuzz >/dev/null 2>&1 && ! cargo fuzz --help >/dev/null 2>&1; then
-  echo "cargo-fuzz is not installed" >&2
+if ! command -v rustup >/dev/null 2>&1; then
+  echo "rustup is required to select the fuzzing toolchain" >&2
+  exit 1
+fi
+
+if ! rustup toolchain list | grep -q "^${FUZZ_TOOLCHAIN}"; then
+  echo "required fuzzing toolchain is not installed: ${FUZZ_TOOLCHAIN}" >&2
+  echo "install with: rustup toolchain install ${FUZZ_TOOLCHAIN}" >&2
+  exit 1
+fi
+
+if ! cargo +${FUZZ_TOOLCHAIN} fuzz --help >/dev/null 2>&1; then
+  echo "cargo-fuzz is not available for toolchain: ${FUZZ_TOOLCHAIN}" >&2
   echo "install with: cargo install cargo-fuzz" >&2
   exit 1
 fi
@@ -38,6 +50,7 @@ mkdir -p "$OUT"
   echo "- rustc: $(rustc --version 2>/dev/null || true)"
   echo "- cargo: $(cargo --version 2>/dev/null || true)"
   echo "- seconds per target: ${DURATION_PER_TARGET}"
+  echo "- fuzz toolchain: ${FUZZ_TOOLCHAIN}"
   echo
 } > "$OUT/SUMMARY.md"
 
@@ -49,7 +62,7 @@ for target in "${TARGETS[@]}"; do
 
   (
     cd "$ROOT/fuzz"
-    cargo fuzz run "$target" -- \
+    cargo +${FUZZ_TOOLCHAIN} fuzz run "$target" -- \
       -max_total_time="${DURATION_PER_TARGET}" \
       -artifact_prefix="$ROOT/$OUT/$target/artifacts/"
   ) > "$OUT/$target.log" 2>&1 || {
@@ -82,6 +95,7 @@ manifest = {
     "branch": "$(git branch --show-current)",
     "generated_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
     "seconds_per_target": int("${DURATION_PER_TARGET}"),
+    "fuzz_toolchain": "${FUZZ_TOOLCHAIN}",
     "targets": ["ipa_proof_decode", "ipa_integrated_opening_decode", "ipa_srs_file_decode"],
     "results": {
         "crashes": "inspect logs",

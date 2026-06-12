@@ -42,3 +42,15 @@ A production release should archive:
 - minimized artifacts
 - regression tests created from crashes
 - final status
+
+## Nightly requirement
+
+Actual fuzz campaign execution requires nightly Rust because cargo-fuzz uses sanitizer `-Z` flags.
+
+Install nightly with:
+
+    rustup toolchain install nightly
+
+The runner defaults to:
+
+    FUZZ_TOOLCHAIN=nightly
