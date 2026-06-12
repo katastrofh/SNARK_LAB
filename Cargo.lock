@@ -83,7 +83,7 @@ dependencies = [
  "ark-ff-macros 0.6.0",
  "ark-serialize 0.6.0",
  "ark-std 0.6.0",
- "digest",
+ "digest 0.10.7",
  "educe",
  "num-bigint",
  "num-traits",
@@ -172,7 +172,7 @@ checksum = "a74dd304fd536fb95d0a328e72be759209cc496a9da094c5bc56e5fea4f9e86b"
 dependencies = [
  "ark-serialize-derive 0.6.0",
  "ark-std 0.6.0",
- "digest",
+ "digest 0.10.7",
  "num-bigint",
 ]
 
@@ -662,7 +662,7 @@ dependencies = [
  "ark-bls12-381",
  "ark-ec",
  "ark-ff 0.6.0",
- "ark-serialize 0.5.0",
+ "ark-serialize 0.6.0",
  "multilinear",
  "rand",
  "sha2",
