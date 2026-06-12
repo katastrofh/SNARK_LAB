@@ -10,6 +10,11 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_opening_statement;
+pub use ipa_opening_statement::{
+    bind_ipa_opening_statement_context, opening_statement_from_witness,
+    validate_ipa_opening_statement, IpaOpeningStatement, IpaOpeningStatementError,
+};
 pub mod ipa_evaluation;
 pub use ipa_evaluation::{
     bind_ipa_evaluation_basis, compute_ipa_evaluation_basis, evaluate_with_ipa_evaluation_basis,
