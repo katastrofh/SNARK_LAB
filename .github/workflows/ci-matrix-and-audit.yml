@@ -42,7 +42,7 @@ jobs:
         run: cargo fmt --all -- --check
 
       - name: Locked metadata
-        run: cargo metadata --locked --workspace --format-version 1 > /dev/null
+        run: cargo metadata --locked --format-version 1 > /dev/null
 
       - name: Clippy
         run: cargo clippy --locked --workspace --all-targets -- -D warnings
