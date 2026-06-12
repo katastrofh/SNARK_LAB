@@ -311,3 +311,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] IPA example linked
 - [x] Release evidence example linked
 - [x] Visualizer example linked
+
+## Paper-style technical overview
+
+- [x] Paper-style technical overview added
+- [x] Protocol stack summary added
+- [x] IPA path summarized
+- [x] Evidence model summarized
+- [x] Limitations documented
