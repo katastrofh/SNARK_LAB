@@ -173,3 +173,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] Real production SRS artifact published
 - [ ] Real production SRS digest published
 - [ ] Real production SRS transcript published
+
+## Fuzz nightly runner
+
+- [x] Nightly fuzz runner policy added
+- [x] Runner checks for rustup toolchain availability
+- [x] Runner records fuzz toolchain in campaign manifest
+- [ ] Nightly smoke campaign completed
+- [ ] Long nightly fuzz campaign completed

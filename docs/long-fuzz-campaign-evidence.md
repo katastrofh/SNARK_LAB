@@ -61,3 +61,15 @@ Production-secure status still requires:
 - production SRS evidence
 - release evidence
 - production deployment approval
+
+## Nightly requirement
+
+Actual fuzz campaign execution requires nightly Rust because cargo-fuzz uses sanitizer `-Z` flags.
+
+Install nightly with:
+
+    rustup toolchain install nightly
+
+The runner defaults to:
+
+    FUZZ_TOOLCHAIN=nightly

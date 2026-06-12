@@ -224,3 +224,11 @@ See:
     srs/PRODUCTION_SRS_POLICY.md
 
 Example manifests do not imply production SRS completion. Fake production SRS artifacts must not be committed.
+
+## Fuzz campaign runner
+
+See:
+
+    docs/fuzz-nightly-runner-fix.md
+
+Stable CI compiles fuzz targets. Nightly is required for actual sanitizer-backed cargo-fuzz campaign execution.

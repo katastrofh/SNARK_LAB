@@ -636,3 +636,11 @@ See:
     srs/PRODUCTION_SRS_POLICY.md
 
 The repository rejects fake or placeholder production SRS artifacts. Production SRS material must be published with digest, manifest, transcript, and verifier evidence.
+
+## Fuzz campaign runner
+
+See:
+
+    docs/fuzz-nightly-runner-fix.md
+
+Fuzz targets compile on stable, while actual cargo-fuzz campaigns require a nightly Rust toolchain.
