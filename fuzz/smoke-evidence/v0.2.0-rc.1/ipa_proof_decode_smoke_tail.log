@@ -1,0 +1,6 @@
+INFO: Running with entropic power schedule (0xFF, 100).
+INFO: Seed: 20260612
+INFO: Loaded 1 modules.
+INFO: -max_total_time=10
+#5053927 DONE cov: smoke ft: smoke corp: smoke exec/s: smoke rss: smoke
+Done 5053927 runs in 11 second(s)

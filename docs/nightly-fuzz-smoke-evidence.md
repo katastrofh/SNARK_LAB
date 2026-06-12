@@ -35,3 +35,14 @@ It does not claim:
 ## Production requirement
 
 A production-secure release still requires long fuzz campaign evidence across all fuzz targets, with archived logs, crash triage, regression tests, and checksums.
+
+## Tracked tail log requirement
+
+The tail log is intentionally tracked because the production-readiness gate checks for completion markers in it.
+
+Required markers:
+
+    DONE
+    Done
+
+This keeps the smoke evidence auditable without rerunning fuzzing during every repository check.
