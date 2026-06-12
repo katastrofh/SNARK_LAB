@@ -1,0 +1,22 @@
+{
+  "schema": "snark-lab-long-fuzz-campaign-v1",
+  "status": "template-not-run",
+  "campaign_completed": false,
+  "production_security_claim": false,
+  "commit": "",
+  "branch": "",
+  "generated_utc": "",
+  "seconds_per_target": 0,
+  "targets": [
+    "ipa_proof_decode",
+    "ipa_integrated_opening_decode",
+    "ipa_srs_file_decode"
+  ],
+  "results": {
+    "crashes": null,
+    "timeouts": null,
+    "ooms": null,
+    "regressions_added": null
+  },
+  "notes": "Template only. This is not evidence that a long fuzz campaign has been run."
+}

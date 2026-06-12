@@ -147,3 +147,12 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] GitHub pre-release created
 - [ ] Release artifacts attached
 - [ ] SHA256SUMS attached
+
+## Long fuzz campaign evidence
+
+- [x] Long fuzz campaign evidence process added
+- [x] Long fuzz campaign runner added
+- [x] Long fuzz campaign manifest template added
+- [ ] Real long fuzz campaign completed
+- [ ] Long fuzz campaign logs archived
+- [ ] Fuzz crash regressions added

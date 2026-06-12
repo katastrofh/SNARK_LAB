@@ -609,3 +609,11 @@ See:
 Release artifacts can be generated with:
 
     scripts/build-github-release-artifacts.sh v0.2.0-rc.1
+
+## Long fuzz campaign evidence
+
+See:
+
+    docs/long-fuzz-campaign-evidence.md
+
+The repository includes tooling to run and archive long fuzz campaign evidence for IPA proof/opening/SRS byte parsers.
