@@ -478,3 +478,12 @@ See:
     CHANGELOG.md
 
 Current releases are research-preview releases. They are not audited and are not production-secure deployment software.
+
+## Public test vectors
+
+See:
+
+    test-vectors/README.md
+    docs/public-test-vectors.md
+
+The committed vectors are regression artifacts for the research prototype. They are not production SRS material.
