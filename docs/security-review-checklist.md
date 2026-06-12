@@ -36,6 +36,7 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] IPA SRS loader rejects trailing bytes
 - [x] IPA SRS loader rejects digest mismatch
 - [x] Fuzz targets for proof, opening, and SRS decoders
+- [x] Fuzz target campaign runner
 - [ ] Long-running fuzz campaign artifacts
 - [ ] Corpus minimization and regression corpus
 

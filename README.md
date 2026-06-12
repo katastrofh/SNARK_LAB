@@ -503,3 +503,12 @@ See:
     docs/dependency-update-policy.md
 
 Cryptographic dependencies are reviewed manually. Arkworks minor/major updates are intentionally not merged one crate at a time.
+
+## Fuzzing
+
+See:
+
+    FUZZING.md
+    docs/long-fuzz-campaign-notes.md
+
+The production gate compile-checks fuzz targets. Long-running fuzz campaign artifacts are required before stronger production-security claims.
