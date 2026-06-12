@@ -10,6 +10,8 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_prover_opening;
+pub use ipa_prover_opening::{prove_ipa_opening, IpaProverOpeningError, IpaProverOpeningOutput};
 pub mod ipa_generator_folding;
 pub use ipa_generator_folding::{
     fold_ipa_evaluation_generators, fold_ipa_generator_basis, fold_ipa_polynomial_generators,
