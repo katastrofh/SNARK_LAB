@@ -6,8 +6,8 @@ use multilinear::Multilinear;
 use snark_lab_interchange::{parse_and_verify, Protocol};
 use snark_lab_oracle::{
     commit_ipa_backend, decode_ipa_integrated_opening, encode_ipa_integrated_opening,
-    expected_ipa_generator_count, open_ipa_backend, trim_ipa_integrated_keys, verify_ipa_backend,
-    IpaCurveGeneratorBasis, IpaCurvePoint,
+    expected_ipa_generator_count, open_ipa_backend, read_ipa_srs_file, trim_ipa_integrated_keys,
+    verify_ipa_backend, IpaCurveGeneratorBasis, IpaCurvePoint, IpaSrsSource,
 };
 use snark_lab_transcript::MerlinTranscript;
 use std::{env, fs, process};
@@ -26,6 +26,7 @@ struct IpaDemoReport {
 fn usage() -> ! {
     eprintln!("usage: snark-lab-cli verify-transcript <path.json>");
     eprintln!("       snark-lab-cli ipa-demo");
+    eprintln!("       snark-lab-cli ipa-srs-validate [--curve bls12-381-g1] <path.srs>");
     process::exit(2);
 }
 
@@ -163,6 +164,80 @@ fn run_ipa_demo() -> DemoResult<()> {
     Ok(())
 }
 
+fn digest_to_hex(digest: &[u8; 32]) -> String {
+    const HEX: &[u8; 16] = b"0123456789abcdef";
+
+    let mut out = String::with_capacity(64);
+    for byte in digest {
+        out.push(HEX[(byte >> 4) as usize] as char);
+        out.push(HEX[(byte & 0x0f) as usize] as char);
+    }
+
+    out
+}
+
+fn srs_source_label(source: &IpaSrsSource) -> &'static str {
+    match source {
+        IpaSrsSource::ExternalTrustedSetup { .. } => "external-trusted-setup",
+        IpaSrsSource::HashToCurveDerivation { .. } => "hash-to-curve-derivation",
+        IpaSrsSource::KnownDiscreteLogTestFixture => "known-discrete-log-test-fixture",
+    }
+}
+
+fn run_ipa_srs_validate(mut args: impl Iterator<Item = String>) -> DemoResult<()> {
+    let first = args.next().unwrap_or_else(|| usage());
+
+    let (curve, path) = if first == "--curve" {
+        let curve = args.next().unwrap_or_else(|| usage());
+        let path = args.next().unwrap_or_else(|| usage());
+
+        if args.next().is_some() {
+            usage();
+        }
+
+        (curve, path)
+    } else {
+        if args.next().is_some() {
+            usage();
+        }
+
+        ("bls12-381-g1".to_string(), first)
+    };
+
+    if curve != "bls12-381-g1" {
+        return Err(format!(
+            "unsupported IPA SRS curve '{curve}'; supported curve: bls12-381-g1"
+        ));
+    }
+
+    let verified = read_ipa_srs_file::<G1Projective, _>(&path)
+        .map_err(|error| format!("IPA SRS validation failed for {path}: {error:?}"))?;
+
+    let provenance = verified.provenance();
+    let basis = verified.basis();
+
+    println!("ipa-srs-validate: accepted production IPA SRS");
+    println!("curve={curve}");
+    println!("curve_id={}", provenance.curve_id);
+    println!("max_variables={}", provenance.max_variables);
+    println!("source={}", srs_source_label(&provenance.source));
+    println!(
+        "canonical_basis_sha256={}",
+        digest_to_hex(&provenance.canonical_basis_sha256)
+    );
+    println!(
+        "polynomial_generators={}",
+        basis.polynomial_generators.len()
+    );
+    println!(
+        "evaluation_generators={}",
+        basis.evaluation_generators.len()
+    );
+    println!("blinding_generator=present");
+
+    Ok(())
+}
+
 fn run_verify_transcript(mut args: impl Iterator<Item = String>) {
     let path = args.next().unwrap_or_else(|| usage());
     if args.next().is_some() {
@@ -207,6 +282,12 @@ fn main() {
                 process::exit(1);
             }
         }
+        Some("ipa-srs-validate") => {
+            if let Err(error) = run_ipa_srs_validate(args) {
+                eprintln!("error: {error}");
+                process::exit(1);
+            }
+        }
         _ => usage(),
     }
 }
@@ -223,5 +304,30 @@ mod tests {
         assert_eq!(report.decoded_rounds, 3);
         assert!(report.commitment_bytes > 0);
         assert!(report.encoded_opening_bytes > report.commitment_bytes);
+    }
+
+    #[test]
+    fn digest_to_hex_is_lowercase_and_fixed_width() {
+        let digest = [0xab; 32];
+
+        let encoded = digest_to_hex(&digest);
+
+        assert_eq!(encoded.len(), 64);
+        assert!(encoded.chars().all(|c| c == 'a' || c == 'b'));
+    }
+
+    #[test]
+    fn ipa_srs_validate_rejects_unsupported_curve_before_file_read() {
+        let error = run_ipa_srs_validate(
+            vec![
+                "--curve".to_string(),
+                "unsupported-curve".to_string(),
+                "/does/not/need/to/exist.srs".to_string(),
+            ]
+            .into_iter(),
+        )
+        .unwrap_err();
+
+        assert!(error.contains("unsupported IPA SRS curve"));
     }
 }
