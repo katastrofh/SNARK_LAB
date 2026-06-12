@@ -1,0 +1,37 @@
+[package]
+name = "snark-lab-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+ark-bls12-381 = "0.5"
+libfuzzer-sys = "0.4"
+snark-lab-oracle = { path = "../crates/oracle" }
+
+[[bin]]
+name = "ipa_proof_decode"
+path = "fuzz_targets/ipa_proof_decode.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ipa_integrated_opening_decode"
+path = "fuzz_targets/ipa_integrated_opening_decode.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ipa_srs_file_decode"
+path = "fuzz_targets/ipa_srs_file_decode.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]
