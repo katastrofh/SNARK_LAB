@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Visualizer screenshot assets for README
+
 - GitHub-facing README polish
 
 - Fuzz crash regression suite

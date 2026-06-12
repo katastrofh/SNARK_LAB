@@ -288,3 +288,11 @@ See:
     docs/readme-star-polish.md
 
 The README is required to state that the release candidate is not production-secure and not externally audited.
+
+## Visualizer screenshot assets
+
+See:
+
+    docs/visualizer-screenshot-assets.md
+
+Visualizer screenshots are documentation assets only. They are not cryptographic evidence.

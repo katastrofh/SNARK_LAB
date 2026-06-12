@@ -89,6 +89,20 @@ Build release artifacts for the current release candidate:
 | IPA PCS | Commits to multilinear polynomials and proves openings |
 | SRS tooling | Validates public parameter provenance and artifact boundaries |
 
+
+## Visualizer screenshots
+
+The visualizer shows how the protocol components fit together.
+
+<p align="center">
+  <img src="docs/assets/visualizer/system-flow.png" alt="SNARK_LAB system flow visualizer" width="45%">
+  <img src="docs/assets/visualizer/ipa-flow.png" alt="SNARK_LAB IPA flow visualizer" width="45%">
+</p>
+
+<p align="center">
+  <img src="docs/assets/visualizer/sumcheck-flow.png" alt="SNARK_LAB sumcheck flow visualizer" width="70%">
+</p>
+
 ## Evidence and hardening
 
 | Evidence layer | Location |
