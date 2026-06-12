@@ -122,3 +122,12 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Release-candidate evidence summary tooling added
 - [ ] Release-candidate evidence run generated from clean release commit
 - [ ] Release-candidate evidence archived with GitHub release
+
+## Release checklist and tagging
+
+- [x] Production release checklist added
+- [x] Release notes template added
+- [x] Release tag preparation script added
+- [x] Release checklist checker added
+- [ ] Release candidate tag created
+- [ ] Release artifacts attached to GitHub release

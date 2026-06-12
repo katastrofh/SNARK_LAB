@@ -173,3 +173,12 @@ See:
     release-candidates/README.md
 
 Release-candidate evidence records executed checks. It does not replace external audit, side-channel review, or production SRS ceremony evidence.
+
+## Release checklist and tagging
+
+See:
+
+    docs/production-release-checklist-and-tagging.md
+    release/PRODUCTION_RELEASE_CHECKLIST.md
+
+A release tag does not imply production-secure status unless audit, side-channel review, SRS ceremony evidence, and deployment evidence are complete.
