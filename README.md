@@ -529,3 +529,11 @@ See:
     docs/visualizer-polish-and-demo.md
 
 The IPA tab is the recommended GitHub Pages demo entry point.
+
+## System flow visualizer
+
+See:
+
+    docs/visualizer-system-flow.md
+
+The System tab shows the actual repository pipeline from statement input to protocol reductions, IPA PCS, codecs, SRS validation, CLI vectors, fuzzing, and CI gates.

@@ -120,3 +120,11 @@ See:
     docs/visualizer-polish-and-demo.md
 
 Visualizer screenshots and GIFs are educational assets. They are not audit evidence.
+
+## System visualizer boundary
+
+See:
+
+    docs/visualizer-system-flow.md
+
+The System tab is an educational map of implemented components. It is not audit evidence or production deployment evidence.

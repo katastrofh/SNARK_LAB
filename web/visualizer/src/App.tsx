@@ -35,14 +35,16 @@ import {
   P,
   rational,
   ipaTrace,
+  systemFlowTrace,
   sumcheck,
   sumcheckTranscript,
 } from './protocols';
 
-type Tab = 'sumcheck' | 'zerocheck' | 'permcheck' | 'scribe' | 'ipa';
+type Tab = 'system' | 'sumcheck' | 'zerocheck' | 'permcheck' | 'scribe' | 'ipa';
 type Icon = typeof Sigma;
 
 const tabs: Array<{ id: Tab; label: string; eyebrow: string; icon: Icon }> = [
+  { id: 'system', label: 'System', eyebrow: 'See the full proof pipeline', icon: Activity },
   { id: 'sumcheck', label: 'Sumcheck', eyebrow: 'Reduce a hypercube sum', icon: Sigma },
   { id: 'zerocheck', label: 'Zerocheck', eyebrow: 'Randomly mix constraints', icon: CircleDot },
   { id: 'permcheck', label: 'PermCheck', eyebrow: 'Compare tagged multisets', icon: Shuffle },
@@ -55,7 +57,7 @@ function isTab(value: string | null): value is Tab {
     || value === 'zerocheck'
     || value === 'permcheck'
     || value === 'scribe'
-    || value === 'ipa';
+    || value === 'ipa' || value === 'system';
 }
 
 function readInitialTab(): Tab {
@@ -150,6 +152,139 @@ function PageIntro({ tab, title, accent, children }: { tab: Tab; title: string; 
       <h1>{title} <em>{accent}</em></h1>
       <p>{children}</p>
     </section>
+  );
+}
+
+
+function SystemFlowLab() {
+  const trace = useMemo(() => systemFlowTrace(), []);
+
+  const iconFor = (kind: string) => {
+    switch (kind) {
+      case 'input': return <Binary size={20} />;
+      case 'algebra': return <Layers3 size={20} />;
+      case 'transcript': return <Fingerprint size={20} />;
+      case 'protocol': return <Sigma size={20} />;
+      case 'pcs': return <LockKeyhole size={20} />;
+      case 'codec': return <Download size={20} />;
+      case 'tooling': return <Gauge size={20} />;
+      case 'gate': return <ShieldCheck size={20} />;
+      default: return <Activity size={20} />;
+    }
+  };
+
+  return (
+    <main>
+      <PageIntro tab="system" title="Visualize the full SNARK_LAB system" accent="from statement to gate.">
+        This is the repository-level execution map: Rust crates, transcript binding, protocol reductions, IPA PCS, codecs, SRS validation, CLI vectors, fuzzing, and CI gates.
+      </PageIntro>
+      <SecurityBoundary />
+
+      <section className="system-hero card">
+        <div>
+          <span className="section-label">SYSTEM MAP</span>
+          <h2>Actual implemented pipeline</h2>
+          <p>{trace.boundary}</p>
+        </div>
+        <div className="metric-grid">
+          <Metric label="STAGES" value={String(trace.stages.length)} />
+          <Metric label="GATES" value={String(trace.gates.length)} />
+          <Metric label="STATUS" value="research prototype" />
+          <Metric label="PATH" value="Rust + browser" />
+        </div>
+      </section>
+
+      <section className="system-flow" aria-label="SNARK_LAB implemented system flow">
+        {trace.stages.map((stage, index) => (
+          <article className={`system-node system-node-${stage.kind}`} key={stage.id}>
+            <div className="system-node-index">{String(index + 1).padStart(2, '0')}</div>
+            <div className="system-node-icon">{iconFor(stage.kind)}</div>
+            <div className="system-node-body">
+              <div className="system-node-title">
+                <span className="section-label">{stage.kind.toUpperCase()}</span>
+                <h2>{stage.title}</h2>
+              </div>
+              <p>{stage.description}</p>
+
+              <div className="system-io-grid">
+                <div>
+                  <strong>Inputs</strong>
+                  {stage.inputs.map(item => <code key={item}>{item}</code>)}
+                </div>
+                <ArrowRight size={18} />
+                <div>
+                  <strong>Outputs</strong>
+                  {stage.outputs.map(item => <code key={item}>{item}</code>)}
+                </div>
+              </div>
+
+              <div className="system-artifacts">
+                {stage.artifacts.map(artifact => <span key={artifact}>{artifact}</span>)}
+              </div>
+
+              <Status ok={stage.implemented}>Implemented</Status>
+            </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="card transcript-card">
+        <div className="transcript-header">
+          <div>
+            <span className="section-label">PRODUCTION GATE</span>
+            <h2>What blocks bad changes before merge</h2>
+          </div>
+          <Status ok>Checked locally and in CI</Status>
+        </div>
+
+        <div className="gate-grid">
+          {trace.gates.map(gate => (
+            <article className="gate-card" key={gate.name}>
+              <div className="gate-card-top">
+                <ShieldCheck size={18} />
+                <strong>{gate.name}</strong>
+              </div>
+              <p>{gate.purpose}</p>
+              <Formula>{gate.command}</Formula>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="pipeline-card">
+        <div><Binary size={20} /><span>statement</span></div>
+        <ArrowRight />
+        <div><Sigma size={20} /><span>protocol reductions</span></div>
+        <ArrowRight />
+        <div><LockKeyhole size={20} /><span>IPA PCS</span></div>
+        <ArrowRight />
+        <div><Download size={20} /><span>codecs/SRS</span></div>
+        <ArrowRight />
+        <div><ShieldCheck size={20} /><span>gate</span></div>
+      </section>
+
+      <div className="method-comparison">
+        <section className="card method-card cyan">
+          <div className="method-icon"><BookOpen /></div>
+          <span className="section-label">REVIEWER VIEW</span>
+          <h2>What a reader can inspect</h2>
+          <ol className="explanation-steps">
+            <li><b><Check size={14} /></b><span>Protocol crate boundaries</span></li>
+            <li><b><Check size={14} /></b><span>Actual proof artifacts and byte parsers</span></li>
+            <li><b><Check size={14} /></b><span>Public vectors and reference comparisons</span></li>
+            <li><b><Check size={14} /></b><span>Fuzz, audit, and CI hardening process</span></li>
+          </ol>
+        </section>
+
+        <section className="card method-card orange">
+          <div className="method-icon"><TriangleAlert /></div>
+          <span className="section-label">BOUNDARY</span>
+          <h2>Still not production-secure</h2>
+          <p>The map shows implemented infrastructure. Full production-security still requires side-channel review, long fuzz evidence, production SRS story, and external audit.</p>
+          <Status ok={false}>Unaudited research-preview system</Status>
+        </section>
+      </div>
+    </main>
   );
 }
 
