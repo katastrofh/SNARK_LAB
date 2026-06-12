@@ -319,3 +319,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] IPA path summarized
 - [x] Evidence model summarized
 - [x] Limitations documented
+
+## Final repo polish and freeze
+
+- [x] Release-candidate freeze recorded
+- [x] Post-freeze maintenance policy added
+- [x] Scope-creep warning documented
+- [x] Review-driven change policy documented
+- [x] Security boundary preserved

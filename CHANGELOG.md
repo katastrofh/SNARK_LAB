@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Final repo polish and freeze marker
+
 - Paper-style technical overview
 
 - Examples gallery
