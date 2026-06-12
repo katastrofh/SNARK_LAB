@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Reviewer onboarding guide
+
 - Final repository health report
 
 - Final project positioning and roadmap

@@ -905,3 +905,12 @@ For a concise repository status snapshot, see:
     docs/final-repo-health-report.md
 
 The report summarizes release candidates, evidence, automated gates, strong points, remaining blockers, and recommended next work.
+
+## Reviewer onboarding
+
+For outside reviewers, start here:
+
+    REVIEWERS.md
+    docs/reviewer-onboarding-guide.md
+
+The reviewer guide explains the main evidence gate, release artifacts, protocol areas, fuzzing evidence, and security boundary.

@@ -293,3 +293,11 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] Evidence stack summarized
 - [x] Remaining review blockers documented
 - [x] Future work listed
+
+## Reviewer onboarding
+
+- [x] Reviewer onboarding guide added
+- [x] Reviewer quick-start file added
+- [x] Review order documented
+- [x] Evidence locations documented
+- [x] Security boundary preserved

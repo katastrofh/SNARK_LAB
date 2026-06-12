@@ -355,3 +355,13 @@ See:
     docs/final-repo-health-report-notes.md
 
 The health report summarizes repository evidence and remaining review blockers without making stronger security claims.
+
+## Reviewer onboarding
+
+See:
+
+    REVIEWERS.md
+    docs/reviewer-onboarding-guide.md
+    docs/reviewer-onboarding-branch-notes.md
+
+The onboarding guide helps reviewers inspect the repository without weakening the stated security boundary.
