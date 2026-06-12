@@ -164,3 +164,12 @@ See:
     audits/packet/README.md
 
 The audit packet prepares SNARK_LAB for external review. It does not itself mean an audit has been completed.
+
+## Release-candidate evidence
+
+See:
+
+    docs/release-candidate-evidence-run.md
+    release-candidates/README.md
+
+Release-candidate evidence records executed checks. It does not replace external audit, side-channel review, or production SRS ceremony evidence.

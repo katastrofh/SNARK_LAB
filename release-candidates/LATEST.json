@@ -1,0 +1,16 @@
+{
+  "schema": "snark-lab-release-candidate-summary-v1",
+  "status": "release-candidate-evidence-generated",
+  "evidence_pack": "deployment/evidence/20260612T125555Z",
+  "branch_under_evidence": "release-candidate-evidence-run",
+  "commit_under_evidence": "d224e4d28f301ec419fbbfc91071084d8260c9a7",
+  "git_status_clean": true,
+  "production_gate_passed": true,
+  "public_vectors_passed": true,
+  "srs_manifest_example_passed": true,
+  "fuzz_targets_compile_passed": true,
+  "external_audit_completed": false,
+  "side_channel_review_completed": false,
+  "production_srs_ceremony_completed": false,
+  "production_secure": false
+}

@@ -116,3 +116,9 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [ ] External audit completed
 - [ ] Critical/high findings resolved
 - [ ] Final audit report linked
+
+## Release candidate evidence
+
+- [x] Release-candidate evidence summary tooling added
+- [ ] Release-candidate evidence run generated from clean release commit
+- [ ] Release-candidate evidence archived with GitHub release
