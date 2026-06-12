@@ -69,6 +69,9 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 
 ## Side channels
 
+- [x] Side-channel boundary documented
+- [x] Production deployment evidence checklist documented
+
 - [ ] Constant-time review
 - [ ] Secret-dependent branching review
 - [ ] Secret-dependent memory-access review

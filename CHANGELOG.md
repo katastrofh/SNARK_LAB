@@ -8,6 +8,9 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Side-channel boundary notes
+- Production deployment evidence checklist
+
 - System-level visualizer map
 
 - Visualizer demo polish and direct tab links

@@ -537,3 +537,12 @@ See:
     docs/visualizer-system-flow.md
 
 The System tab shows the actual repository pipeline from statement input to protocol reductions, IPA PCS, codecs, SRS validation, CLI vectors, fuzzing, and CI gates.
+
+## Side-channel and deployment evidence
+
+See:
+
+    docs/side-channel-boundary-notes.md
+    docs/production-deployment-evidence.md
+
+The target is a production system, but production-secure claims require audit evidence, side-channel review, and production SRS ceremony evidence.

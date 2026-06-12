@@ -128,3 +128,12 @@ See:
     docs/visualizer-system-flow.md
 
 The System tab is an educational map of implemented components. It is not audit evidence or production deployment evidence.
+
+## Side-channel and production deployment evidence
+
+See:
+
+    docs/side-channel-boundary-notes.md
+    docs/production-deployment-evidence.md
+
+Do not describe SNARK_LAB as production-secure until side-channel review, external audit, and production SRS ceremony evidence exist.
