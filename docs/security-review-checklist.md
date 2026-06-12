@@ -234,4 +234,10 @@ This checklist tracks what must hold before SNARK_LAB can make stronger security
 - [x] README evidence table added
 - [x] README quickstart added
 - [x] README release-candidate status added
-- [ ] Visualizer screenshot or GIF added
+- [x] Visualizer screenshot assets added
+
+## Visualizer screenshot assets
+
+- [x] Visualizer screenshot assets added
+- [x] Visualizer screenshot checker added
+- [x] README references screenshot assets
