@@ -1,0 +1,8 @@
+SNARK_LAB release artifact manifest
+
+tag: v0.2.0-rc.2
+commit: e3cfc1aff3ab41b991206a53b73f803f780d82ee
+generated_utc: 2026-06-12T15:07:15Z
+
+This artifact bundle is for review and release-candidate validation.
+It does not claim production-secure status.

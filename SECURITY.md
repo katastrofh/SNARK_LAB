@@ -328,3 +328,11 @@ See:
     docs/release-candidate-rc2-current-main.md
 
 v0.2.0-rc.2 is a review and reproducibility release candidate. It does not claim production security.
+
+## GitHub Release rc2 publication evidence
+
+See:
+
+    docs/github-release-rc2-publication.md
+
+Release publication evidence confirms asset publication only. It does not claim production security.
