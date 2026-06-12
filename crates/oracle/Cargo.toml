@@ -13,3 +13,4 @@ snark-lab-transcript = { path = "../transcript" }
 
 [dev-dependencies]
 ark-bls12-381 = "0.5"
+rand = "0.8"
