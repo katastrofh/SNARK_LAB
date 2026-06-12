@@ -20,7 +20,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/example/snark-lab"
 
 [workspace.dependencies]
-ark-ff = "0.5"
+ark-ff = "0.6"
 ark-bls12-381 = "0.5"
 field = { path = "crates/field" }
 multilinear = { path = "crates/multilinear" }
