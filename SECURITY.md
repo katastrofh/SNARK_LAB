@@ -248,3 +248,11 @@ See:
     docs/ipa-fuzz-target-runtime-fix.md
 
 A successful smoke fuzz run is not production fuzz evidence. Long campaign logs still need to be archived and triaged.
+
+## IPA proof decoder fuzz regression
+
+See:
+
+    docs/ipa-proof-decoder-fuzz-regression.md
+
+Malformed IPA proof count fields must fail closed with decode errors, not panics.
