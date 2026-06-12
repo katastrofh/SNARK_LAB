@@ -509,9 +509,12 @@ dependencies = [
 name = "snark-lab-benches"
 version = "0.2.0"
 dependencies = [
+ "ark-bls12-381",
+ "ark-ec",
  "field",
  "multilinear",
  "permcheck",
+ "snark-lab-oracle",
  "snark-lab-transcript",
  "sumcheck",
 ]
