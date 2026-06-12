@@ -287,3 +287,151 @@ export function ipaTrace(tableInput = [3, 1, 4, 1], pointInput = [2, 7]): IpaTra
     accepted: table.length === basis.length && rounds.length === point.length,
   };
 }
+
+export type SystemStage = {
+  id: string;
+  title: string;
+  kind: 'input' | 'algebra' | 'transcript' | 'protocol' | 'pcs' | 'codec' | 'tooling' | 'gate';
+  implemented: boolean;
+  description: string;
+  artifacts: string[];
+  inputs: string[];
+  outputs: string[];
+};
+
+export type SystemGate = {
+  name: string;
+  command: string;
+  purpose: string;
+};
+
+export type SystemFlowTrace = {
+  stages: SystemStage[];
+  gates: SystemGate[];
+  boundary: string;
+};
+
+export function systemFlowTrace(): SystemFlowTrace {
+  return {
+    boundary: 'Browser visualizes the same protocol structure at educational scale. Rust crates perform the production-oriented BLS12-381, Merlin, codec, SRS, and proof checks.',
+    stages: [
+      {
+        id: 'statement',
+        title: 'Statement and witness table',
+        kind: 'input',
+        implemented: true,
+        description: 'Protocol inputs enter as finite-field tables, opening points, claims, or byte-facing proof/SRS files.',
+        artifacts: ['crates/multilinear', 'crates/cli', 'test-vectors'],
+        inputs: ['user statement', 'witness table', 'opening point'],
+        outputs: ['Multilinear<F>', 'claim', 'point'],
+      },
+      {
+        id: 'multilinear',
+        title: 'Multilinear algebra layer',
+        kind: 'algebra',
+        implemented: true,
+        description: 'Evaluation tables, equality weights, and inner products provide the algebra used by Sumcheck and IPA.',
+        artifacts: ['crates/multilinear', 'crates/oracle'],
+        inputs: ['table', 'point'],
+        outputs: ['evaluation value', 'basis vector'],
+      },
+      {
+        id: 'transcript',
+        title: 'Fiat-Shamir transcript',
+        kind: 'transcript',
+        implemented: true,
+        description: 'Statements and prover messages are bound before challenges are sampled.',
+        artifacts: ['crates/transcript'],
+        inputs: ['statement bytes', 'prover messages'],
+        outputs: ['challenge scalars'],
+      },
+      {
+        id: 'sumcheck-family',
+        title: 'Sumcheck, Zerocheck, PermCheck',
+        kind: 'protocol',
+        implemented: true,
+        description: 'Interactive-proof reductions check sums, zero constraints, and multiset/permutation relations.',
+        artifacts: ['crates/sumcheck', 'crates/zerocheck', 'crates/permcheck'],
+        inputs: ['oracle tables', 'claims', 'transcript challenges'],
+        outputs: ['protocol proofs', 'verification decisions'],
+      },
+      {
+        id: 'ipa-pcs',
+        title: 'IPA polynomial commitment path',
+        kind: 'pcs',
+        implemented: true,
+        description: 'The typed IPA path commits to multilinear vectors and proves openings with folding rounds.',
+        artifacts: ['crates/oracle::ipa_*'],
+        inputs: ['polynomial vector', 'evaluation basis', 'SRS material'],
+        outputs: ['commitment', 'opening proof', 'verified opening'],
+      },
+      {
+        id: 'codec-srs',
+        title: 'Proof codecs and SRS validation',
+        kind: 'codec',
+        implemented: true,
+        description: 'Canonical byte formats reject malformed proofs, openings, and SRS files before verification proceeds.',
+        artifacts: ['ipa_backend_codec', 'ipa_srs_loader', 'ipa_srs_provenance'],
+        inputs: ['proof bytes', 'opening bytes', 'SRS bytes'],
+        outputs: ['typed proof objects', 'validated SRS'],
+      },
+      {
+        id: 'cli-vectors',
+        title: 'CLI and public test vectors',
+        kind: 'tooling',
+        implemented: true,
+        description: 'CLI commands and committed vectors make the implementation reproducible for reviewers.',
+        artifacts: ['crates/cli', 'test-vectors', 'scripts/check-test-vectors.sh'],
+        inputs: ['CLI command', 'public vector file'],
+        outputs: ['verified demo output', 'regression check'],
+      },
+      {
+        id: 'fuzz-ci',
+        title: 'Fuzzing, CI, and production gate',
+        kind: 'gate',
+        implemented: true,
+        description: 'The repository gate checks formatting, linting, tests, fuzz target builds, vectors, visualizer build, unsafe rejection, and audit workflows.',
+        artifacts: ['scripts/check-production-ready.sh', 'fuzz/', '.github/workflows'],
+        inputs: ['code changes', 'dependency changes'],
+        outputs: ['merge/no-merge decision'],
+      },
+    ],
+    gates: [
+      {
+        name: 'Format',
+        command: 'cargo fmt --all -- --check',
+        purpose: 'Rejects unformatted Rust code.',
+      },
+      {
+        name: 'Lint',
+        command: 'cargo clippy --locked --workspace --all-targets -- -D warnings',
+        purpose: 'Rejects warning-level Rust issues.',
+      },
+      {
+        name: 'Tests',
+        command: 'cargo test --locked --workspace',
+        purpose: 'Runs protocol, codec, CLI, and reference-comparison tests.',
+      },
+      {
+        name: 'Fuzz target build',
+        command: 'scripts/check-fuzz-targets.sh',
+        purpose: 'Ensures parser fuzz targets compile.',
+      },
+      {
+        name: 'Public vectors',
+        command: 'scripts/check-test-vectors.sh',
+        purpose: 'Checks committed public outputs match the current implementation.',
+      },
+      {
+        name: 'Visualizer',
+        command: 'npm run build',
+        purpose: 'Ensures the browser demo builds cleanly.',
+      },
+      {
+        name: 'Unsafe rejection',
+        command: 'grep unsafe crates fuzz',
+        purpose: 'Rejects unsafe Rust in repository protocol crates.',
+      },
+    ],
+  };
+}
