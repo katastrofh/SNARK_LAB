@@ -932,3 +932,15 @@ For a compact paper-like technical summary, see:
     docs/protocol-stack-summary.md
 
 These documents summarize the motivation, protocol stack, IPA path, evidence model, release model, visualizer role, and limitations.
+
+## Release-candidate freeze
+
+The current release-candidate phase is frozen for public review.
+
+See:
+
+    FREEZE.md
+    docs/final-repo-polish-and-freeze.md
+    docs/post-freeze-maintenance-policy.md
+
+Future changes should be bug fixes, review-driven corrections, evidence updates, benchmark reports, or clearly justified follow-up work.

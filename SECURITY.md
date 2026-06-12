@@ -384,3 +384,12 @@ See:
     docs/paper-style-technical-overview-notes.md
 
 The overview explains the repository scope and limitations without making deployment claims.
+
+## Post-freeze maintenance
+
+See:
+
+    FREEZE.md
+    docs/post-freeze-maintenance-policy.md
+
+The freeze is a project-management milestone. It does not change the security status of the repository.
