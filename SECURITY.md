@@ -104,3 +104,11 @@ See:
     docs/long-fuzz-campaign-notes.md
 
 Fuzzing hardens malformed external byte parsers. It does not replace external audit or formal security review.
+
+## Visualizer IPA boundary
+
+See:
+
+    docs/visualizer-real-ipa-flow.md
+
+The browser IPA flow is educational and small-field. It is not an audit and not production deployment evidence.

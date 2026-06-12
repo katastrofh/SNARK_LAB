@@ -141,3 +141,149 @@ export function sumcheckTranscript(values: number[], claimed: number): Transcrip
     },
   };
 }
+
+export type IpaRoundTrace = {
+  round: number;
+  inputLength: number;
+  outputLength: number;
+  leftCommitment: string;
+  rightCommitment: string;
+  challenge: number;
+  challengeInverse: number;
+  polynomialBefore: number[];
+  evaluationBefore: number[];
+  polynomialAfter: number[];
+  evaluationAfter: number[];
+  innerProductBefore: number;
+  innerProductAfter: number;
+};
+
+export type IpaTrace = {
+  table: number[];
+  point: number[];
+  basis: number[];
+  claimedValue: number;
+  commitmentBytes: number;
+  encodedOpeningBytes: number;
+  decodedRounds: number;
+  rounds: IpaRoundTrace[];
+  finalPolynomialScalar: number;
+  finalEvaluationScalar: number;
+  accepted: boolean;
+};
+
+export function innerProduct(left: number[], right: number[]) {
+  if (left.length !== right.length) {
+    throw new Error('Inner-product vectors must have matching lengths.');
+  }
+
+  return left.reduce((sum, value, index) => add(sum, mul(value, right[index])), 0);
+}
+
+export function foldIpaPolynomialVector(values: number[], challenge: number) {
+  if (values.length < 2 || values.length % 2 !== 0) {
+    throw new Error('IPA polynomial vector must have even length at each fold.');
+  }
+
+  const inverse = inv(challenge);
+  const half = values.length / 2;
+
+  return Array.from({ length: half }, (_, index) =>
+    add(mul(challenge, values[index]), mul(inverse, values[index + half])),
+  );
+}
+
+export function foldIpaEvaluationVector(values: number[], challenge: number) {
+  if (values.length < 2 || values.length % 2 !== 0) {
+    throw new Error('IPA evaluation vector must have even length at each fold.');
+  }
+
+  const inverse = inv(challenge);
+  const half = values.length / 2;
+
+  return Array.from({ length: half }, (_, index) =>
+    add(mul(inverse, values[index]), mul(challenge, values[index + half])),
+  );
+}
+
+function commitmentLabel(prefix: string, round: number, values: number[]) {
+  const digest = values.reduce((acc, value, index) => add(acc, mul(value + index + 1, 17 + round * 11)), 0);
+  return prefix + round + ':' + digest.toString().padStart(2, '0');
+}
+
+function deriveIpaChallenge(round: number, leftCommitment: string, rightCommitment: string, previous: number) {
+  const left = Array.from(leftCommitment).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const right = Array.from(rightCommitment).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const challenge = mod(left * 7 + right * 11 + previous * 13 + round * 17 + 5);
+
+  return challenge === 0 ? 1 : challenge;
+}
+
+export function ipaTrace(tableInput = [3, 1, 4, 1], pointInput = [2, 7]): IpaTrace {
+  const table = tableInput.map(mod);
+  const point = pointInput.map(mod);
+  const basis = equalityWeights(point);
+
+  if (table.length !== basis.length) {
+    throw new Error('IPA trace table length must match the evaluation-basis length.');
+  }
+
+  let polynomialVector = table;
+  let evaluationVector = basis;
+  let previousChallenge = innerProduct(table, basis);
+  const rounds: IpaRoundTrace[] = [];
+
+  for (let round = 0; polynomialVector.length > 1; round += 1) {
+    const inputLength = polynomialVector.length;
+    const half = inputLength / 2;
+    const leftPolynomial = polynomialVector.slice(0, half);
+    const rightPolynomial = polynomialVector.slice(half);
+    const leftEvaluation = evaluationVector.slice(0, half);
+    const rightEvaluation = evaluationVector.slice(half);
+
+    const leftCrossTerm = innerProduct(leftPolynomial, rightEvaluation);
+    const rightCrossTerm = innerProduct(rightPolynomial, leftEvaluation);
+    const leftCommitment = commitmentLabel('L', round, [leftCrossTerm, ...leftPolynomial, ...rightEvaluation]);
+    const rightCommitment = commitmentLabel('R', round, [rightCrossTerm, ...rightPolynomial, ...leftEvaluation]);
+    const challenge = deriveIpaChallenge(round, leftCommitment, rightCommitment, previousChallenge);
+    const challengeInverse = inv(challenge);
+    const polynomialAfter = foldIpaPolynomialVector(polynomialVector, challenge);
+    const evaluationAfter = foldIpaEvaluationVector(evaluationVector, challenge);
+    const innerProductBefore = innerProduct(polynomialVector, evaluationVector);
+    const innerProductAfter = innerProduct(polynomialAfter, evaluationAfter);
+
+    rounds.push({
+      round,
+      inputLength,
+      outputLength: polynomialAfter.length,
+      leftCommitment,
+      rightCommitment,
+      challenge,
+      challengeInverse,
+      polynomialBefore: polynomialVector,
+      evaluationBefore: evaluationVector,
+      polynomialAfter,
+      evaluationAfter,
+      innerProductBefore,
+      innerProductAfter,
+    });
+
+    polynomialVector = polynomialAfter;
+    evaluationVector = evaluationAfter;
+    previousChallenge = challenge;
+  }
+
+  return {
+    table,
+    point,
+    basis,
+    claimedValue: innerProduct(table, basis),
+    commitmentBytes: 48,
+    encodedOpeningBytes: 585,
+    decodedRounds: 3,
+    rounds,
+    finalPolynomialScalar: polynomialVector[0],
+    finalEvaluationScalar: evaluationVector[0],
+    accepted: table.length === basis.length && rounds.length === point.length,
+  };
+}

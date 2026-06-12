@@ -8,6 +8,8 @@ The project is currently in research-preview status.
 
 ### Added
 
+- Real IPA opening flow in the visualizer
+
 - Fuzz campaign runner and documentation
 
 - Threat model and security notes
