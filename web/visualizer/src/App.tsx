@@ -38,7 +38,7 @@ import {
   sumcheckTranscript,
 } from './protocols';
 
-type Tab = 'sumcheck' | 'zerocheck' | 'permcheck' | 'scribe';
+type Tab = 'sumcheck' | 'zerocheck' | 'permcheck' | 'scribe' | 'ipa';
 type Icon = typeof Sigma;
 
 const tabs: Array<{ id: Tab; label: string; eyebrow: string; icon: Icon }> = [
@@ -46,6 +46,7 @@ const tabs: Array<{ id: Tab; label: string; eyebrow: string; icon: Icon }> = [
   { id: 'zerocheck', label: 'Zerocheck', eyebrow: 'Randomly mix constraints', icon: CircleDot },
   { id: 'permcheck', label: 'PermCheck', eyebrow: 'Compare tagged multisets', icon: Shuffle },
   { id: 'scribe', label: 'Streaming', eyebrow: 'Model prover I/O', icon: Database },
+  { id: 'ipa', label: 'IPA PCS', eyebrow: 'Curve commitment backend', icon: LockKeyhole },
 ];
 
 const formatBytes = (bytes: number) => {
@@ -426,6 +427,111 @@ function Metric({ label, value }: { label: string; value: string }) {
   return <div><small>{label}</small><strong>{value}</strong></div>;
 }
 
+
+function IpaPcsLab() {
+  const implemented = [
+    'PCS backend trait boundary',
+    'IPA transcript round schedule',
+    'Typed IPA opening proof shape',
+    'Canonical IPA proof serialization',
+    'Generator-basis validation',
+    'Curve-point serialization and subgroup validation',
+    'Curve commitment equation C = <a,G> + rH',
+    'Prover-side commit path',
+  ];
+
+  const pending = [
+    'Evaluation-basis vector for v = f(z)',
+    'IPA reduction-round prover',
+    'IPA opening verifier',
+    'Backend integration into MultilinearPcs::open / verify',
+    'Benchmarks against transparent oracle and future KZG/FRI backends',
+  ];
+
+  return (
+    <main>
+      <PageIntro tab="ipa" title="Build a real polynomial commitment" accent="one layer at a time.">
+        Inspect the production IPA backend roadmap. The Rust core now has curve-aware commitment infrastructure, but full opening verification is still intentionally not claimed.
+      </PageIntro>
+      <SecurityBoundary />
+
+      <div className="stream-layout">
+        <section className="card scale-card">
+          <div className="card-heading">
+            <span className="step-index">01</span>
+            <div>
+              <h2>Implemented backend layers</h2>
+              <p>These are present in the Rust oracle crate.</p>
+            </div>
+          </div>
+          <div className="metric-grid">
+            <Metric label="ORACLE TESTS" value="49+" />
+            <Metric label="CURVE" value="BLS12-381" />
+            <Metric label="PCS STATUS" value="Commit path" />
+            <Metric label="OPENING VERIFY" value="Pending" />
+          </div>
+          <ol className="explanation-steps">
+            {implemented.map(item => (
+              <li key={item}><b><Check size={14} /></b><span>{item}</span></li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="card traffic-card">
+          <div className="traffic-heading">
+            <div>
+              <span className="section-label">02 / COMMITMENT EQUATION</span>
+              <h2>Current cryptographic boundary</h2>
+            </div>
+            <span>PROVER-SIDE</span>
+          </div>
+          <div className="empty-state">
+            <div className="protocol-orbit"><LockKeyhole size={30} /><i /><i /><i /></div>
+            <h3>Commitment computation is real; opening verification is next.</h3>
+            <p>The implemented equation commits to the full multilinear evaluation vector with an explicit blinding scalar.</p>
+            <Formula>C = &lt;a, G&gt; + rH</Formula>
+          </div>
+          <div className="production-note">
+            <TriangleAlert size={16} />
+            <span>This is not a public verifier yet. A verifier must eventually check an IPA opening proof without seeing a or r.</span>
+          </div>
+        </section>
+      </div>
+
+      <section className="pipeline-card">
+        <div><Binary size={20} /><span>Multilinear table a</span></div>
+        <ArrowRight />
+        <div className="accumulator-visual"><LockKeyhole size={18} /><Formula>&lt;a,G&gt; + rH</Formula><span>curve commitment</span></div>
+        <ArrowRight />
+        <div><ShieldCheck size={20} /><span>IPA opening proof pending</span></div>
+      </section>
+
+      <div className="method-comparison">
+        <section className="card method-card cyan">
+          <div className="method-icon"><ShieldCheck /></div>
+          <span className="section-label">DONE</span>
+          <h2>Backend foundation</h2>
+          <p>Curve points, canonical compressed serialization, generator basis validation, and prover commitment path are in place.</p>
+          <Status ok={true}>Safe to present as infrastructure</Status>
+        </section>
+
+        <section className="card method-card orange">
+          <div className="method-icon"><TriangleAlert /></div>
+          <span className="section-label">NEXT</span>
+          <h2>Opening proof system</h2>
+          <ol className="explanation-steps">
+            {pending.map(item => (
+              <li key={item}><b><ChevronRight size={14} /></b><span>{item}</span></li>
+            ))}
+          </ol>
+          <Status ok={false}>Do not claim full IPA verifier yet</Status>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+
 export default function App() {
   const [tab, setTab] = useState<Tab>('sumcheck');
   return (
@@ -435,6 +541,7 @@ export default function App() {
       {tab === 'zerocheck' && <ZerocheckLab />}
       {tab === 'permcheck' && <PermcheckLab />}
       {tab === 'scribe' && <StreamingLab />}
+      {tab === 'ipa' && <IpaPcsLab />}
       <footer><span><ShieldCheck size={14} /> No telemetry · local computation</span><p>Educational browser model + production-oriented Rust protocol core.</p><code>docs/</code></footer>
     </div>
   );
