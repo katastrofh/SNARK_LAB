@@ -449,11 +449,5 @@ study Scribe-style polynomial commitment integration choices
 
 ## License
 
-Licensed under either of:
-
-```text
-Apache-2.0
 MIT
-```
 
-at your option.
