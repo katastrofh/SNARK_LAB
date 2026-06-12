@@ -10,6 +10,10 @@ use multilinear::Multilinear;
 use snark_lab_transcript::ProofTranscript;
 
 pub mod ipa;
+pub mod ipa_blinding;
+pub use ipa_blinding::{
+    extend_ipa_opening_for_blinding, IpaBlindedOpeningExtension, IpaBlindingExtensionError,
+};
 pub mod ipa_verifier_opening;
 pub use ipa_verifier_opening::{verify_ipa_opening, IpaVerifierOpeningError};
 pub mod ipa_prover_opening;
