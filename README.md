@@ -644,3 +644,11 @@ See:
     docs/fuzz-nightly-runner-fix.md
 
 Fuzz targets compile on stable, while actual cargo-fuzz campaigns require a nightly Rust toolchain.
+
+## Fuzz campaign runner hardening
+
+See:
+
+    docs/fuzz-campaign-runner-hardening.md
+
+Failed fuzz runs are not treated as evidence. Generated fuzz corpora and artifacts are ignored by default.
