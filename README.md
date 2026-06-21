@@ -23,7 +23,6 @@ It connects the math of interactive proofs to executable Rust code, transcript-b
 The goal is simple: make SNARK protocol mechanics inspectable.
 
 ---
-
 ## Why this repository matters
 
 Most SNARK learning material stops at equations. Most production libraries hide the protocol mechanics behind APIs.
