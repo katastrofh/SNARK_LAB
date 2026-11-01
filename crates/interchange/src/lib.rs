@@ -144,7 +144,9 @@ fn equality_evaluations(point: &[u64]) -> Vec<u64> {
 fn evaluate(mut table: Vec<u64>, point: &[u64]) -> u64 {
     for &challenge in point {
         table = table
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|pair| fold(pair[0], pair[1], challenge))
             .collect();
     }
