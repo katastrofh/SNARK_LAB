@@ -39,7 +39,10 @@ impl<F: Field> Multilinear<F> {
         let mut layer = self.evaluations.clone();
         for &challenge in point {
             layer = layer
-                .chunks_exact(2)
+                .as_slice()
+                .as_chunks::<2>()
+                .0
+                .iter()
                 .map(|pair| pair[0] + challenge * (pair[1] - pair[0]))
                 .collect();
         }
@@ -49,7 +52,10 @@ impl<F: Field> Multilinear<F> {
     pub fn fold_first(&self, challenge: F) -> Self {
         Self::new(
             self.evaluations
-                .chunks_exact(2)
+                .as_slice()
+                .as_chunks::<2>()
+                .0
+                .iter()
                 .map(|pair| pair[0] + challenge * (pair[1] - pair[0]))
                 .collect(),
         )

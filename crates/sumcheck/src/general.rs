@@ -178,13 +178,17 @@ impl<F: PrimeField> SumcheckPolynomial<F> for Multilinear<F> {
 
         let evaluation_at_zero = folded
             .evaluations()
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|pair| pair[0])
             .sum();
 
         let evaluation_at_one = folded
             .evaluations()
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|pair| pair[1])
             .sum();
 
