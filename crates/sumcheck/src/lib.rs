@@ -92,12 +92,16 @@ pub fn prove<F: PrimeField, T: ProofTranscript<F>>(
         let message = RoundPolynomial {
             evaluation_at_zero: folded
                 .evaluations()
-                .chunks_exact(2)
+                .as_chunks::<2>()
+                .0
+                .iter()
                 .map(|pair| pair[0])
                 .sum(),
             evaluation_at_one: folded
                 .evaluations()
-                .chunks_exact(2)
+                .as_chunks::<2>()
+                .0
+                .iter()
                 .map(|pair| pair[1])
                 .sum(),
         };
